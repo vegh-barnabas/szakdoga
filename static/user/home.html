@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
+
+        <title>Beléptető rendszer - Főoldal</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    Beléptető rendszer
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarText">
+                        <ul class="navbar-nav">
+                          <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="home.html">Főoldal</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="buy_ticket.html">Jegyvásárlás</a>
+                          </li>
+                          <li class="nav-item">
+                            <a class="nav-link" href="statistics.html">Statisztika</a>
+                          </li>
+                        </ul>
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="true"> user1 </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
+                                <li>
+                                    <a class="dropdown-item" href="#">Kredit: 7400</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="settings.html">Beállítások</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main class="container mt-4">
+            <h2>Üdv újra, <b>user1</b>!</h2>
+            <div class="row">
+                <div class="col p-4">
+                    <div class="row">
+                      <div class="col">
+                        <div class="row">
+                            <div class="card">
+                              <div class="card-body">
+                                <h5 class="card-title">Bérletek</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                  Harap utcai edzőterem
+                                </h6>
+                                <p class="card-text">
+                                  <table class="table">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Név</th>
+                                        <th scope="col">Lejárat</th>
+                                        <th scope="col">Státusz</th>
+                                        <th scope="col">Lehetőség</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td>Szaunabérlet</td>
+                                        <td>2022.04.14</td>
+                                        <td class="text-success">Aktív</td>
+                                        <td><button type="button" class="btn btn-light">Hosszabbítás</button></td>
+                                      </tr>
+                                      <tr>
+                                        <td>Bérlet</td>
+                                        <td>2022.01.14</td>
+                                        <td class="text-danger">Lejárt</td>
+                                        <td><button type="button" class="btn btn-light">Megújítás</button></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </p>
+                                <a href="#" class="card-link">többi helyszínhez tartozó bérlet megtekintése</a>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mt-3">
+                      <div class="col">
+                        <div class="row">
+                            <div class="card">
+                              <div class="card-body">
+                                <h5 class="card-title">Jegyek</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                  Harap utcai edzőterem
+                                </h6>
+                                <p class="card-text">
+                                  <table class="table">
+                                    <thead>
+                                      <tr>
+                                        <th scope="col">Név</th>
+                                        <th scope="col">Lejárat</th>
+                                        <th scope="col">Státusz</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr>
+                                        <td>Diákjegy</td>
+                                        <td>2022.04.14</td>
+                                        <td class="text-success">Aktív</td>
+                                      </tr>
+                                      <tr>
+                                        <td>Diákjegy</td>
+                                        <td>2022.01.14</td>
+                                        <td class="text-danger">Lejárt</td>
+                                      </tr>
+                                      <tr>
+                                        <td>Diákjegy</td>
+                                        <td>2022.05.20</td>
+                                        <td class="text-warning">Felhasznált</td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </p>
+                                <a href="#" class="card-link">többi helyszínhez tartozó jegy megtekintése</a>
+                              </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="col p-3 align-self-center">
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">Státusz</h5>
+                      <h6 class="card-subtitle mb-2 text-muted">
+                        Harap utcai edzőterem
+                      </h6>
+                      <p class="card-text">
+                        <!-- ikon -->
+                        <h1 class="text-success">Belépve</h1>
+                        <h3>2022. 03. 12. 8:14 óta</h3>
+                        <button type="button" class="btn btn-danger text-white mt-4">Kilépési kód</button>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </main>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    </body>
+</html>
