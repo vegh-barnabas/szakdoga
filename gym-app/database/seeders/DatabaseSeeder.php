@@ -47,5 +47,38 @@ class DatabaseSeeder extends Seeder
                 'password' => Hash::make('password'),
             ]);
         }
+
+        /* Categories */
+        $styles = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark'];
+
+        DB::table('categories')->truncate();
+
+        for ($i = 1; $i <= rand(4, 8); $i++) {
+            User::factory()->create([
+                'name' => $this->faker->word,
+                'style' => $this->faker->randomElement($styles),
+            ]);
+        }
+
+        /* Gyms */
+        DB::table('gyms')->truncate();
+
+        // $categories = Category::all();
+        // $categories_count = $categories->count();
+
+        for ($i = 1; $i <= rand(1, 4); $i++) {
+            $addr = $this->faker->word;
+
+            // $category_ids = $categories->random(rand(1, $categories_count))->pluck('id')->toArray();
+
+            User::factory()->create([
+                'name' => $addr . " utcai edzőterem",
+                'address' => $addr . " utca " . $this->faker->numberBetween(1, 20),
+                'description' => $this->faker->boolean() ? $this->sentence() : ""
+            ]);
+
+            // $post->categories()->attach($category_ids);
+        }
+
     }
 }
