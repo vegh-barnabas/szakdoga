@@ -11,10 +11,15 @@ class Gym extends Model
 
     protected $fillable = [
         'name',
-        'address'
+        'address',
+        'description'
     ];
 
     public function categories() {
-        return $this->hasMany(Categories::class)->withTimestamps();
+        return $this->hasMany(Category::class);
+    }
+
+    public function tickets() {
+        return $this->hasMany(Ticket::class);
     }
 }

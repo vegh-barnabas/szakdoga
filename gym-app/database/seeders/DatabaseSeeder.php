@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 use App\Models\User;
+use App\Models\Category;
+use App\Models\Gym;
+use App\Models\Ticket;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,8 +21,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        /* Users */
+        DB::table('tickets')->truncate();
+        DB::table('gyms')->truncate();
         DB::table('users')->truncate();
+        DB::table('categories')->truncate();
+
+        /* Users */
 
         // Admin
         User::factory()->create([
@@ -40,7 +47,7 @@ class DatabaseSeeder extends Seeder
         }
 
         // Users
-        for ($i = 1; $i <= rand(3, 7); $i++) {
+        for ($i = 1; $i <= rand(10, 20); $i++) {
             User::factory()->create([
                 'name' => 'user'. $i,
                 'email' => 'user'. $i . '@br.hu',
@@ -48,36 +55,42 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        /* Categories */
-        $styles = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark'];
+        /* Gyms */
 
-        DB::table('categories')->truncate();
+        for ($i = 1; $i <= rand(1, 4); $i++) {
+            $addr = ['Harap', 'Sajt', 'Kossuth', 'Petőfi', 'Arany', 'Gárdonyi'];
 
-        for ($i = 1; $i <= rand(4, 8); $i++) {
-            User::factory()->create([
-                'name' => $this->faker->word,
-                'style' => $this->faker->randomElement($styles),
+            Gym::factory()->create([
+                'name' => $addr[$i] . " utcai edzőterem",
+                'address' => $addr[$i] . " utca " . rand(1, 20)
             ]);
         }
 
-        /* Gyms */
-        DB::table('gyms')->truncate();
+        /* Categories */
+        $styles = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark'];
+        $gyms = Gym::all();
 
-        // $categories = Category::all();
-        // $categories_count = $categories->count();
 
-        for ($i = 1; $i <= rand(1, 4); $i++) {
-            $addr = $this->faker->word;
+        for ($i = 1; $i <= rand(4, 8); $i++) {
+            $random_gym = $gyms->random();
 
-            // $category_ids = $categories->random(rand(1, $categories_count))->pluck('id')->toArray();
-
-            User::factory()->create([
-                'name' => $addr . " utcai edzőterem",
-                'address' => $addr . " utca " . $this->faker->numberBetween(1, 20),
-                'description' => $this->faker->boolean() ? $this->sentence() : ""
+            $category = Category::factory()->create([
+                'gym_id' => $random_gym
             ]);
+        }
 
-            // $post->categories()->attach($category_ids);
+        /* Tickets */
+
+        $users = User::all();
+
+        for ($i = 1; $i <= rand(4, 8); $i++) {
+            $random_user = $users->random();
+            $random_gym = $gyms->random();
+
+            $ticket = Ticket::factory()->create([
+                'user_id' => $random_user,
+                'gym_id' => $random_gym,
+            ]);
         }
 
     }

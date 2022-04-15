@@ -13,13 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('tickets', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('gym_id');
-            $table->string('name', 22);
-            $table->enum('style', ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark']);
+            $table->string('type', 25);
+            $table->string('name', 25);
+            $table->string('expiration', 120);
+            $table->boolean('used');
             $table->timestamps();
 
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('gym_id')->references('id')->on('gyms')->onDelete('cascade');
         });
     }
@@ -31,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('tickets');
     }
 };

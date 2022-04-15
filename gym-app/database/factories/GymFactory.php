@@ -16,6 +16,10 @@ class GymFactory extends Factory
      */
     public function definition()
     {
-        return [];
+        return [
+            'name' => $this->faker->word . " Edzőterem",
+            'address' => $this->faker->word . " utca " . $this->faker->numberBetween(1, 20) . ".",
+            'description' => $this->faker->sentence()
+        ];
     }
 }
