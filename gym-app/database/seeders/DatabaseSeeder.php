@@ -83,7 +83,7 @@ class DatabaseSeeder extends Seeder
 
         $users = User::all();
 
-        for ($i = 1; $i <= rand(4, 8); $i++) {
+        for ($i = 1; $i <= rand(20, 40); $i++) {
             $random_user = $users->random();
             $random_gym = $gyms->random();
 

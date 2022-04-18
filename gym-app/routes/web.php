@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\GymController;
+use App\Models\Gym;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +17,18 @@ use App\Http\Controllers\GymController;
 
 Auth::routes();
 
-Route::resource('gyms', GymController::class);
+Route::get('/', function () {
+    return view('gyms.index', ['gyms' => Gym::all()]);
+})->name('gyms')->middleware('auth');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', function () {
+    return view('user.index');
+})->name('index')->middleware('auth');
+
+Route::get('/buy', function () {
+    return view('user.buy');
+})->name('buyticket')->middleware('auth');
+
+Route::get('/stats', function () {
+    return view('user.statistics');
+})->name('userstats')->middleware('auth');
