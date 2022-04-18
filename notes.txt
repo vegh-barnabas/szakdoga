@@ -1,0 +1,66 @@
+mi kell:
+-userek
+	vendég
+		be tud lépni, tud statisztikákat nézni az edzőtermekről, látja hogy mettől meddig edzett és mikor, tud kreditből jegyet/bérletet venni, hosszabbítani
+	recepciós
+		be tud léptetni, ki tud léptetni, tud hozzárendelni szekrényt a vendéghez
+	admin
+		tud új edzőtermet hozzáadni, tud vendéget kitiltani
+	
+első körben custom ID-val léptethető be a vendég, amit generálni tud és x perc után lejár, utána ha van idő a qr kódra akkor az
+
+kreditet úgy kell venni, hogy egy kódért fizetsz KP-val az edzőteremben, és azt gépeled be
+
+lehessen requestet küldeni a recepciós accountjának, ahol felugrik egy popup, hogy xy be akar lépni
+
+oldalak:
+	login, register - kb mint a default
+		enélkül nem érhető el egyik oldal sem
+	főoldal - választható edzőtermek, ha kiválaszt egyet akkor megjegyzi sessionben, hogy melyik az
+		kiírja a helyszínt - google maps API
+		kiírja a lehetőségeket - súlyok, szauna, zuhanyzó, stb...
+		rövid leírás
+	user page - főoldal után
+		ha van bérlet: érvényesség, meghosszabbítás gomb ha lejárt
+		felhasználható napijegyek száma
+		mutassa a státuszt
+			belépve - mikortól van belépve
+			nincs belépve - utolsó belépés időpontja
+		saját ID-t mutassa, amit meg kell adni a recisnek
+		vagy lehet kérést küldeni a recisnek, hogy fogadja el a belépést
+		lejárt cuccokat pl 2 hétig mutassa csak
+	statisztikák
+		utolsó edzés időpontja
+		heti átlag edzések száma
+		konditermek látogatottsága - mennyire van tele, a vendég mikor szokott járni általában
+		stb...
+	beállítások - pl. névre kattintva legördülő menüből elérhető
+		kiválasztott edzőterem módosítása
+		alapértelmezett edzőterem beállítása
+		email, jelszó változtatás
+		kredit feltöltés
+		
+		
+szekrények
+	szám
+	helyszín
+	rövid leírás
+	
+recepciós - elvesztett kulcs
+
+külön logó minden edzőteremnek - ez jelenik meg a navbarban
+
+belépési kód mutatása helyett táblázat a felhasználható jegyekkel/bérletekkel + kód mutatása gomb
+
+jegyeknél beállítható hogy hány db van
+
+recepciós tud képet feltölteni userről
+
+
+
+-- TODO --
+- migrationokben helyes adattípusok
+- google maps képek edzőtermeknél
+- kilépés gomb
+- belépések modell, user N - M enterance
+- auth magyarra
