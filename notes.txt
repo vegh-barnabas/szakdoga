@@ -64,3 +64,6 @@ recepciós tud képet feltölteni userről
 - kilépés gomb
 - belépések modell, user N - M enterance
 - auth magyarra
+- bérlet jegy lejáratnál óra nem kell
+- bérletek, jegyek hozzáadása gomb, adatbázisban tárolni
+- nincs bérleted hibaüzi formázása user.index-ben
