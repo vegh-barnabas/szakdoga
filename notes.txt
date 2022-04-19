@@ -67,3 +67,7 @@ recepciós tud képet feltölteni userről
 - bérlet jegy lejáratnál óra nem kell
 - bérletek, jegyek hozzáadása gomb, adatbázisban tárolni
 - nincs bérleted hibaüzi formázása user.index-ben
+- pagination user.index-ben
+- rendezve kiírás user.index-ben
+- típusnál a bérlet, jegy konstansba
+- buyableTicketsnél duration, jegynél nevet kivenni
