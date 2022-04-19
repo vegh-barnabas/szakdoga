@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Category;
 use App\Models\Gym;
 use App\Models\Ticket;
+use App\Models\Enterance;
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,6 +26,7 @@ class DatabaseSeeder extends Seeder
         DB::table('gyms')->truncate();
         DB::table('users')->truncate();
         DB::table('categories')->truncate();
+        DB::table('enterances')->truncate();
 
         /* Users */
 
@@ -93,5 +95,23 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        /* Enterances */
+        $tickets = Ticket::all();
+        foreach($tickets as $ticket) {
+            if($ticket->type == 'bérlet') {
+                for ($i = 0; $i < rand(0, 20); $i++) {
+                    Enterance::factory()->create([
+                        'ticket_id' => $ticket->id,
+                    ]);
+                }
+            }
+            else {
+                if (rand(0, 1)) {
+                    Enterance::factory()->create([
+                        'ticket_id' => $ticket->id,
+                    ]);
+                }
+            }
+        }
     }
 }

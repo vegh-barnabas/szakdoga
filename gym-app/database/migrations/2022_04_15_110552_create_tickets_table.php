@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('type', 25);
             $table->string('name', 25);
             $table->string('expiration', 120);
-            $table->boolean('used');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

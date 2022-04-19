@@ -25,4 +25,8 @@ class Ticket extends Model
     public function gym() {
         return $this->belongsTo(Gym::class);
     }
+
+    public function enterances() {
+        return $this->hasMany(Enterance::class);
+    }
 }
