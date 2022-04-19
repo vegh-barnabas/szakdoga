@@ -48,4 +48,8 @@ class User extends Authenticatable
     public function tickets() {
         return $this->hasMany(Ticket::class);
     }
+
+    public function enterances() {
+        return $this->hasMany(Enterance::class);
+    }
 }

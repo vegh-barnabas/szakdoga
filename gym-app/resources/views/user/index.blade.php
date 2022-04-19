@@ -25,7 +25,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @forelse (Auth::user()->tickets as $ticket)
+                    @foreach (Auth::user()->tickets as $ticket)
                       @if ($ticket->type == 'bérlet')
                         <tr>
                           <td>{{ $ticket->name }}</td>
@@ -39,9 +39,7 @@
                           @endif
                         </tr>
                       @endif
-                    @empty
-                      Nincs bérleted
-                    @endforelse
+                    @endforeach
                   </tbody>
                 </table>
                 </p>
@@ -70,12 +68,12 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @forelse (Auth::user()->tickets as $ticket)
+                    @forelse ($tickets as $ticket)
                       @if ($ticket->type == 'jegy')
                         <tr>
                           <td>{{ $ticket->name }}</td>
                           <td>{{ $ticket->expiration }}</td>
-                          @if ($ticket->used == 1)
+                          @if ($ticket->used() == true)
                             <td class="text-warning">Felhasznált</td>
                             <td><button type="button" class="btn btn-light">Új vásárlása</button></td>
                           @elseif ($ticket->expiration < date('Y-m-d H:i:s'))
@@ -107,12 +105,21 @@
           <h6 class="card-subtitle text-muted mb-2">
             {{ $gym->name }}
           </h6>
-          <p class="card-text">
-            <!-- ikon -->
-          <h1 class="text-success">Belépve</h1>
-          <h3>2022. 03. 12. 8:14 óta</h3>
-          <button type="button" class="btn btn-danger mt-4 text-white">Kilépési kód</button>
-          </p>
+          @if ($last_enterance->exited())
+            <p class="card-text">
+              <!-- ikon -->
+            <h1 class="text-danger">Kilépve</h1>
+            <h3 class="text-muted">Utolsó belépés időtartama:</h3>
+            <h4 class="text-muted">{{ $last_enterance->enter }} - {{ $last_enterance->exit }}</h4>
+            </p>
+          @else
+            <p class="card-text">
+              <!-- ikon -->
+            <h1 class="text-success">Belépve</h1>
+            <h3>{{ $last_enterance->enter }}</h3>
+            <button type="button" class="btn btn-danger mt-4 text-white">Kilépési kód</button>
+            </p>
+          @endif
         </div>
       </div>
     </div>

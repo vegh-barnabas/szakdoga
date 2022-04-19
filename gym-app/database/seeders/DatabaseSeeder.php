@@ -12,6 +12,7 @@ use App\Models\Category;
 use App\Models\Gym;
 use App\Models\Ticket;
 use App\Models\Enterance;
+use App\Models\BuyableTicket;
 
 class DatabaseSeeder extends Seeder
 {
@@ -29,6 +30,13 @@ class DatabaseSeeder extends Seeder
         DB::table('enterances')->truncate();
 
         /* Users */
+
+        // Test User
+        User::factory()->create([
+            'name' => 'test',
+            'email' => 'test' . '@br.hu',
+            'password' => Hash::make('password'),
+        ]);
 
         // Admin
         User::factory()->create([
@@ -81,17 +89,34 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        /* Tickets */
+        /* Buyable Tickets */
+        BuyableTicket::factory(rand(3, 10))->create();
 
+        /* Tickets */
         $users = User::all();
+        $buyable_tickets = BuyableTicket::all();
 
         for ($i = 1; $i <= rand(20, 40); $i++) {
             $random_user = $users->random();
             $random_gym = $gyms->random();
+            $random_buyable_ticket = $buyable_tickets->random();
 
             $ticket = Ticket::factory()->create([
                 'user_id' => $random_user,
                 'gym_id' => $random_gym,
+                'type_id' => $random_buyable_ticket,
+            ]);
+        }
+
+        // Test user
+        for ($i = 1; $i <= 10; $i++) {
+            $random_gym = $gyms->random();
+            $random_buyable_ticket = $buyable_tickets->random();
+
+            $ticket = Ticket::factory()->create([
+                'user_id' => 1,
+                'gym_id' => $random_gym,
+                'type_id' => $random_buyable_ticket,
             ]);
         }
 
@@ -101,14 +126,18 @@ class DatabaseSeeder extends Seeder
             if($ticket->type == 'bérlet') {
                 for ($i = 0; $i < rand(0, 20); $i++) {
                     Enterance::factory()->create([
+                        'user_id' => $ticket->user_id,
                         'ticket_id' => $ticket->id,
+                        'gym_id' => $ticket->gym_id,
                     ]);
                 }
             }
             else {
                 if (rand(0, 1)) {
                     Enterance::factory()->create([
+                        'user_id' => $ticket->user_id,
                         'ticket_id' => $ticket->id,
+                        'gym_id' => $ticket->gym_id,
                     ]);
                 }
             }

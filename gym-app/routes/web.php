@@ -33,9 +33,15 @@ Route::post('/', function (Request $request) {
 });
 
 Route::get('/home', function () {
+    if(session('gym') == null) return redirect()->route('gyms');
+
     $gym = Gym::find(session('gym'));
 
-    return view('user.index', ['gym' => $gym]);
+    $tickets = Auth::user()->tickets->where('gym_id', $gym->id);
+
+    $last_enterance = Auth::user()->enterances->where('gym_id', $gym->id)->sortByDesc('enter')->first();
+
+    return view('user.index', ['gym' => $gym, 'tickets' => $tickets, 'last_enterance' => $last_enterance]);
 })->name('index')->middleware('auth');
 
 Route::get('/buy', function () {

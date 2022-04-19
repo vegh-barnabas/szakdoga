@@ -17,11 +17,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('gym_id');
-            $table->string('type', 25);
+            $table->unsignedBigInteger('type_id');
             $table->string('name', 25);
             $table->string('expiration', 120);
             $table->timestamps();
 
+            $table->foreign('type_id')->references('id')->on('buyable_tickets')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('gym_id')->references('id')->on('gyms')->onDelete('cascade');
         });

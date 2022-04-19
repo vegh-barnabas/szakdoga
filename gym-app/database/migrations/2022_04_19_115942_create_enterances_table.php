@@ -16,11 +16,15 @@ return new class extends Migration
         Schema::create('enterances', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('ticket_id');
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('gym_id');
             $table->date('enter');
             $table->date('exit')->nullable();
             $table->timestamps();
 
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('ticket_id')->references('id')->on('tickets')->onDelete('cascade');
+            $table->foreign('gym_id')->references('id')->on('gyms')->onDelete('cascade');
         });
     }
 

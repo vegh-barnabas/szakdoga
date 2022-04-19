@@ -10,6 +10,8 @@ class Enterance extends Model
     use HasFactory;
 
     protected $fillable = [
+        'gym_id',
+        'user_id',
         'ticket_id',
         'enter',
         'exit'
@@ -17,5 +19,9 @@ class Enterance extends Model
 
     public function ticket() {
         return $this->belongsTo(Ticket::class);
+    }
+
+    public function exited() {
+        return $this->exit != null;
     }
 }

@@ -12,6 +12,7 @@ class Ticket extends Model
     protected $fillable = [
         'user_id',
         'gym_id',
+        'type_id',
         'type',
         'name',
         'expiration',
@@ -28,5 +29,15 @@ class Ticket extends Model
 
     public function enterances() {
         return $this->hasMany(Enterance::class);
+    }
+
+    public function type() {
+        return $this->belongsTo(BuyableTicket::class);
+    }
+
+    public function used() {
+        if($this->type == "jegy" && $this->enterances->count() > 0) return true;
+
+        return false;
     }
 }
