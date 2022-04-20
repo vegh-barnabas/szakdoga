@@ -71,3 +71,7 @@ recepciós tud képet feltölteni userről
 - rendezve kiírás user.index-ben
 - típusnál a bérlet, jegy konstansba
 - buyableTicketsnél duration, jegynél nevet kivenni
+- minden datet carbonra
+- "beléptető rendszer" felirat valami menő színre meg menő betűtípusra
+- utolsó belépésnél ha nem egyezik a dátum akkor dátumot kiírni, ha egyezik akkor csak órát
+- edzőterem nyitvatartás tól-ig, kezdőképernyőn kijelezni h nyitva/zárva/hamarosan zár, seederben feltölteni sok mai belépéssel, statisztikánál jó adatokat átadni
