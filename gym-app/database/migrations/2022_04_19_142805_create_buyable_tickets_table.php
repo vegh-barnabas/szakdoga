@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('buyable_tickets', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('gym_id');
             $table->string('type', 25);
             $table->string('name', 45);
             $table->text('description');

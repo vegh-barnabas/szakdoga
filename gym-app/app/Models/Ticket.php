@@ -13,10 +13,7 @@ class Ticket extends Model
         'user_id',
         'gym_id',
         'type_id',
-        'type',
-        'name',
         'expiration',
-        'used',
     ];
 
     public function user() {

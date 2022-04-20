@@ -26,9 +26,9 @@
                   </thead>
                   <tbody>
                     @foreach (Auth::user()->tickets as $ticket)
-                      @if ($ticket->type == 'bérlet')
+                      @if ($ticket->type->type == 'bérlet')
                         <tr>
-                          <td>{{ $ticket->name }}</td>
+                          <td>{{ $ticket->type->name }}</td>
                           <td>{{ $ticket->expiration }}</td>
                           @if ($ticket->expiration < date('Y-m-d H:i:s'))
                             <td class="text-danger">Lejárt</td>
@@ -69,9 +69,9 @@
                   </thead>
                   <tbody>
                     @forelse ($tickets as $ticket)
-                      @if ($ticket->type == 'jegy')
+                      @if ($ticket->type->type == 'jegy')
                         <tr>
-                          <td>{{ $ticket->name }}</td>
+                          <td>{{ $ticket->type->name }}</td>
                           <td>{{ $ticket->expiration }}</td>
                           @if ($ticket->used() == true)
                             <td class="text-warning">Felhasznált</td>
@@ -109,8 +109,10 @@
             <p class="card-text">
               <!-- ikon -->
             <h1 class="text-danger">Kilépve</h1>
-            <h3 class="text-muted">Utolsó belépés időtartama:</h3>
-            <h4 class="text-muted">{{ $last_enterance->enter }} - {{ $last_enterance->exit }}</h4>
+            <h4 class="text-muted">Utolsó belépés időtartama:</h4>
+            <h5 class="text-muted">{{ date_create($last_enterance->enter)->format('Y. m. d. H:i') }} -
+              {{ date_create($last_enterance->exit)->format('H:i') }}
+              ({{ $dur_hours }} óra {{ $dur_minutes }} perc)</h5>
             </p>
           @else
             <p class="card-text">

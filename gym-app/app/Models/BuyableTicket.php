@@ -10,6 +10,7 @@ class BuyableTicket extends Model
     use HasFactory;
 
     protected $fillable = [
+        'gym_id',
         'type',
         'name',
         'description',
@@ -20,5 +21,9 @@ class BuyableTicket extends Model
 
     public function tickets() {
         return $this->hasMany(Ticket::class);
+    }
+
+    public function gym() {
+        return $this->belongsTo(Gym::class);
     }
 }

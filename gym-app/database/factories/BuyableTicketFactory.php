@@ -20,8 +20,8 @@ class BuyableTicketFactory extends Factory
             'type' => $this->faker->boolean() ? 'bérlet' : 'jegy',
             'name' => $this->faker->word(rand(1, 3), true),
             'description' => $this->faker->sentence(),
-            'quantity' => $this->faker->boolean() ? 999 : $this->faker->numberBetween(rand(0, 30)),
-            'price' => $this->faker->boolean() ? 0 : $this->faker->numberBetween(rand(500, 10000)),
+            'quantity' => $this->faker->boolean() ? 999 : $this->faker->numberBetween(0, 30),
+            'price' => $this->faker->boolean() ? 0 : $this->faker->numberBetween(500, 10000),
             'hidden' => $this->faker->boolean()
         ];
     }

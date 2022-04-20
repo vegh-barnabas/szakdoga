@@ -22,4 +22,8 @@ class Gym extends Model
     public function tickets() {
         return $this->hasMany(Ticket::class);
     }
+
+    public function buyableTickets() {
+        return $this->hasMany(buyableTicket::class);
+    }
 }

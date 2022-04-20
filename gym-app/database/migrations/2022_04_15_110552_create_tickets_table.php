@@ -18,8 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('gym_id');
             $table->unsignedBigInteger('type_id');
-            $table->string('name', 25);
-            $table->string('expiration', 120);
+            $table->date('expiration');
             $table->timestamps();
 
             $table->foreign('type_id')->references('id')->on('buyable_tickets')->onDelete('cascade');

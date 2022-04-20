@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         DB::table('users')->truncate();
         DB::table('categories')->truncate();
         DB::table('enterances')->truncate();
+        DB::table('buyable_tickets')->truncate();
 
         /* Users */
 
@@ -90,8 +91,9 @@ class DatabaseSeeder extends Seeder
         }
 
         /* Buyable Tickets */
-        BuyableTicket::factory(rand(3, 10))->create();
-
+        for ($i = 1; $i <= rand(5, 15); $i++) {
+        BuyableTicket::factory(['gym_id' => $gyms->random()])->create();
+        }
         /* Tickets */
         $users = User::all();
         $buyable_tickets = BuyableTicket::all();
