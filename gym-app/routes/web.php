@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Gym;
 use App\Models\Enterance;
+use App\Models\Ticket;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,21 +37,37 @@ Route::post('/', function (Request $request) {
 Route::get('/home', function () {
     if(session('gym') == null) return redirect()->route('gyms');
 
-    $gym = Gym::find(session('gym'));
+    if(Auth::user()->is_receptionist) {
+        $gym = Gym::find(session('gym'));
+        $enterances = Enterance::all()->where('gym_id', $gym->id)->where('exit', null);
 
-    $tickets = Auth::user()->tickets->where('gym_id', $gym->id)->sortByDesc('expiration');
+        $tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
+            return $ticket->type->type == 'jegy';
+        })->take(5);
+        // TODO: rename this
+        $berlets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
+            return $ticket->type->type == 'bérlet';
+        })->sortByDesc('bought')->take(5);
 
-    $last_enterance = Auth::user()->enterances->where('gym_id', $gym->id)->sortByDesc('enter')->first();
+        return view('receptionist.index', ['enterances' => $enterances, 'tickets' => $tickets, 'berlets' => $berlets]);
+    }
+    else {
+        $gym = Gym::find(session('gym'));
 
-    // Duration
-    $start = new DateTime($last_enterance->enter);
-    $end = new DateTime($last_enterance->exit);
-    $mins = ($end->getTimestamp() - $start->getTimestamp()) / 60;
-    $hours = intdiv($mins, 60);
-    $minutes = $mins % 60;
+        $tickets = Auth::user()->tickets->where('gym_id', $gym->id)->sortByDesc('expiration');
+
+        $last_enterance = Auth::user()->enterances->where('gym_id', $gym->id)->sortByDesc('enter')->first();
+
+        // Duration
+        $start = new DateTime($last_enterance->enter);
+        $end = new DateTime($last_enterance->exit);
+        $mins = ($end->getTimestamp() - $start->getTimestamp()) / 60;
+        $hours = intdiv($mins, 60);
+        $minutes = $mins % 60;
 
 
-    return view('user.index', ['gym' => $gym, 'tickets' => $tickets, 'last_enterance' => $last_enterance, 'dur_hours' => $hours, 'dur_minutes' => $minutes]);
+        return view('user.index', ['gym' => $gym, 'tickets' => $tickets, 'last_enterance' => $last_enterance, 'dur_hours' => $hours, 'dur_minutes' => $minutes]);
+    }
 })->name('index')->middleware('auth');
 
 Route::get('/buy', function () {
@@ -68,8 +85,12 @@ Route::get('/stats', function () {
     foreach($enterances as $enterance) {
         if($enterance->gym_id == $gym->id) {
             // TODO: if date is today
-            $hour = intval(date_create($enterance->enter)->format('H'));
-            if($hour >= 11 && $hour <= 16) $people_inside[$hour]++;
+            $enter_hour = intval(date_create($enterance->enter)->format('H'));
+            $exit_hour = intval(date_create($enterance->enter)->format('H'));
+
+            for ($i = $enter_hour; $i <= $exit_hour; $i++) {
+                if($i >= 11 && $i <= 16) $people_inside[$i]++;
+            }
         }
     }
 

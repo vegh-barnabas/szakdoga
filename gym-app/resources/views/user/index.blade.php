@@ -35,7 +35,7 @@
                             <td><button type="button" class="btn btn-light">Hosszabbítás</button></td>
                           @else
                             <td class="text-success">Aktív</td>
-                            <td><button type="button" class="btn btn-light">Hosszabbítás</button></td>
+                            <td><button type="button" class="btn btn-success">Belépési kód</button></td>
                           @endif
                         </tr>
                       @endif
@@ -81,6 +81,7 @@
                             <td><button type="button" class="btn btn-light">Új vásárlása</button></td>
                           @else
                             <td class="text-success">Felhasználható</td>
+                            <td><button type="button" class="btn btn-success">Belépési kód</button></td>
                             <td></td>
                           @endif
                         </tr>

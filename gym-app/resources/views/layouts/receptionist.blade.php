@@ -25,9 +25,9 @@
 
 <body>
   <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light shadow-sm" id="receptionist-navbar">
       <div class="container-fluid">
-        <a class="navbar-brand" href="{{ route('index') }}">
+        <a class="navbar-brand" href="#">
           Beléptető rendszer
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
@@ -37,25 +37,20 @@
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link {{ Route::is('index') ? 'active' : '' }}" href="{{ route('index') }}">Főoldal</a>
+              <a class="nav-link active" aria-current="page" href="home.html">Főoldal</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ Route::is('buyticket') ? 'active' : '' }}"
-                href="{{ route('buyticket') }}">Jegyvásárlás</a>
+              <a class="nav-link" href="let_in.html">Beléptetés</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ Route::is('userstats') ? 'active' : '' }}"
-                href="{{ route('userstats') }}">Statisztika</a>
+              <a class="nav-link" href="let_out.html">Kiléptetés</a>
             </li>
           </ul>
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
               <a class="nav-link" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown"
-                aria-expanded="true">{{ Auth::user()->name }}</a>
+                aria-expanded="true"> receptionist1 </a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
-                <li>
-                  <a class="dropdown-item" href="#">Kredit: {{ Auth::user()->credits }}</a>
-                </li>
                 <li>
                   <a class="dropdown-item" href="settings.html">Beállítások</a>
                 </li>

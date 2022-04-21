@@ -17,6 +17,7 @@ class TicketFactory extends Factory
     public function definition()
     {
         return [
+            'bought' => $this->faker->dateTimeBetween('-2 month', '+1 month'),
             'expiration' => $this->faker->dateTimeBetween('-2 month', '+1 month'),
         ];
     }
