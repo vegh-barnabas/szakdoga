@@ -37,22 +37,22 @@
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="home.html">Főoldal</a>
+                <a class="nav-link {{ Route::is('index') ? 'active' : '' }}" href="{{ route('index') }}">Főoldal</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="let_in.html">Beléptetés</a>
+                <a class="nav-link {{ Route::is('let-in') ? 'active' : '' }}" href="{{ route('let-in') }}">Beléptetés</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="let_out.html">Kiléptetés</a>
+                <a class="nav-link {{ Route::is('let-out') ? 'active' : '' }}" href="{{ route('let-out') }}">Kiléptetés</a>
             </li>
           </ul>
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
               <a class="nav-link" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown"
-                aria-expanded="true"> receptionist1 </a>
+                aria-expanded="true">{{ Auth::user()->name }}</a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
                 <li>
-                  <a class="dropdown-item" href="settings.html">Beállítások</a>
+                    <a class="nav-link" href="{{ route('settings') }}">Beállítások</a>
                 </li>
               </ul>
             </li>

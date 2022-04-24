@@ -34,6 +34,37 @@ Route::post('/', function (Request $request) {
     else return redirect()->route('gyms')->middleware('auth');
 });
 
+Route::get('/let-in', function (Request $request) {
+    if(Auth::user()->is_receptionist) {
+        return view('receptionist.let-in');
+    }
+})->name('let-in')->middleware('auth');
+
+
+Route::get('/let-in/{code}', function (Request $request, $code) {
+    if(Auth::user()->is_receptionist) {
+        $ticket = Ticket::all()->where('code', $code)->first();
+
+        if($ticket === null) return view('receptionist.let-in');
+
+        $user = $ticket->user;
+
+        return view('receptionist.let-in-2', ['user' => $user]);
+    }
+})->name('let-in-2')->middleware('auth');
+
+Route::get('/let-out', function (Request $request) {
+    if(Auth::user()->is_receptionist) {
+        return view('receptionist.let-out');
+    }
+})->name('let-out')->middleware('auth');
+
+Route::get('/settings', function (Request $request) {
+    if(Auth::user()->is_receptionist) {
+        return view('receptionist.let-in');
+    }
+})->name('settings')->middleware('auth');
+
 Route::get('/home', function () {
     if(session('gym') == null) return redirect()->route('gyms');
 
