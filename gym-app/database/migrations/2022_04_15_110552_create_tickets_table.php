@@ -20,6 +20,7 @@ return new class extends Migration
             $table->unsignedBigInteger('type_id');
             $table->date('expiration');
             $table->date('bought');
+            $table->string('code')->unique();
             $table->timestamps();
 
             $table->foreign('type_id')->references('id')->on('buyable_tickets')->onDelete('cascade');

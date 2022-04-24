@@ -15,6 +15,7 @@ class Ticket extends Model
         'type_id',
         'bought',
         'expiration',
+        'code',
     ];
 
     public function user() {
