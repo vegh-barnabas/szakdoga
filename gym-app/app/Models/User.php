@@ -23,7 +23,8 @@ class User extends Authenticatable
         'password',
         'is_admin',
         'is_receptionist',
-        'credits'
+        'credits',
+        'gender'
     ];
 
     /**

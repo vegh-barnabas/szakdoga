@@ -49,7 +49,7 @@ Route::get('/let-in/{code}', function (Request $request, $code) {
 
         $user = $ticket->user;
 
-        return view('receptionist.let-in-2', ['user' => $user]);
+        return view('receptionist.let-in-2', ['user' => $user, 'ticket' => $ticket]);
     }
 })->name('let-in-2')->middleware('auth');
 

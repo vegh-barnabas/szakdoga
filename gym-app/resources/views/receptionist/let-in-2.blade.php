@@ -38,7 +38,7 @@
                 type="text"
                 id="enteranceCode"
                 class="form-control"
-                value="férfi"
+                value="{{ $user->gender === 0 ? "férfi" : "nő" }}"
                 disabled
                 />
             </div>
@@ -54,7 +54,7 @@
                 type="text"
                 id="usedTicket"
                 class="form-control"
-                value="Szaunabérlet"
+                value="{{ $ticket->type->name }}"
                 disabled
                 />
             </div>

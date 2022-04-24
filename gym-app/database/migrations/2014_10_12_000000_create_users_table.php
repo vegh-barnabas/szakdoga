@@ -22,6 +22,7 @@ return new class extends Migration
             $table->boolean('is_admin')->default(false);
             $table->boolean('is_receptionist')->default(false);
             $table->integer('credits')->default(0);
+            $table->integer('gender');
             $table->rememberToken();
             $table->timestamps();
         });
