@@ -13,6 +13,7 @@ use App\Models\Gym;
 use App\Models\Ticket;
 use App\Models\Enterance;
 use App\Models\BuyableTicket;
+use App\Models\Locker;
 
 class DatabaseSeeder extends Seeder
 {
@@ -125,7 +126,7 @@ class DatabaseSeeder extends Seeder
         /* Enterances */
         $tickets = Ticket::all();
         foreach($tickets as $ticket) {
-            if($ticket->type == 'bérlet') {
+            if($ticket->type === 'bérlet') {
                 for ($i = 0; $i < rand(0, 20); $i++) {
                     Enterance::factory()->create([
                         'user_id' => $ticket->user_id,
@@ -135,13 +136,48 @@ class DatabaseSeeder extends Seeder
                 }
             }
             else {
-                if (rand(0, 1)) {
-                    Enterance::factory()->create([
-                        'user_id' => $ticket->user_id,
-                        'ticket_id' => $ticket->id,
-                        'gym_id' => $ticket->gym_id,
-                    ]);
+                if(rand(0, 1) === 0) // ticket used
+                {
+                    if(rand(0,1) === 0) // person is still in the gym
+                    {
+                        Enterance::factory()->create([
+                            'user_id' => $ticket->user_id,
+                            'ticket_id' => $ticket->id,
+                            'gym_id' => $ticket->gym_id,
+                            'exit' => null
+                        ]);
+                    }
+                    else
+                    {
+                        Enterance::factory()->create([
+                            'user_id' => $ticket->user_id,
+                            'ticket_id' => $ticket->id,
+                            'gym_id' => $ticket->gym_id,
+                        ]);
+                    }
                 }
+            }
+        }
+
+        /* Lockers */
+        foreach($gyms as $gym) {
+            for($i = 0; $i < rand(10, 20); $i++) {
+                Locker::factory()->create([
+                    'gym_id' => $gym->id,
+                    'number' => $i
+                ]);
+            }
+        }
+
+        $enterances = Enterance::all();
+        foreach($enterances as $index => $enterance) {
+            if($enterance->exit === null) {
+                Locker::factory()->create([
+                    'gym_id' => $enterance->gym_id,
+                    'user_id' => $enterance->user_id,
+                    'gender' => $enterance->user->gender,
+                    'number' => $index
+                ]);
             }
         }
     }

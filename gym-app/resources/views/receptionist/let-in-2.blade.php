@@ -9,7 +9,8 @@
     </div>
     <div class="card-body">
         <div class="card-text">
-        <form>
+        <form method="post">
+        @csrf
             <h2 class="mb-3">Vendég adatai</h2>
             <div class="row g-3 align-items-center mb-3">
             <div class="col-2">
@@ -62,12 +63,12 @@
             <h2 class="mb-3">Beállítandó adatok</h2>
             <div class="mb-3">
             <label for="locker" class="form-label"
-                >Válassz szekrényt! (férfi öltöző)</label
+                >Válassz szekrényt! ({{ $user->gender === 0 ? "férfi" : "női" }} öltöző)</label
             >
             <select class="form-select" id="locker" name="locker">
-                <option value="002" selected="selected">002</option>
-                <option value="006">006</option>
-                <option value="010">010</option>
+                @foreach ($lockers as $locker)
+                    <option value="{{ $locker->id }}">{{ $locker->id }}</option>
+                @endforeach
             </select>
             </div>
             <div class="mb-3 form-check">

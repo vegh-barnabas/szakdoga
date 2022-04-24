@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Gym;
 use App\Models\Enterance;
 use App\Models\Ticket;
+use App\Models\Locker;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,11 +46,14 @@ Route::get('/let-in/{code}', function (Request $request, $code) {
     if(Auth::user()->is_receptionist) {
         $ticket = Ticket::all()->where('code', $code)->first();
 
-        if($ticket === null) return view('receptionist.let-in');
+        if($ticket === null) return view('receptionist.let-in'); // TODO: error message
+        if($ticket->exit !== null) return view('receptionist.let-in'); // TODO: error message
 
         $user = $ticket->user;
 
-        return view('receptionist.let-in-2', ['user' => $user, 'ticket' => $ticket]);
+        $lockers = Locker::all()->where('gender', $user->gender)->where('user_id', null);
+
+        return view('receptionist.let-in-2', ['user' => $user, 'ticket' => $ticket, 'lockers' => $lockers]);
     }
 })->name('let-in-2')->middleware('auth');
 
