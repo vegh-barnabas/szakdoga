@@ -9,19 +9,20 @@
     </div>
     <div class="card-body">
         <div class="card-text">
-        <form method="post">
+        <form action="{{ route('let-in-2', $code, $user, $ticket, $lockers) }}" method="POST">
         @csrf
             <h2 class="mb-3">Vendég adatai</h2>
             <div class="row g-3 align-items-center mb-3">
             <div class="col-2">
-                <label for="enterance-code" class="col-form-label"
+                <label for="userName" class="col-form-label"
                 >Felhasználó neve</label
                 >
             </div>
             <div class="col-auto">
                 <input
                 type="text"
-                id="enterance-code"
+                id="userName"
+                name="userName"
                 class="form-control"
                 value="{{ $user->name }}"
                 disabled
@@ -30,14 +31,15 @@
             </div>
             <div class="row g-3 align-items-center mb-3">
             <div class="col-2">
-                <label for="enteranceCode" class="col-form-label"
+                <label for="userGender" class="col-form-label"
                 >Felhasználó neme</label
                 >
             </div>
             <div class="col-auto">
                 <input
                 type="text"
-                id="enteranceCode"
+                id="userGender"
+                name="userGender"
                 class="form-control"
                 value="{{ $user->gender === 0 ? "férfi" : "nő" }}"
                 disabled
@@ -54,8 +56,9 @@
                 <input
                 type="text"
                 id="usedTicket"
+                name="usedTicket"
                 class="form-control"
-                value="{{ $ticket->type->name }}"
+                value="{{ $ticket->type->name }} ({{ $ticket->id }})"
                 disabled
                 />
             </div>
@@ -75,9 +78,10 @@
             <input
                 type="checkbox"
                 class="form-check-input"
-                id="exampleCheck1"
+                id="keyGiven"
+                name="keyGiven"
             />
-            <label class="form-check-label" for="exampleCheck1"
+            <label class="form-check-label" for="keyGiven"
                 ><b class="text-danger"
                 >a kulcsot odaadtam a megfelelő szekrényhez</b
                 ></label

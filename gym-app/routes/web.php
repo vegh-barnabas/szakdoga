@@ -7,6 +7,7 @@ use App\Models\Gym;
 use App\Models\Enterance;
 use App\Models\Ticket;
 use App\Models\Locker;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +42,24 @@ Route::get('/let-in', function (Request $request) {
     }
 })->name('let-in')->middleware('auth');
 
+Route::post('/let-in', function (Request $request) {
+    if(Auth::user()->is_receptionist) {
+
+        // $validated = $request->validate(
+        //     // Validation rules
+        //     [
+        //         // 'enterance_code' => 'required',
+        //         // '' => 'required|accepted'
+        //     ],
+        // );
+
+        // error_log($request->input('enterance_code'));
+
+        $code = $request->input('enterance_code');
+
+        return redirect()->route('let-in-2', $code);
+    }
+})->name('let-in')->middleware('auth');
 
 Route::get('/let-in/{code}', function (Request $request, $code) {
     if(Auth::user()->is_receptionist) {
@@ -53,7 +72,34 @@ Route::get('/let-in/{code}', function (Request $request, $code) {
 
         $lockers = Locker::all()->where('gender', $user->gender)->where('user_id', null);
 
-        return view('receptionist.let-in-2', ['user' => $user, 'ticket' => $ticket, 'lockers' => $lockers]);
+        return view('receptionist.let-in-2', ['user' => $user, 'ticket' => $ticket, 'lockers' => $lockers, 'code' => $code]);
+    }
+})->name('let-in-2')->middleware('auth');
+
+Route::post('/let-in/{code}', function (Request $request, $code) {
+    if(Auth::user()->is_receptionist) {
+
+        // error_log($request->input('locker'));
+        // error_log($request->input('keyGiven'));
+
+        $ticket = Ticket::all()->where('code', $code)->first();
+        $user = $ticket->user;
+        $lockers = Locker::all()->where('gender', $user->gender)->where('user_id', null);
+
+        $validated = $request->validate(
+            // Validation rules
+            [
+                'locker' => 'required', // TODO: check if locker is in lockers
+                'keyGiven' => 'required|accepted',
+            ],
+        );
+
+        $locker = Locker::all()->where('number', $validated['locker']);
+
+        $user->locker = $locker;
+
+        // TODO: create enterance with ticket
+
     }
 })->name('let-in-2')->middleware('auth');
 

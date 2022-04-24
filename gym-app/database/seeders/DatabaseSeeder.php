@@ -126,7 +126,7 @@ class DatabaseSeeder extends Seeder
         /* Enterances */
         $tickets = Ticket::all();
         foreach($tickets as $ticket) {
-            if($ticket->type === 'bérlet') {
+            if($ticket->type == 'bérlet') {
                 for ($i = 0; $i < rand(0, 20); $i++) {
                     Enterance::factory()->create([
                         'user_id' => $ticket->user_id,
@@ -136,9 +136,9 @@ class DatabaseSeeder extends Seeder
                 }
             }
             else {
-                if(rand(0, 1) === 0) // ticket used
+                if(rand(0, 1) == 0) // ticket used
                 {
-                    if(rand(0,1) === 0) // person is still in the gym
+                    if(rand(0,1) == 0) // person is still in the gym
                     {
                         Enterance::factory()->create([
                             'user_id' => $ticket->user_id,
@@ -171,7 +171,7 @@ class DatabaseSeeder extends Seeder
 
         $enterances = Enterance::all();
         foreach($enterances as $index => $enterance) {
-            if($enterance->exit === null) {
+            if($enterance->exit == null) {
                 Locker::factory()->create([
                     'gym_id' => $enterance->gym_id,
                     'user_id' => $enterance->user_id,
