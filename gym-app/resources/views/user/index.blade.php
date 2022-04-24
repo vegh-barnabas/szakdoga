@@ -92,13 +92,13 @@
                           @else
                             <td class="text-success">Felhasználható</td>
                             <td>
-                                <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target={{ $ticket->id }} aria-expanded="false" aria-controls="{{ $ticket->id }}">
+                                <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target={{ "#" . $ticket->type->name . $ticket->id }} aria-expanded="false" aria-controls="{{ $ticket->id }}">
                                   Belépési kód
                                 </button>
                               </p>
-                              <div class="collapse" id="{{ $ticket->id }}">
+                              <div class="collapse" id="{{ $ticket->type->name . $ticket->id }}">
                                 <div class="card card-body">
-                                  {{ $ticket->id }}
+                                  {{ $ticket->code }}
                                 </div>
                               </div>
                             </td>
