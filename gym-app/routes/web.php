@@ -1,16 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
-
-use App\Models\Gym;
-use App\Models\Enterance;
 use App\Models\BuyableTicket;
-use App\Models\Ticket;
+use App\Models\Enterance;
+use App\Models\Gym;
 use App\Models\Locker;
+use App\Models\Ticket;
 use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\Rule;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,20 +20,21 @@ use App\Models\User;
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+ */
 
 Auth::routes();
 
 // TODO: make error texts, check input validation
 
-
 /* --- Mutual Routes --- */
 
 // Home - User & Receptionist
 Route::get('/home', function () {
-    if(session('gym') == null) return redirect()->route('gyms');
+    if (session('gym') == null) {
+        return redirect()->route('gyms');
+    }
 
-    if(Auth::user()->is_receptionist) {
+    if (Auth::user()->is_receptionist) {
         $gym = Gym::find(session('gym'));
         $enterances = Enterance::all()->where('gym_id', $gym->id)->where('exit', null);
 
@@ -47,8 +47,7 @@ Route::get('/home', function () {
         })->sortByDesc('bought')->take(5);
 
         return view('receptionist.index', ['enterances' => $enterances, 'tickets' => $tickets, 'berlets' => $berlets]);
-    }
-    else {
+    } else {
         $gym = Gym::find(session('gym'));
 
         $tickets = Auth::user()->tickets
@@ -67,15 +66,18 @@ Route::get('/home', function () {
         $hours = intdiv($mins, 60);
         $minutes = $mins % 60;
 
-
         return view('user.index', ['gym' => $gym, 'tickets' => $tickets, 'last_enterance' => $last_enterance, 'dur_hours' => $hours, 'dur_minutes' => $minutes]);
     }
 })->name('index')->middleware('auth');
 
 // Settings - User & Receptionist
 Route::get('/settings', function (Request $request) {
-    if(Auth::user()->is_receptionist) return view('receptionist.settings');
-    else return view('user.settings');
+    if (Auth::user()->is_receptionist) {
+        return view('receptionist.settings');
+    } else {
+        return view('user.settings');
+    }
+
 })->name('settings')->middleware('auth');
 
 /* --- User Routes --- */
@@ -92,8 +94,8 @@ Route::post('/', function (Request $request) {
         'gymId' => [
             'required',
             'numeric',
-            Rule::in(Gym::all()->pluck('id'))
-        ]
+            Rule::in(Gym::all()->pluck('id')),
+        ],
     ]);
 
     session(['gym' => $validated['gymId']]);
@@ -110,13 +112,17 @@ Route::get('/buy', function () {
 
 // Check Tickets
 Route::get('/tickets', function () {
-    if(session('gym') == null) return redirect()->route('gyms');
+    if (session('gym') == null) {
+        return redirect()->route('gyms');
+    }
 
-    if(Auth::user()->is_receptionist) return redirect()->route('home');
+    if (Auth::user()->is_receptionist) {
+        return redirect()->route('home');
+    }
 
     $gym = Gym::find(session('gym'));
 
-    $tickets = Auth::user()->tickets()
+    $tickets = Auth::user()->tickets
         ->paginate(8)
         ->where('gym_id', $gym->id)
         ->sortByDesc('expiration')
@@ -135,14 +141,17 @@ Route::get('/stats', function () {
     // People
     $enterances = Enterance::all();
     $people_inside = [11 => 0, 12 => 0, 13 => 0, 14 => 0, 15 => 0, 16 => 0];
-    foreach($enterances as $enterance) {
-        if($enterance->gym_id == $gym->id) {
+    foreach ($enterances as $enterance) {
+        if ($enterance->gym_id == $gym->id) {
             // TODO: if date is today
             $enter_hour = intval(date_create($enterance->enter)->format('H'));
             $exit_hour = intval(date_create($enterance->enter)->format('H'));
 
             for ($i = $enter_hour; $i <= $exit_hour; $i++) {
-                if($i >= 11 && $i <= 16) $people_inside[$i]++;
+                if ($i >= 11 && $i <= 16) {
+                    $people_inside[$i]++;
+                }
+
             }
         }
     }
@@ -151,8 +160,8 @@ Route::get('/stats', function () {
     // Enterance avg
     $min_sum = 0;
     $count = 0;
-    foreach(Auth::user()->enterances as $enterance) {
-        if($enterance->gym_id == $gym->id) {
+    foreach (Auth::user()->enterances as $enterance) {
+        if ($enterance->gym_id == $gym->id) {
             $start = new DateTime($enterance->enter);
             $end = new DateTime($enterance->exit);
 
@@ -175,45 +184,68 @@ Route::get('/stats', function () {
 
 // Extend Ticket
 Route::get('/extend/{ticket}', function (Request $request, Ticket $ticket) {
-    if(session('gym') == null) return redirect()->route('gyms');
+    if (session('gym') == null) {
+        return redirect()->route('gyms');
+    }
 
-    if(Auth::user()->is_receptionist) return redirect()->route('index');
+    if (Auth::user()->is_receptionist) {
+        return redirect()->route('index');
+    }
 
-    if(Auth::user()->tickets->where('id', $ticket->id)->count() == 0) return redirect()->route('index');
+    if (Auth::user()->tickets->where('id', $ticket->id)->count() == 0) {
+        return redirect()->route('index');
+    }
 
-    if($ticket->expiration >= date('Y-m-d H:i:s')) return redirect()->route('tickets');
+    if ($ticket->expiration >= date('Y-m-d H:i:s')) {
+        return redirect()->route('tickets');
+    }
 
     return view('user.extend_ticket', ['ticket' => $ticket]);
 })->name('extend_ticket')->middleware('auth');
 
 // Extend Ticket POST
 Route::post('/extend/{ticket}', function (Request $request, Ticket $ticket) {
-    if(session('gym') == null) return redirect()->route('gyms');
+    if (session('gym') == null) {
+        return redirect()->route('gyms');
+    }
 
-    if(Auth::user()->is_receptionist) return redirect()->route('index');
+    if (Auth::user()->is_receptionist) {
+        return redirect()->route('index');
+    }
 
-    if(Auth::user()->tickets->where('id', $ticket->id)->count() == 0) return redirect()->route('index');
+    if (Auth::user()->tickets->where('id', $ticket->id)->count() == 0) {
+        return redirect()->route('index');
+    }
 
-    if(strtotime($ticket->expiration) >= date('Y-m-d H:i:s')) return redirect()->route('tickets');
+    if (strtotime($ticket->expiration) >= date('Y-m-d H:i:s')) {
+        return redirect()->route('tickets');
+    }
 
-    if(Auth::user()->credits < $ticket->type->price) return redirect()->route('tickets'); // TODO: error
+    if (Auth::user()->credits < $ticket->type->price) {
+        return redirect()->route('tickets');
+    }
+    // TODO: error
 
     $expiration = new DateTime();
     $expiration->modify("+1 month");
     $ticket->expiration = $expiration;
     $ticket->save();
 
-    Auth::user()->credits -= $ticket->type->price;
-    Auth::user()->save();
+    $user = Auth::user();
+    $user->credits -= $ticket->type->price;
 
     return redirect()->route('index');
 })->name('extend_ticket')->middleware('auth');
 
 // Buy Ticket
 Route::get('/buy/{ticket}', function (Request $request, $buyable_ticket_id) {
-    if(session('gym') == null) return redirect()->route('gyms');
+    if (session('gym') == null) {
+        return redirect()->route('gyms');
+    }
 
-    if(Auth::user()->is_receptionist) return redirect()->route('index');
+    if (Auth::user()->is_receptionist) {
+        return redirect()->route('index');
+    }
 
     $ticket = BuyableTicket::find($buyable_ticket_id);
 
@@ -235,7 +267,7 @@ Route::post('/buy/{ticket}', function (Request $request, $buyable_ticket_id) {
         'gym_id' => $buyable_ticket->gym_id,
         'type_id' => $buyable_ticket->id,
         'bought' => $current_date,
-        'expiration' => $expiration
+        'expiration' => $expiration,
     ]);
 
     return redirect()->route('index');
@@ -245,21 +277,25 @@ Route::post('/buy/{ticket}', function (Request $request, $buyable_ticket_id) {
 
 // Let-in index page
 Route::get('/let-in', function () {
-    if (!Auth::user()->is_receptionist) abort(403);
+    if (!Auth::user()->is_receptionist) {
+        abort(403);
+    }
 
     return view('receptionist.let-in');
 })->name('let-in')->middleware('auth');
 
 // Let-in index page POST
 Route::post('/let-in', function (Request $request) {
-    if (!Auth::user()->is_receptionist) abort(403);
+    if (!Auth::user()->is_receptionist) {
+        abort(403);
+    }
 
     $validated = $request->validate(
         [
             // TODO: receptionist can only let in people in in the same gym
             'enterance_code' => [
                 'required',
-            ]
+            ],
         ],
     );
     $code = $validated['enterance_code'];
@@ -269,12 +305,20 @@ Route::post('/let-in', function (Request $request) {
 
 // List data of user page
 Route::get('/let-in/{code}', function ($code) {
-    if (!Auth::user()->is_receptionist) abort(403);
+    if (!Auth::user()->is_receptionist) {
+        abort(403);
+    }
 
     $ticket = Ticket::all()->where('code', $code)->first();
 
-    if($ticket === null) return view('receptionist.let-in'); // TODO: error message
-    if($ticket->exit !== null) return view('receptionist.let-in'); // TODO: error message
+    if ($ticket === null) {
+        return view('receptionist.let-in');
+    }
+    // TODO: error message
+    if ($ticket->exit !== null) {
+        return view('receptionist.let-in');
+    }
+    // TODO: error message
 
     $user = $ticket->user;
 
@@ -285,7 +329,9 @@ Route::get('/let-in/{code}', function ($code) {
 
 // Let someone in POST
 Route::post('/let-in/{code}', function (Request $request, $code) {
-    if (!Auth::user()->is_receptionist) abort(403);
+    if (!Auth::user()->is_receptionist) {
+        abort(403);
+    }
 
     $ticket = Ticket::all()->where('code', $code)->first();
     $user = $ticket->user;
@@ -296,11 +342,11 @@ Route::post('/let-in/{code}', function (Request $request, $code) {
         [
             'locker' => [
                 'required',
-                Rule::in(Locker::all()->pluck('id'))
+                Rule::in(Locker::all()->pluck('id')),
             ],
             'keyGiven' => [
                 'required',
-                'accepted'
+                'accepted',
             ],
         ],
     );
@@ -315,7 +361,7 @@ Route::post('/let-in/{code}', function (Request $request, $code) {
         'user_id' => $user->id,
         'ticket_id' => $ticket->id,
         'enter' => $enter_time,
-        'exit' => null
+        'exit' => null,
     ]);
 
     return redirect()->route('let-in'); // TODO: success message
@@ -323,21 +369,25 @@ Route::post('/let-in/{code}', function (Request $request, $code) {
 
 // Let-out index page
 Route::get('/let-out', function () {
-    if (!Auth::user()->is_receptionist) abort(403);
+    if (!Auth::user()->is_receptionist) {
+        abort(403);
+    }
 
     return view('receptionist.let-in');
 })->name('let-out')->middleware('auth');
 
 // Let-out index page POST
 Route::post('/let-out', function (Request $request) {
-    if (!Auth::user()->is_receptionist) abort(403);
+    if (!Auth::user()->is_receptionist) {
+        abort(403);
+    }
 
     $validated = $request->validate(
         [
             // TODO: receptionist can only let in people out in the same gym
             'enterance_code' => [
                 'required',
-            ]
+            ],
         ],
     );
     $code = $validated['enterance_code'];
@@ -347,7 +397,9 @@ Route::post('/let-out', function (Request $request) {
 
 // List data of user page
 Route::get('/let-out/{code}', function ($code) {
-    if (!Auth::user()->is_receptionist) abort(403);
+    if (!Auth::user()->is_receptionist) {
+        abort(403);
+    }
 
     // TODO: write the logics here
 
@@ -356,7 +408,9 @@ Route::get('/let-out/{code}', function ($code) {
 
 // Let someone in POST
 Route::post('/let-out/{code}', function (Request $request, $code) {
-    if (!Auth::user()->is_receptionist) abort(403);
+    if (!Auth::user()->is_receptionist) {
+        abort(403);
+    }
 
     // TODO: write the logics here
 
