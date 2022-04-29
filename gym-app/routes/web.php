@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Gym;
 use App\Models\Enterance;
+use App\Models\BuyableTicket;
 use App\Models\Ticket;
 use App\Models\Locker;
 use App\Models\User;
@@ -180,6 +181,38 @@ Route::get('/tickets', function () {
     return view('user.tickets', ['gym' => $gym, 'tickets' => $tickets, 'showPagination' => is_null(request('all'))]);
 
 })->name('tickets')->middleware('auth');
+
+
+Route::get('/buy/{ticket}', function (Request $request, $buyable_ticket_id) {
+    if(session('gym') == null) return redirect()->route('gyms');
+
+    if(Auth::user()->is_receptionist) return redirect()->route('index');
+
+    $ticket = BuyableTicket::find($buyable_ticket_id);
+
+    $ticket_type = $ticket->type == "bérlet" ? "Bérlet" : "Jegy";
+
+    return view('user.buy_ticket', ['ticket' => $ticket, 'ticket_type' => $ticket_type]);
+})->name('buy_ticket')->middleware('auth');
+
+Route::post('/buy/{ticket}', function (Request $request, $buyable_ticket_id) {
+    $buyable_ticket = BuyableTicket::find($buyable_ticket_id);
+
+    $current_date = new DateTime();
+    $expiration = new DateTime();
+    $expiration->modify("+1 month");
+
+    $new_ticket = Ticket::factory()->create([
+        'user_id' => Auth::user()->id,
+        'gym_id' => $buyable_ticket->gym_id,
+        'type_id' => $buyable_ticket->id,
+        'bought' => $current_date,
+        'expiration' => $expiration
+    ]);
+
+    return redirect()->route('index');
+})->name('buy_ticket')->middleware('auth');
+
 
 Route::get('/extend/{ticket}', function (Request $request, Ticket $ticket) {
     if(session('gym') == null) return redirect()->route('gyms');

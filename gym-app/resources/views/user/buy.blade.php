@@ -54,6 +54,7 @@
             @endforeach
             @foreach ($gym->buyableTickets as $ticket) {{-- existing ticket --}}
             @if (Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->type == "jegy")
+            <form action="{{ route('buy_ticket', $ticket->id) }}" method="GET">
               <tr>
                 <td>{{ $ticket->name }}</td>
                 <td>{{ $ticket->type }}</td>
@@ -72,10 +73,12 @@
                     <button class="btn btn-success">Vásárlás</button>
                 </td>
               </tr>
+            </form>
               @endif
             @endforeach
             @foreach ($gym->buyableTickets as $ticket) {{-- non-existing bérlet --}}
             @if (!Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->type == "bérlet")
+            <form action="{{ route('buy_ticket', $ticket->id) }}" method="GET">
               <tr>
                 <td>{{ $ticket->name }}</td>
                 <td>{{ $ticket->type }}</td>
@@ -94,10 +97,12 @@
                 <button class="btn btn-success">Vásárlás</button>
                 </td>
               </tr>
+            </form>
             @endif
             @endforeach
             @foreach ($gym->buyableTickets as $ticket) {{-- non-existing ticket --}}
             @if (!Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->type == "jegy")
+            <form action="{{ route('buy_ticket', $ticket->id) }}" method="GET">
               <tr>
                 <td>{{ $ticket->name }}</td>
                 <td>{{ $ticket->type }}</td>
@@ -116,6 +121,7 @@
                 <button class="btn btn-success">Vásárlás</button>
                 </td>
               </tr>
+            </form>
             @endif
             @endforeach
           </tbody>

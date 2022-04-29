@@ -146,7 +146,7 @@
           </p>
           <div class="collapse" id="{{ Auth::user()->exit_code }}">
             <div class="card card-body">
-              {{ $ticket->code }}
+              {{ Auth::user()->exit_code }}
             </div>
           </div>
             </p>
