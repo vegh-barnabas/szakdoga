@@ -100,15 +100,46 @@ Route::post('/let-in/{code}', function (Request $request, $code) {
         $user->locker = $locker;
 
         // TODO: create enterance with ticket
+        $enter_time = new DateTime();
 
+        $new_enterance = Enterance::factory()->create([
+            'gym_id' => $ticket->gym_id,
+            'user_id' => $user->id,
+            'ticket_id' => $ticket->id,
+            'enter' => $enter_time,
+            'exit' => null
+        ]);
+
+        return redirect()->route('let-in');
     }
 })->name('let-in-2')->middleware('auth');
 
-Route::get('/let-out', function (Request $request) {
+Route::get('/let-out/{code}', function (Request $request, $code) {
+    if(Auth::user()->is_receptionist) {
+        $user = User::all()->where('exit_code', $code)->first();
+        if($user === null) return view('receptionist.let-out'); // TODO: error message
+
+        $enterace = $user->enterances()->sortByDesc('enter')->first();
+        if($enterace->exit != null) return view('receptionist.let-out'); // TODO: error message
+
+        $exit_time = new DateTime();
+        $enterance->exit = $exit_time;
+
+        return redirect->route('let-out-2');
+    }
+})->name('let-out-2')->middleware('auth');
+
+Route::post('/let-out/{code}', function (Request $request, $code) {
     if(Auth::user()->is_receptionist) {
         return view('receptionist.let-out');
     }
-})->name('let-out')->middleware('auth');
+})->name('let-out-2')->middleware('auth');
+
+Route::get('/let-out/{code}', function (Request $request, $code) {
+    if(Auth::user()->is_receptionist) {
+        return view('receptionist.let-out-2');
+    }
+})->name('let-out-2')->middleware('auth');
 
 Route::get('/settings', function (Request $request) {
     if(Auth::user()->is_receptionist) {
@@ -276,6 +307,8 @@ Route::get('/stats', function () {
 
             $mins = ($end->getTimestamp() - $start->getTimestamp()) / 60;
             $min_sum += $mins;
+
+            error_log("mins: " . $mins . ", sum: " . $min_sum);
 
             $count++;
         }

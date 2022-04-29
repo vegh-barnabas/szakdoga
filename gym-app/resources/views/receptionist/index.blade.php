@@ -122,7 +122,7 @@
           <table class="table">
             <thead>
               <tr>
-                <th scope="col">Név</th>
+                <th scope="col">Vendég neve</th>
                 <th scope="col">Felhasznált bérlet/jegy</th>
                 <th scope="col">Belépés időpontja</th>
               </tr>

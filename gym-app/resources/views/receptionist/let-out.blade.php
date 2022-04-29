@@ -10,7 +10,8 @@
     <div class="card-body">
         <div class="card-text">
         <h2 class="mb-3">Add meg a vendég kilépési kódját!</h2>
-        <form>
+        <form action="{{ route('let-out-2', $code) }}" method="POST">
+        @csrf
             <div class="mb-3">
             <div class="row g-3 align-items-center">
                 <div class="col-2">
