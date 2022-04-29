@@ -28,8 +28,7 @@
           <tbody>
             @foreach ($gym->buyableTickets as $ticket) {{-- existing bérlet --}}
             @if (Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->type == "bérlet")
-            <form action="{{ route('buyticket', Auth::user()->tickets->where('type_id', $ticket->id)->first()) }}" method="GET">
-                @csrf
+            <form action="{{ route('extend_ticket', Auth::user()->tickets->where('type_id', $ticket->id)->first()) }}" method="GET">
               <tr>
                 <td>{{ $ticket->name }}</td>
                 <td>{{ $ticket->type }}</td>

@@ -181,7 +181,7 @@ Route::get('/tickets', function () {
 
 })->name('tickets')->middleware('auth');
 
-Route::get('/buy/{ticket}', function (Request $request, Ticket $ticket) {
+Route::get('/extend/{ticket}', function (Request $request, Ticket $ticket) {
     if(session('gym') == null) return redirect()->route('gyms');
 
     if(Auth::user()->is_receptionist) return redirect()->route('index');
@@ -190,10 +190,10 @@ Route::get('/buy/{ticket}', function (Request $request, Ticket $ticket) {
 
     if($ticket->expiration >= date('Y-m-d H:i:s')) return redirect()->route('tickets');
 
-    return view('user.buyticket', ['ticket' => $ticket]);
-})->name('buyticket')->middleware('auth');
+    return view('user.extend_ticket', ['ticket' => $ticket]);
+})->name('extend_ticket')->middleware('auth');
 
-Route::post('/buy/{ticket}', function (Request $request, Ticket $ticket) {
+Route::post('/extend/{ticket}', function (Request $request, Ticket $ticket) {
     if(session('gym') == null) return redirect()->route('gyms');
 
     if(Auth::user()->is_receptionist) return redirect()->route('index');
@@ -213,7 +213,7 @@ Route::post('/buy/{ticket}', function (Request $request, Ticket $ticket) {
     Auth::user()->save();
 
     return redirect()->route('index');
-})->name('buyticket')->middleware('auth');
+})->name('extend_ticket')->middleware('auth');
 
 Route::get('/stats', function () {
     $gym = Gym::find(session('gym'));

@@ -140,7 +140,15 @@
               <!-- ikon -->
             <h1 class="text-success">Belépve</h1>
             <h3>{{ $last_enterance->enter }}</h3>
-            <button type="button" class="btn btn-danger mt-4 text-white">Kilépési kód</button>
+            <button class="btn btn-danger" type="button" data-bs-toggle="collapse" data-bs-target={{ "#" . Auth::user()->exit_code }} aria-expanded="false" aria-controls="{{ Auth::user()->exit_code }}">
+              Kilépési kód
+            </button>
+          </p>
+          <div class="collapse" id="{{ Auth::user()->exit_code }}">
+            <div class="card card-body">
+              {{ $ticket->code }}
+            </div>
+          </div>
             </p>
           @endif
         </div>

@@ -95,7 +95,7 @@
                     @foreach ($tickets as $ticket)
                     @if ($ticket->type->type == "bérlet" && !$ticket->useable())
                     <tr>
-                        <form action="{{ route('buyticket', $ticket) }}" method="GET">
+                        <form action="{{ route('extend_ticket', $ticket) }}" method="GET">
                             <td>{{ $ticket->type->name }}</td>
                             @if ($ticket->type->type == 'bérlet')
                                 <td class="text-primary"><b>{{ $ticket->type->type }}</b></td>
