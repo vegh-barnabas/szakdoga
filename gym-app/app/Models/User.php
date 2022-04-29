@@ -24,7 +24,8 @@ class User extends Authenticatable
         'is_admin',
         'is_receptionist',
         'credits',
-        'gender'
+        'gender',
+        'exit_code'
     ];
 
     /**
