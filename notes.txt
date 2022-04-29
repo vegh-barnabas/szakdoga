@@ -79,3 +79,4 @@ recepciós tud képet feltölteni userről
 - recepciós ne válasszon kondit
 - hibaüzenet ha rossz a recepciós let in id
 - ticket type: one_time, monthly
+- ikonok
