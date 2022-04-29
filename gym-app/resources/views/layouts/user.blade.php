@@ -43,8 +43,12 @@
               <a class="nav-link {{ Route::is('index') ? 'active' : '' }}" href="{{ route('index') }}">Főoldal</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ Route::is('buyticket') ? 'active' : '' }}"
-                href="{{ route('buyticket') }}">Jegyvásárlás</a>
+              <a class="nav-link {{ Route::is('tickets') ? 'active' : '' }}"
+                href="{{ route('tickets') }}">Jegyeim</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {{ Route::is('buyticketpage') ? 'active' : '' }}"
+                href="{{ route('buyticketpage') }}">Jegyvásárlás</a>
             </li>
             <li class="nav-item">
               <a class="nav-link {{ Route::is('userstats') ? 'active' : '' }}"

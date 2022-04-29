@@ -7,13 +7,14 @@
     <div class="col p-4">
       <div class="row">
         <div class="col">
-          <div class="row">
             <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5>Felhasználható bérletek</h5>
+                    <h6 class="card-subtitle text-light mb-2">
+                      {{ $gym->name }}
+                    </h6>
+                </div>
               <div class="card-body">
-                <h5 class="card-title">Bérletek</h5>
-                <h6 class="card-subtitle text-muted mb-2">
-                  {{ $gym->name }}
-                </h6>
                 <p class="card-text">
                 <table class="table">
                   <thead>
@@ -25,7 +26,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    @foreach (Auth::user()->tickets as $ticket)
+                    @foreach ($tickets as $ticket) {{-- TODO: if no ticket then write something in forelse --}}
                       @if ($ticket->type->type == 'bérlet')
                         <tr>
                           <td>{{ $ticket->type->name }}</td>
@@ -36,7 +37,7 @@
                           @else
                             <td class="text-success">Aktív</td>
                             <td>
-                                <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target={{ "#" . $ticket->type->name . $ticket->id }} aria-expanded="false" aria-controls="{{ $ticket->id }}">
+                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target={{ "#" . $ticket->type->name . $ticket->id }} aria-expanded="false" aria-controls="{{ $ticket->id }}">
                                   Belépési kód
                                 </button>
                               </p>
@@ -53,21 +54,20 @@
                   </tbody>
                 </table>
                 </p>
-                <a href="#" class="card-link">többi helyszínhez tartozó bérlet megtekintése</a>
-              </div>
             </div>
           </div>
         </div>
       </div>
       <div class="row mt-3">
         <div class="col">
-          <div class="row">
             <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5>Felhasználható jegyek</h5>
+                    <h6 class="card-subtitle text-light mb-2">
+                      {{ $gym->name }}
+                    </h6>
+                </div>
               <div class="card-body">
-                <h5 class="card-title">Jegyek</h5>
-                <h6 class="card-subtitle text-muted mb-2">
-                  {{ $gym->name }}
-                </h6>
                 <p class="card-text">
                 <table class="table">
                   <thead>
@@ -112,21 +112,21 @@
                   </tbody>
                 </table>
                 </p>
-                <a href="#" class="card-link">többi helyszínhez tartozó jegy megtekintése</a>
               </div>
-            </div>
           </div>
         </div>
       </div>
     </div>
     <div class="col align-self-center p-3">
       <div class="card">
+        <div class="card-header">
+            <h5>Státusz</h5>
+            <h6 class="card-subtitle text-muted mb-2">
+              {{ $gym->name }}
+            </h6>
+        </div>
         <div class="card-body">
-          <h5 class="card-title">Státusz</h5>
-          <h6 class="card-subtitle text-muted mb-2">
-            {{ $gym->name }}
-          </h6>
-          @if ($last_enterance->exited())
+            @if ($last_enterance->exited())
             <p class="card-text">
               <!-- ikon -->
             <h1 class="text-danger">Kilépve</h1>

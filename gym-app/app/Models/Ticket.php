@@ -39,4 +39,14 @@ class Ticket extends Model
 
         return false;
     }
+
+    public function useable() {
+        return ($this->expiration >= date('Y-m-d H:i:s') && !$this->used());
+    }
+
+    public function expired() {
+        if($this->type == "bérlet") return ($this->expiration >= date('Y-m-d H:i:s'));
+
+        else return ($this->expiration >= date('Y-m-d H:i:s') && !$this->used());
+    }
 }

@@ -26,7 +26,10 @@
             </tr>
           </thead>
           <tbody>
-            @foreach ($gym->buyableTickets as $ticket)
+            @foreach ($gym->buyableTickets as $ticket) {{-- existing bérlet --}}
+            @if (Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->type == "bérlet")
+            <form action="{{ route('buyticket', Auth::user()->tickets->where('type_id', $ticket->id)->first()) }}" method="GET">
+                @csrf
               <tr>
                 <td>{{ $ticket->name }}</td>
                 <td>{{ $ticket->type }}</td>
@@ -41,21 +44,83 @@
                 @else
                   <td>{{ $ticket->price }}</td>
                 @endif
-                @if (Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0)
-                  <td>
+                <td>
+                @if (Auth::user()->tickets->where('type_id', $ticket->id)->first()->expiration < date('Y-m-d H:i:s'))
                     <button class="btn btn-primary">Hosszabbítás</button>
-                  </td>
-                @else
-                  <td>
-                    <button class="btn btn-success">Vásárlás</button>
-                  </td>
                 @endif
+                </td>
               </tr>
+            </form>
+              @endif
+            @endforeach
+            @foreach ($gym->buyableTickets as $ticket) {{-- existing ticket --}}
+            @if (Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->type == "jegy")
+              <tr>
+                <td>{{ $ticket->name }}</td>
+                <td>{{ $ticket->type }}</td>
+                <td>{{ $ticket->description }}</td>
+                @if ($ticket->quantity == 999)
+                  <td>végtelen</td>
+                @else
+                  <td>{{ $ticket->quantity }}</td>
+                @endif
+                @if ($ticket->price == 0)
+                  <td>ingyenes</td>
+                @else
+                  <td>{{ $ticket->price }}</td>
+                @endif
+                <td>
+                    <button class="btn btn-success">Vásárlás</button>
+                </td>
+              </tr>
+              @endif
+            @endforeach
+            @foreach ($gym->buyableTickets as $ticket) {{-- non-existing bérlet --}}
+            @if (!Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->type == "bérlet")
+              <tr>
+                <td>{{ $ticket->name }}</td>
+                <td>{{ $ticket->type }}</td>
+                <td>{{ $ticket->description }}</td>
+                @if ($ticket->quantity == 999)
+                  <td>végtelen</td>
+                @else
+                  <td>{{ $ticket->quantity }}</td>
+                @endif
+                @if ($ticket->price == 0)
+                  <td>ingyenes</td>
+                @else
+                  <td>{{ $ticket->price }}</td>
+                @endif
+                <td>
+                <button class="btn btn-success">Vásárlás</button>
+                </td>
+              </tr>
+            @endif
+            @endforeach
+            @foreach ($gym->buyableTickets as $ticket) {{-- non-existing ticket --}}
+            @if (!Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->type == "jegy")
+              <tr>
+                <td>{{ $ticket->name }}</td>
+                <td>{{ $ticket->type }}</td>
+                <td>{{ $ticket->description }}</td>
+                @if ($ticket->quantity == 999)
+                  <td>végtelen</td>
+                @else
+                  <td>{{ $ticket->quantity }}</td>
+                @endif
+                @if ($ticket->price == 0)
+                  <td>ingyenes</td>
+                @else
+                  <td>{{ $ticket->price }}</td>
+                @endif
+                <td>
+                <button class="btn btn-success">Vásárlás</button>
+                </td>
+              </tr>
+            @endif
             @endforeach
           </tbody>
         </table>
-
-        <button type="button" class="btn btn-link">Edzőterem váltása</button>
       </div>
     </div>
   </div>

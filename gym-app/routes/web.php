@@ -135,7 +135,12 @@ Route::get('/home', function () {
     else {
         $gym = Gym::find(session('gym'));
 
-        $tickets = Auth::user()->tickets->where('gym_id', $gym->id)->sortByDesc('expiration');
+        $tickets = Auth::user()->tickets
+            ->where('gym_id', $gym->id)
+            ->filter(function ($ticket) {
+                return $ticket->useable();
+            })
+            ->sortByDesc('expiration');
 
         $last_enterance = Auth::user()->enterances->where('gym_id', $gym->id)->sortByDesc('enter')->first();
 
@@ -155,6 +160,59 @@ Route::get('/buy', function () {
     $gym = Gym::find(session('gym'));
 
     return view('user.buy', ['gym' => $gym]);
+})->name('buyticketpage')->middleware('auth');
+
+Route::get('/tickets', function () {
+    if(session('gym') == null) return redirect()->route('gyms');
+
+    if(Auth::user()->is_receptionist) return redirect()->route('home');
+
+    $gym = Gym::find(session('gym'));
+
+    $tickets = Auth::user()->tickets()
+        ->paginate(8)
+        ->where('gym_id', $gym->id)
+        ->sortByDesc('expiration')
+        ->sortBy(function ($ticket) {
+            return $ticket->type->type;
+        });
+
+    return view('user.tickets', ['gym' => $gym, 'tickets' => $tickets, 'showPagination' => is_null(request('all'))]);
+
+})->name('tickets')->middleware('auth');
+
+Route::get('/buy/{ticket}', function (Request $request, Ticket $ticket) {
+    if(session('gym') == null) return redirect()->route('gyms');
+
+    if(Auth::user()->is_receptionist) return redirect()->route('index');
+
+    if(Auth::user()->tickets->where('id', $ticket->id)->count() == 0) return redirect()->route('index');
+
+    if($ticket->expiration >= date('Y-m-d H:i:s')) return redirect()->route('tickets');
+
+    return view('user.buyticket', ['ticket' => $ticket]);
+})->name('buyticket')->middleware('auth');
+
+Route::post('/buy/{ticket}', function (Request $request, Ticket $ticket) {
+    if(session('gym') == null) return redirect()->route('gyms');
+
+    if(Auth::user()->is_receptionist) return redirect()->route('index');
+
+    if(Auth::user()->tickets->where('id', $ticket->id)->count() == 0) return redirect()->route('index');
+
+    if(strtotime($ticket->expiration) >= date('Y-m-d H:i:s')) return redirect()->route('tickets');
+
+    if(Auth::user()->credits < $ticket->type->price) return redirect()->route('tickets'); // TODO: error
+
+    $expiration = new DateTime();
+    $expiration->modify("+1 month");
+    $ticket->expiration = $expiration;
+    $ticket->save();
+
+    Auth::user()->credits -= $ticket->type->price;
+    Auth::user()->save();
+
+    return redirect()->route('index');
 })->name('buyticket')->middleware('auth');
 
 Route::get('/stats', function () {
