@@ -319,7 +319,7 @@ Route::get('/let-in/{code}', function ($code) {
 
     $ticket = Ticket::all()->where('code', $code)->first();
 
-    if ($ticket === null) {
+    if ($ticket == null) {
         return view('receptionist.let-in');
     }
     // TODO: error message
@@ -343,7 +343,6 @@ Route::post('/let-in/{code}', function (Request $request, $code) {
 
     $ticket = Ticket::all()->where('code', $code)->first();
     $user = $ticket->user;
-    $lockers = Locker::all()->where('gender', $user->gender)->where('user_id', null);
 
     $validated = $request->validate(
         // Validation rules
@@ -417,7 +416,6 @@ Route::get('/let-out/{code}', function ($code) {
         abort(403);
     }
 
-    // TODO: write the logics here
     $user = User::all()->where('exit_code', $code)->first(); // TODO: is $code safe to use?
     if ($user == null) {
         return Redirect::to('let-out')->with('error-not-found', $code);
@@ -431,15 +429,39 @@ Route::get('/let-out/{code}', function ($code) {
     return view('receptionist.let-out-2', ['user' => $user, 'enterance' => $enterance]);
 })->name('let-out-2')->middleware('auth');
 
-// Let someone in POST
+// Let someone out POST
 Route::post('/let-out/{code}', function (Request $request, $code) {
     if (!Auth::user()->is_receptionist) {
         abort(403);
     }
 
-    // TODO: write the logics here
+    error_log($code);
 
-    return redirect()->route('let-out'); // TODO: success message
+    $user = User::all()->where('exit_code', $code)->first();
+    if ($user == null) {
+        abort(403);
+    }
+
+    $request->validate(
+        [
+            'keyGiven' => [
+                'required',
+                'accepted',
+            ],
+        ],
+    );
+
+    $enterance = $user->enterances->where('exit', null)->first();
+
+    $date_now = new DateTime();
+    $enterance->exit = $date_now;
+    $enterance->save();
+
+    $user->locker->user_id = null;
+    $user->locker_id = null;
+    $user->save();
+
+    return Redirect::to('let-out')->with('success', $user->name);
 })->name('let-out-2')->middleware('auth');
 
 /* --- Admin Routes --- */

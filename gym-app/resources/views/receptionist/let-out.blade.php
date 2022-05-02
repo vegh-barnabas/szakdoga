@@ -15,6 +15,12 @@
       Nem létezik <strong>{{ Session::get('error-not-found') }}</strong> kilépési kóddal rendelkező felhasználó!
     </div>
     </p>
+  @elseif (Session::has('success'))
+    <p>
+    <div class="alert alert-success" role="alert">
+      Sikeresen kiengedted <strong>{{ Session::get('success') }}</strong> vendéget!
+    </div>
+    </p>
   @endif
 
   <h2 class="mb-3">Vendég kiléptetése</h2>

@@ -24,6 +24,7 @@ class User extends Authenticatable
         'is_receptionist',
         'credits',
         'gender',
+        'locker_id',
         'exit_code',
     ];
 

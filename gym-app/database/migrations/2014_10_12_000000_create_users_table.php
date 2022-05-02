@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('is_receptionist')->default(false);
             $table->integer('credits')->default(0);
             $table->integer('gender');
+            $table->unsignedBigInteger('locker_id')->nullable()->unique();
             $table->string('exit_code')->unique();
             $table->rememberToken();
             $table->timestamps();
