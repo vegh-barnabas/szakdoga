@@ -80,3 +80,4 @@ recepciós tud képet feltölteni userről
 - hibaüzenet ha rossz a recepciós let in id
 - ticket type: one_time, monthly
 - ikonok
+- locker enterancehoz
