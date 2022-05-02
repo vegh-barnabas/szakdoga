@@ -8,7 +8,9 @@ use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
 
 /*
@@ -300,6 +302,12 @@ Route::post('/let-in', function (Request $request) {
     );
     $code = $validated['enterance_code'];
 
+    $ticket = Ticket::all()->where('code', $code)->first();
+    $user = $ticket->user;
+    if ($user->enterances->where('exit', null)->count() > 0) {
+        return Redirect::back()->with('error', ['code' => $code, 'user' => $user->name]);
+    }
+
     return redirect()->route('let-in-2', $code);
 })->name('let-in')->middleware('auth');
 
@@ -373,7 +381,7 @@ Route::get('/let-out', function () {
         abort(403);
     }
 
-    return view('receptionist.let-in');
+    return view('receptionist.let-out');
 })->name('let-out')->middleware('auth');
 
 // Let-out index page POST
@@ -385,14 +393,22 @@ Route::post('/let-out', function (Request $request) {
     $validated = $request->validate(
         [
             // TODO: receptionist can only let in people out in the same gym
-            'enterance_code' => [
+            'exit_code' => [
                 'required',
             ],
         ],
     );
-    $code = $validated['enterance_code'];
+    $exit_code = $validated['exit_code'];
 
-    return redirect()->route('let-in-2', $code);
+    $user = User::all()->where('exit_code', $exit_code)->first();
+    if ($user == null) {
+        return Redirect::back()->with('error-not-found', $exit_code);
+    }
+    if ($user->enterances->where('exit', null)->count() == 0) {
+        return Redirect::back()->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
+    } // TODO: rename this exit code
+
+    return redirect()->route('let-out-2', $user->exit_code);
 })->name('let-out')->middleware('auth');
 
 // List data of user page
@@ -402,8 +418,17 @@ Route::get('/let-out/{code}', function ($code) {
     }
 
     // TODO: write the logics here
+    $user = User::all()->where('exit_code', $code)->first(); // TODO: is $code safe to use?
+    if ($user == null) {
+        return Redirect::to('let-out')->with('error-not-found', $code);
+    }
 
-    return view('receptionist.let-out-2');
+    $enterance = $user->enterances->where('exit', null)->first();
+    if ($enterance == null) {
+        return Redirect::to('let-out')->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
+    } // TODO: rename this exit code from 'error'
+
+    return view('receptionist.let-out-2', ['user' => $user, 'enterance' => $enterance]);
 })->name('let-out-2')->middleware('auth');
 
 // Let someone in POST
