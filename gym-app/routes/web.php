@@ -315,7 +315,14 @@ Route::post('/let-in', function (Request $request) {
     );
     $code = $validated['enterance_code'];
 
+    error_log($code);
+
     $ticket = Ticket::all()->where('code', $code)->first();
+
+    if ($ticket == null) {
+        return Redirect::back()->with('doesnt_exist', ['code' => $code]);
+    }
+
     $user = $ticket->user;
     if ($user->enterances->where('exit', null)->count() > 0) {
         return Redirect::back()->with('error', ['code' => $code, 'user' => $user->name]);
@@ -362,7 +369,7 @@ Route::post('/let-in/{code}', function (Request $request, $code) {
         [
             'locker' => [
                 'required',
-                Rule::in(Locker::all()->pluck('id')),
+                Rule::in(Locker::all()->pluck('number')),
             ],
             'keyGiven' => [
                 'required',
@@ -384,7 +391,7 @@ Route::post('/let-in/{code}', function (Request $request, $code) {
         'exit' => null,
     ]);
 
-    return redirect()->route('let-in'); // TODO: success message
+    return Redirect::to('let-in')->with('success', $user->name);
 })->name('let-in-2')->middleware('auth');
 
 // Let-out index page
@@ -413,6 +420,7 @@ Route::post('/let-out', function (Request $request) {
     $exit_code = $validated['exit_code'];
 
     $user = User::all()->where('exit_code', $exit_code)->first();
+
     if ($user == null) {
         return Redirect::back()->with('error-not-found', $exit_code);
     }
@@ -470,7 +478,9 @@ Route::post('/let-out/{code}', function (Request $request, $code) {
     $enterance->exit = $date_now;
     $enterance->save();
 
+    // TODO: fix this
     $user->locker->user_id = null;
+    $user->locker->save();
     $user->locker_id = null;
     $user->save();
 

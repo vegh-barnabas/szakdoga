@@ -45,7 +45,7 @@
               öltöző)</label>
             <select class="form-select" id="locker" name="locker">
               @foreach ($lockers as $locker)
-                <option value="{{ $locker->id }}">{{ $locker->id }}</option>
+                <option value="{{ $locker->number }}">{{ $locker->number }}</option>
               @endforeach
             </select>
           </div>

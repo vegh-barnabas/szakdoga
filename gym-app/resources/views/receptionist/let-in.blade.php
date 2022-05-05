@@ -9,6 +9,18 @@
       (<strong>{{ Session::get('error.user') }}</strong>) már be van lépve!
     </div>
     </p>
+  @elseif (Session::has('doesnt_exist'))
+    <p>
+    <div class="alert alert-danger" role="alert">
+      Nem létezik <strong>{{ Session::get('doesnt_exist.code') }}</strong> kódú jegy!
+    </div>
+    </p>
+  @elseif (Session::has('success'))
+    <p>
+    <div class="alert alert-success" role="alert">
+      Sikeresen beengedted <strong>{{ Session::get('success') }}</strong> vendéget!
+    </div>
+    </p>
   @endif
 
   <h2 class="mb-3">Vendég beléptetése</h2>
