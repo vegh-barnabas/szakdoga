@@ -2,18 +2,16 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\BuyableTicket;
+use App\Models\Category;
+use App\Models\Enterance;
+use App\Models\Gym;
+use App\Models\Locker;
+use App\Models\Ticket;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-
-use App\Models\User;
-use App\Models\Category;
-use App\Models\Gym;
-use App\Models\Ticket;
-use App\Models\Enterance;
-use App\Models\BuyableTicket;
-use App\Models\Locker;
 
 class DatabaseSeeder extends Seeder
 {
@@ -30,6 +28,18 @@ class DatabaseSeeder extends Seeder
         DB::table('categories')->truncate();
         DB::table('enterances')->truncate();
         DB::table('buyable_tickets')->truncate();
+
+        /* Gyms */
+
+        for ($i = 1; $i <= rand(1, 4); $i++) {
+            $addr = ['Harap', 'Sajt', 'Kossuth', 'Petőfi', 'Arany', 'Gárdonyi'];
+
+            Gym::factory()->create([
+                'name' => $addr[$i] . " utcai edzőterem",
+                'address' => $addr[$i] . " utca " . rand(1, 20),
+            ]);
+        }
+        $gyms = Gym::all();
 
         /* Users */
 
@@ -52,48 +62,37 @@ class DatabaseSeeder extends Seeder
         for ($i = 1; $i <= rand(2, 4); $i++) {
             User::factory()->create([
                 'name' => 'receptionist' . $i,
-                'email' => 'receptionist'. $i .'@br.hu',
+                'email' => 'receptionist' . $i . '@br.hu',
                 'password' => Hash::make('password'),
                 'is_receptionist' => true,
+                // 'prefered_gym' => $gyms->random(), // TODO: uncomment this
+                'prefered_gym' => 1,
             ]);
         }
 
         // Users
         for ($i = 1; $i <= rand(10, 20); $i++) {
             User::factory()->create([
-                'name' => 'user'. $i,
-                'email' => 'user'. $i . '@br.hu',
+                'name' => 'user' . $i,
+                'email' => 'user' . $i . '@br.hu',
                 'password' => Hash::make('password'),
-            ]);
-        }
-
-        /* Gyms */
-
-        for ($i = 1; $i <= rand(1, 4); $i++) {
-            $addr = ['Harap', 'Sajt', 'Kossuth', 'Petőfi', 'Arany', 'Gárdonyi'];
-
-            Gym::factory()->create([
-                'name' => $addr[$i] . " utcai edzőterem",
-                'address' => $addr[$i] . " utca " . rand(1, 20)
             ]);
         }
 
         /* Categories */
         $styles = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark'];
-        $gyms = Gym::all();
-
 
         for ($i = 1; $i <= rand(4, 8); $i++) {
             $random_gym = $gyms->random();
 
             $category = Category::factory()->create([
-                'gym_id' => $random_gym
+                'gym_id' => $random_gym,
             ]);
         }
 
         /* Buyable Tickets */
         for ($i = 1; $i <= rand(5, 15); $i++) {
-        BuyableTicket::factory(['gym_id' => $gyms->random()])->create();
+            BuyableTicket::factory(['gym_id' => $gyms->random()])->create();
         }
         /* Tickets */
         $users = User::all();
@@ -125,8 +124,8 @@ class DatabaseSeeder extends Seeder
 
         /* Enterances */
         $tickets = Ticket::all();
-        foreach($tickets as $ticket) {
-            if($ticket->type == 'bérlet') {
+        foreach ($tickets as $ticket) {
+            if ($ticket->type == 'bérlet') {
                 for ($i = 0; $i < rand(0, 20); $i++) {
                     Enterance::factory()->create([
                         'user_id' => $ticket->user_id,
@@ -134,21 +133,18 @@ class DatabaseSeeder extends Seeder
                         'gym_id' => $ticket->gym_id,
                     ]);
                 }
-            }
-            else {
-                if(rand(0, 1) == 0) // ticket used
-                {
-                    if(rand(0,1) == 0) // person is still in the gym
-                    {
+            } else {
+                // ticket used
+                if (rand(0, 1) == 0) {
+                    // person is still in the gym
+                    if (rand(0, 1) == 0) {
                         Enterance::factory()->create([
                             'user_id' => $ticket->user_id,
                             'ticket_id' => $ticket->id,
                             'gym_id' => $ticket->gym_id,
-                            'exit' => null
+                            'exit' => null,
                         ]);
-                    }
-                    else
-                    {
+                    } else {
                         Enterance::factory()->create([
                             'user_id' => $ticket->user_id,
                             'ticket_id' => $ticket->id,
@@ -159,24 +155,24 @@ class DatabaseSeeder extends Seeder
             }
         }
 
-        /* Lockers */
-        foreach($gyms as $gym) {
-            for($i = 0; $i < rand(10, 20); $i++) {
+/* Lockers */
+        foreach ($gyms as $gym) {
+            for ($i = 0; $i < rand(10, 20); $i++) {
                 Locker::factory()->create([
                     'gym_id' => $gym->id,
-                    'number' => $i
+                    'number' => $i,
                 ]);
             }
         }
 
         $enterances = Enterance::all();
-        foreach($enterances as $index => $enterance) {
-            if($enterance->exit == null) {
+        foreach ($enterances as $index => $enterance) {
+            if ($enterance->exit == null) {
                 Locker::factory()->create([
                     'gym_id' => $enterance->gym_id,
                     'user_id' => $enterance->user_id,
                     'gender' => $enterance->user->gender,
-                    'number' => $index
+                    'number' => $index,
                 ]);
             }
         }

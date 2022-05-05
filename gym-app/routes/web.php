@@ -86,11 +86,24 @@ Route::get('/settings', function (Request $request) {
 
 // Choose Gym
 Route::get('/', function () {
+    if (session('gym') != null) {
+        return redirect()->route('index');
+    }
+
+    if (Auth::user()->prefered_gym != null) {
+        session(['gym' => Auth::user()->prefered_gym]);
+        return redirect()->route('index');
+    }
+
     return view('gyms.index', ['gyms' => Gym::all()]);
 })->name('gyms')->middleware('auth');
 
 // Gym Index
 Route::post('/', function (Request $request) {
+    if (session('gym') != null) {
+        return redirect()->route('index');
+    }
+
     // TODO: check if this validation redicect is working
     $validated = $request->validate([
         'gymId' => [

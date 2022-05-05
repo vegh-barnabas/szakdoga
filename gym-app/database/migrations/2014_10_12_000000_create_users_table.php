@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('gender');
             $table->unsignedBigInteger('locker_id')->nullable()->unique();
             $table->string('exit_code')->unique();
+            $table->integer('prefered_gym')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

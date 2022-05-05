@@ -26,6 +26,7 @@ class User extends Authenticatable
         'gender',
         'locker_id',
         'exit_code',
+        'prefered_gym',
     ];
 
     /**
