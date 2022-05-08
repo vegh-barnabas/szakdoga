@@ -18,35 +18,52 @@ class Ticket extends Model
         'code',
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function gym() {
+    public function gym()
+    {
         return $this->belongsTo(Gym::class);
     }
 
-    public function enterances() {
+    public function enterances()
+    {
         return $this->hasMany(Enterance::class);
     }
 
-    public function type() {
+    public function type()
+    {
         return $this->belongsTo(BuyableTicket::class);
     }
 
-    public function used() {
-        if($this->type == "jegy" && $this->enterances->count() > 0) return true;
+    public function isMonthly()
+    {
+        return $this->type->type == "bérlet";
+    }
+
+    public function used()
+    {
+        if ($this->type == "jegy" && $this->enterances->count() > 0) {
+            return true;
+        }
 
         return false;
     }
 
-    public function useable() {
+    public function useable()
+    {
         return ($this->expiration >= date('Y-m-d H:i:s') && !$this->used());
     }
 
-    public function expired() {
-        if($this->type == "bérlet") return ($this->expiration >= date('Y-m-d H:i:s'));
+    public function expired()
+    {
+        if ($this->type == "bérlet") {
+            return ($this->expiration >= date('Y-m-d H:i:s'));
+        } else {
+            return ($this->expiration >= date('Y-m-d H:i:s') && !$this->used());
+        }
 
-        else return ($this->expiration >= date('Y-m-d H:i:s') && !$this->used());
     }
 }

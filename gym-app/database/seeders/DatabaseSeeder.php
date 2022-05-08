@@ -43,6 +43,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'test',
             'email' => 'test' . '@br.hu',
             'password' => Hash::make('password'),
+            'credits' => 30000,
         ]);
 
         // Admin

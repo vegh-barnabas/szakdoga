@@ -55,20 +55,37 @@ Route::get('/home', function () {
         $tickets = Auth::user()->tickets
             ->where('gym_id', $gym->id)
             ->filter(function ($ticket) {
-                return $ticket->useable();
+                return !$ticket->isMonthly() && $ticket->useable();
+            })
+            ->sortByDesc('expiration');
+
+        $monthly_tickets = Auth::user()->tickets
+            ->where('gym_id', $gym->id)
+            ->filter(function ($ticket) {
+                return $ticket->isMonthly() && $ticket->useable();
             })
             ->sortByDesc('expiration');
 
         $last_enterance = Auth::user()->enterances->where('gym_id', $gym->id)->sortByDesc('enter')->first();
 
-        // Duration
-        $start = new DateTime($last_enterance->enter);
-        $end = new DateTime($last_enterance->exit);
-        $mins = ($end->getTimestamp() - $start->getTimestamp()) / 60;
-        $hours = intdiv($mins, 60);
-        $minutes = $mins % 60;
+        if ($last_enterance == null) {
+            $last_enterance_data = null;
+        } else {
+            // Duration
+            $start = new DateTime($last_enterance->enter);
+            $end = new DateTime($last_enterance->exit);
+            $mins = ($end->getTimestamp() - $start->getTimestamp()) / 60;
+            $hours = intdiv($mins, 60);
+            $minutes = $mins % 60;
 
-        return view('user.index', ['gym' => $gym, 'tickets' => $tickets, 'last_enterance' => $last_enterance, 'dur_hours' => $hours, 'dur_minutes' => $minutes]);
+            $last_enterance_data = [
+                'last_enterance' => $last_enterance,
+                'dur_hours' => $hours,
+                'dur_minutes' => $minutes,
+            ];
+        }
+
+        return view('user.index', ['gym' => $gym, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'last_enterance_data' => $last_enterance_data]);
     }
 })->name('index')->middleware('auth');
 
@@ -126,7 +143,9 @@ Route::post('/', function (Request $request) {
 Route::get('/buy', function () {
     $gym = Gym::find(session('gym'));
 
-    return view('user.buy', ['gym' => $gym]);
+    $buyable_tickets = $gym->buyableTickets; // TODO: filter this to only list quantity > 0 tickets
+
+    return view('user.buy', ['gym' => $gym, 'buyable_tickets' => $buyable_tickets]);
 })->name('buyticketpage')->middleware('auth'); // TODO: rename this to buy_ticket
 
 // Check Tickets
@@ -176,6 +195,7 @@ Route::get('/stats', function () {
     }
 
     // TODO: make this into a function in model
+    // TODO: dont show table if the user was never in the gym
     // Enterance avg
     $min_sum = 0;
     $count = 0;
@@ -193,7 +213,11 @@ Route::get('/stats', function () {
         }
     }
 
-    $min_avg = $min_sum / $count;
+    if ($count != 0) {
+        $min_avg = $min_sum / $count;
+    } else {
+        $min_avg = 0;
+    }
 
     $hours = intdiv($min_avg, 60);
     $minutes = $min_avg % 60;
@@ -281,13 +305,23 @@ Route::post('/buy/{ticket}', function (Request $request, $buyable_ticket_id) {
     $expiration = new DateTime();
     $expiration->modify("+1 month");
 
-    $new_ticket = Ticket::factory()->create([
+    Ticket::factory()->create([
         'user_id' => Auth::user()->id,
         'gym_id' => $buyable_ticket->gym_id,
         'type_id' => $buyable_ticket->id,
         'bought' => $current_date,
         'expiration' => $expiration,
     ]);
+
+    $user = User::all()->where('id', Auth::user()->id);
+
+    $user->credits -= $buyable_ticket->price;
+    $user->save();
+
+    if ($buyable_ticket->quantity != 999) {
+        $buyable_ticket->quantity -= 1;
+        $buyable_ticket->save();
+    }
 
     return redirect()->route('index');
 })->name('buy_ticket')->middleware('auth');

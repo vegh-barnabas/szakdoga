@@ -2,8 +2,8 @@
 @section('title', 'Főoldal')
 
 @section('content')
-<h2>Jegyek, bérletek</h2>
-<p>Ezen az oldalon tudod megnézni az összes jegyed és bérleted.</p>
+  <h2>Jegyek, bérletek</h2>
+  <p>Ezen az oldalon tudod megnézni az összes jegyed és bérleted.</p>
   <div class="row">
     <div class="col p-4">
       <div class="row">
@@ -28,40 +28,45 @@
                   </thead>
                   <tbody>
                     @foreach ($tickets as $ticket)
-                    @if ($ticket->useable())
-                    <tr>
-                        <td>{{ $ticket->type->name }}</td>
-                        @if ($ticket->type->type == 'bérlet')
+                      @if ($ticket->useable())
+                        <tr>
+                          <td>{{ $ticket->type->name }}</td>
+                          @if ($ticket->type->type == 'bérlet')
                             <td class="text-primary"><b>{{ $ticket->type->type }}</b></td>
-                        @else
+                          @else
                             <td class="text-success"><b>{{ $ticket->type->type }}</b></td>
-                        @endif
-                        <td>{{ $ticket->expiration }}</td>
-                        @if ($ticket->expiration < date('Y-m-d H:i:s'))
-                        <td class="text-danger">Lejárt</td>
-                        <td><button type="submit" class="btn btn-light">Hosszabbítás</button></td>
-                        @else
-                        <td class="text-success">Aktív</td>
-                        <td>
-                            @if($ticket->type->type == "bérlet")
-                            <button class="btn btn-primary" type="submit" data-bs-toggle="collapse" data-bs-target={{ "#" . $ticket->type->name . $ticket->id }} aria-expanded="false" aria-controls="{{ $ticket->id }}">
-                                Belépési kód
-                            </button>
-                            @else
-                            <button class="btn btn-success" type="submit" data-bs-toggle="collapse" data-bs-target={{ "#" . $ticket->type->name . $ticket->id }} aria-expanded="false" aria-controls="{{ $ticket->id }}">
-                                Belépési kód
-                            </button>
-                            @endif
-                            </p>
-                            <div class="collapse" id="{{ $ticket->type->name . $ticket->id }}">
-                            <div class="card card-body">
-                                {{ $ticket->code }}
-                            </div>
-                            </div>
-                        </td>
-                        @endif
-                    </tr>
-                    @endif
+                          @endif
+                          <td>{{ $ticket->expiration }}</td>
+                          @if ($ticket->expiration < date('Y-m-d H:i:s'))
+                            <td class="text-danger">Lejárt</td>
+                            <td><button type="submit" class="btn btn-light">Hosszabbítás</button></td>
+                          @else
+                            <td class="text-success">Aktív</td>
+                            <td>
+                              <p>
+                                @if ($ticket->type->type == 'bérlet')
+                                  <button class="btn btn-primary" type="submit" data-bs-toggle="collapse"
+                                    data-bs-target="{{ '#' . Str::slug($ticket->type->name . $ticket->id) }}"
+                                    aria-expanded="false" aria-controls="{{ $ticket->id }}">
+                                    Belépési kód
+                                  </button>
+                                @else
+                                  <button class="btn btn-success" type="submit" data-bs-toggle="collapse"
+                                    data-bs-target="{{ '#' . Str::slug($ticket->type->name . $ticket->id) }}"
+                                    aria-expanded="false" aria-controls="{{ $ticket->id }}">
+                                    Belépési kód
+                                  </button>
+                                @endif
+                              </p>
+                              <div class="collapse" id="{{ Str::slug($ticket->type->name . $ticket->id) }}">
+                                <div class="card card-body">
+                                  {{ $ticket->code }}
+                                </div>
+                              </div>
+                            </td>
+                          @endif
+                        </tr>
+                      @endif
                     @endforeach
                   </tbody>
                 </table>
@@ -93,36 +98,39 @@
                   </thead>
                   <tbody>
                     @foreach ($tickets as $ticket)
-                    @if ($ticket->type->type == "bérlet" && !$ticket->useable())
-                    <tr>
-                        <form action="{{ route('extend_ticket', $ticket) }}" method="GET">
+                      @if ($ticket->type->type == 'bérlet' && !$ticket->useable())
+                        <tr>
+                          <form action="{{ route('extend_ticket', $ticket) }}" method="GET">
                             <td>{{ $ticket->type->name }}</td>
                             @if ($ticket->type->type == 'bérlet')
-                                <td class="text-primary"><b>{{ $ticket->type->type }}</b></td>
+                              <td class="text-primary"><b>{{ $ticket->type->type }}</b></td>
                             @else
-                                <td class="text-success"><b>{{ $ticket->type->type }}</b></td>
+                              <td class="text-success"><b>{{ $ticket->type->type }}</b></td>
                             @endif
                             <td>{{ $ticket->expiration }}</td>
                             @if ($ticket->expiration < date('Y-m-d H:i:s'))
-                            <td class="text-danger">Lejárt</td>
-                            <td><button type="submit" class="btn btn-light">Hosszabbítás</button></td>
+                              <td class="text-danger">Lejárt</td>
+                              <td><button type="submit" class="btn btn-light">Hosszabbítás</button></td>
                             @else
-                            <td class="text-success">Aktív</td>
-                            <td>
-                                <button class="btn btn-success" type="submit" data-bs-toggle="collapse" data-bs-target={{ "#" . $ticket->type->name . $ticket->id }} aria-expanded="false" aria-controls="{{ $ticket->id }}">
+                              <td class="text-success">Aktív</td>
+                              <td>
+                                <p>
+                                  <button class="btn btn-success" type="submit" data-bs-toggle="collapse"
+                                    data-bs-target="{{ '#' . Str::slug($ticket->type->name . $ticket->id) }}"
+                                    aria-expanded="false" aria-controls="{{ $ticket->id }}">
                                     Belépési kód
-                                </button>
+                                  </button>
                                 </p>
-                                <div class="collapse" id="{{ $ticket->type->name . $ticket->id }}">
-                                <div class="card card-body">
+                                <div class="collapse" id="{{ Str::slug($ticket->type->name . $ticket->id) }}">
+                                  <div class="card card-body">
                                     {{ $ticket->code }}
+                                  </div>
                                 </div>
-                                </div>
-                            </td>
+                              </td>
                             @endif
-                        </form>
-                    </tr>
-                    @endif
+                          </form>
+                        </tr>
+                      @endif
                     @endforeach
                   </tbody>
                 </table>
