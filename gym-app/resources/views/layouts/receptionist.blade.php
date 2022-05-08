@@ -37,13 +37,15 @@
         <div class="collapse navbar-collapse" id="navbarText">
           <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('index') ? 'active' : '' }}" href="{{ route('index') }}">Főoldal</a>
+              <a class="nav-link {{ Route::is('index') ? 'active' : '' }}" href="{{ route('index') }}">Főoldal</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('let-in') ? 'active' : '' }}" href="{{ route('let-in') }}">Beléptetés</a>
+              <a class="nav-link {{ Route::is('let-in') ? 'active' : '' }}"
+                href="{{ route('let-in') }}">Beléptetés</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {{ Route::is('let-out') ? 'active' : '' }}" href="{{ route('let-out') }}">Kiléptetés</a>
+              <a class="nav-link {{ Route::is('let-out') ? 'active' : '' }}"
+                href="{{ route('let-out') }}">Kiléptetés</a>
             </li>
           </ul>
           <ul class="navbar-nav ms-auto">
@@ -52,9 +54,19 @@
                 aria-expanded="true">{{ Auth::user()->name }}</a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
                 <li>
-                    <a class="nav-link" href="{{ route('settings') }}">Beállítások</a>
+                  <a class="nav-link" href="{{ route('settings') }}">Beállítások</a>
                 </li>
               </ul>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                {{ __('Logout') }}
+              </a>
+
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                @csrf
+              </form>
             </li>
           </ul>
         </div>
