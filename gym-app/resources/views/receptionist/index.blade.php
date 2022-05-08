@@ -12,7 +12,7 @@
               <div class="card-body">
                 <h5 class="card-title">Legutóbb megvásárolt bérletek</h5>
                 <h6 class="card-subtitle text-muted mb-2">
-                  Harap utcai edzőterem
+                  {{ $gym->name }}
                 </h6>
                 <p class="card-text">
                 <table class="table">
@@ -53,7 +53,7 @@
               <div class="card-body">
                 <h5 class="card-title">Legutóbb megvásárolt jegyek</h5>
                 <h6 class="card-subtitle text-muted mb-2">
-                  Harap utcai edzőterem
+                  {{ $gym->name }}
                 </h6>
                 <p class="card-text">
                 <table class="table">
@@ -113,7 +113,7 @@
         <div class="card-body">
           <h5 class="card-title">Státusz</h5>
           <h6 class="card-subtitle text-muted mb-2">
-            Harap utcai edzőterem
+            {{ $gym->name }}
           </h6>
           <p class="card-text">
             <!-- ikon -->

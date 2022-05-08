@@ -48,7 +48,7 @@ Route::get('/home', function () {
             return $ticket->type->type == 'bérlet';
         })->sortByDesc('bought')->take(5);
 
-        return view('receptionist.index', ['enterances' => $enterances, 'tickets' => $tickets, 'berlets' => $berlets]);
+        return view('receptionist.index', ['enterances' => $enterances, 'tickets' => $tickets, 'berlets' => $berlets, 'gym' => $gym]);
     } else {
         $gym = Gym::find(session('gym'));
 
@@ -137,8 +137,8 @@ Route::get('/tickets', function () {
 
     $gym = Gym::find(session('gym'));
 
+    // TODO: paginaion
     $tickets = Auth::user()->tickets
-        ->paginate(8)
         ->where('gym_id', $gym->id)
         ->sortByDesc('expiration')
         ->sortBy(function ($ticket) {
