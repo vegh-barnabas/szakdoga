@@ -73,11 +73,15 @@ Route::get('/home', function () {
 })->name('index')->middleware('auth');
 
 // Settings - User & Receptionist
-Route::get('/settings', function (Request $request) {
+Route::get('/settings', function () {
     if (Auth::user()->is_receptionist) {
         return view('receptionist.settings');
     } else {
-        return view('user.settings');
+        $gyms = Gym::all();
+        $selected_gym_id = Auth::user()->prefered_gym;
+        $current_gym = session('gym');
+
+        return view('user.settings', ['gyms' => $gyms, 'selected_gym_id' => $selected_gym_id, 'current_gym' => $current_gym]);
     }
 
 })->name('settings')->middleware('auth');
