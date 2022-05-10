@@ -14,18 +14,26 @@ class Enterance extends Model
         'user_id',
         'ticket_id',
         'enter',
-        'exit'
+        'exit',
     ];
 
-    public function ticket() {
+    public function gym()
+    {
+        return $this->belongsTo(Gym::class);
+    }
+
+    public function ticket()
+    {
         return $this->belongsTo(Ticket::class);
     }
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function exited() {
+    public function exited()
+    {
         error_log($this->exit == null);
 
         return $this->exit != null;

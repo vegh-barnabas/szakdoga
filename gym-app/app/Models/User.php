@@ -62,4 +62,25 @@ class User extends Authenticatable
     {
         return $this->hasOne(Locker::class);
     }
+
+    public function getPreferedGymName()
+    {
+        if ($this->prefered_gym == null) {
+            return "";
+        }
+
+        return Gym::all()->where('id', $this->prefered_gym)->first()->name;
+    }
+
+    public function getUserType()
+    {
+        if ($this->is_receptionist) {
+            return "Recepciós";
+        } else if ($this->is_admin) {
+            return "Admin";
+        } else {
+            return "Vendég";
+        }
+
+    }
 }

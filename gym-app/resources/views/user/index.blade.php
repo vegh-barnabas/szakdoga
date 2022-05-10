@@ -1,7 +1,6 @@
 @extends('layouts.user')
 @section('title', 'Főoldal')
 
-
 @section('content')
   <h2>Üdv újra, <b>{{ Auth::user()->name }}</b>!</h2>
   <div class="row">

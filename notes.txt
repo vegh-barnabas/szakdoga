@@ -81,3 +81,11 @@ recepciós tud képet feltölteni userről
 - ticket type: one_time, monthly
 - ikonok
 - locker enterancehoz
+- purchased-monthly és purchased-tickets lehetne 1 nézet is
+- valami stílus a recisnél a jegyek listázásánál a táblázatokhoz, adminhoz is, pl gradient háttérszín, színezés stb
+- recepciós kezdje el a munkát
+
+- admin jegy módosítás a jegyek listában a névre kattintva
+- admin bérlet listában hányszor volt használva a bérlet
+
+- admin, recis, user nem 2 boolba hanem 1 intbe vagy enumba jogosultság néven vagy ilyesmi

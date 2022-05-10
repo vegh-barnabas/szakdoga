@@ -48,6 +48,23 @@ Route::get('/home', function () {
         })->sortByDesc('bought')->take(5);
 
         return view('receptionist.index', ['enterances' => $enterances, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'gym' => $gym]);
+    } else if (Auth::user()->is_admin) {
+
+        $gym_name = Gym::all()->pluck('name')->implode(',');
+
+        $tickets = Ticket::all()->filter(function ($ticket) {
+            return $ticket->type->type == 'jegy';
+        })->sortByDesc('bought')->take(5);
+        $monthly_tickets = Ticket::all()->filter(function ($ticket) {
+            return $ticket->type->type == 'bérlet';
+        })->sortByDesc('bought')->take(5);
+
+        $active_enterances = Enterance::all();
+
+        // TODO: receptionist login
+        $active_receptionists = User::all()->where('is_receptionist');
+
+        return view('admin.index', ['gym_name' => $gym_name, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'active_enterances' => $active_enterances, 'active_receptionists' => $active_receptionists]);
     } else {
         $gym = Gym::find(session('gym'));
 
@@ -524,47 +541,99 @@ Route::post('/let-out/{code}', function (Request $request, $code) {
 
 // Let-out index page
 Route::get('/buyable-tickets', function () {
-    if (!Auth::user()->is_receptionist) {
+    if (Auth::user()->is_receptionist) {
+        $gym = Gym::find(session('gym'));
+        $monthly_tickets = BuyableTicket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
+            return $ticket->isMonthly();
+        })->values();
+
+        $tickets = BuyableTicket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
+            return !$ticket->isMonthly();
+        })->values();
+
+        $all_tickets = $monthly_tickets->merge($tickets);
+
+        return view('receptionist.buyable-tickets', ['tickets' => $all_tickets, 'gym_name' => $gym->name]);
+    } else if (Auth::user()->is_admin) {
+        $gym_name = Gym::all()->pluck('name')->implode(',');
+
+        $monthly_tickets = BuyableTicket::all()->filter(function ($ticket) {
+            return $ticket->isMonthly();
+        })->values();
+
+        $tickets = BuyableTicket::all()->filter(function ($ticket) {
+            return !$ticket->isMonthly();
+        })->values();
+
+        $all_tickets = $monthly_tickets->merge($tickets);
+
+        return view('admin.buyable-tickets', ['tickets' => $all_tickets, 'gym_name' => $gym_name]);
+    } else {
         abort(403);
     }
-
-    $gym = Gym::find(session('gym'));
-    $monthly_tickets = BuyableTicket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
-        return $ticket->isMonthly();
-    })->values();
-
-    $tickets = BuyableTicket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
-        return !$ticket->isMonthly();
-    })->values();
-
-    $all_tickets = $monthly_tickets->merge($tickets);
-
-    return view('receptionist.buyable-tickets', ['tickets' => $all_tickets, 'gym_name' => $gym->name]);
 })->name('buyable-ticket-list')->middleware('auth');
 
 Route::get('/purchased-monthly', function () {
-    if (!Auth::user()->is_receptionist) {
+    if (Auth::user()->is_receptionist) {
+        $gym = Gym::find(session('gym'));
+        $purchased_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
+            return $ticket->isMonthly();
+        })->values()->sortByDesc('expiration');
+
+        return view('receptionist.purchased-monthly', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
+    } else if (Auth::user()->is_admin) {
+        $gym_name = Gym::all()->pluck('name')->implode(',');
+
+        $purchased_tickets = Ticket::all()->filter(function ($ticket) {
+            return $ticket->isMonthly();
+        })->values()->sortByDesc('expiration');
+
+        return view('admin.purchased-monthly', ['tickets' => $purchased_tickets, 'gym_name' => $gym_name]);
+    } else {
         abort(403);
     }
-
-    $gym = Gym::find(session('gym'));
-    $purchased_monthly_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
-        return $ticket->isMonthly();
-    })->values()->sortByDesc('expiration');
-
-    return view('receptionist.purchased-monthly', ['tickets' => $purchased_monthly_tickets, 'gym_name' => $gym->name]);
 })->name('purchased-monthly')->middleware('auth');
 
 Route::get('/purchased-tickets', function () {
-    if (!Auth::user()->is_receptionist) {
+
+    if (Auth::user()->is_receptionist) {
+        $gym = Gym::find(session('gym'));
+        $purchased_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
+            return !$ticket->isMonthly();
+        })->values()->sortByDesc('expiration');
+
+        return view('receptionist.purchased-tickets', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
+    } else if (Auth::user()->is_admin) {
+        $gym_name = Gym::all()->pluck('name')->implode(',');
+
+        $purchased_tickets = Ticket::all()->filter(function ($ticket) {
+            return !$ticket->isMonthly();
+        })->values()->sortByDesc('expiration');
+
+        return view('admin.purchased-tickets', ['tickets' => $purchased_tickets, 'gym_name' => $gym_name]);
+    } else {
+        abort(403);
+    }
+})->name('purchased-tickets')->middleware('auth');
+/* --- Admin Routes --- */
+
+Route::get('/users', function () {
+    if (!Auth::user()->is_admin) {
         abort(403);
     }
 
-    $gym = Gym::find(session('gym'));
-    $purchased_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
-        return !$ticket->isMonthly();
-    })->values()->sortByDesc('expiration');
+    $gym_name = Gym::all()->pluck('name')->implode(',');
 
-    return view('receptionist.purchased-tickets', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
-})->name('purchased-tickets')->middleware('auth');
-/* --- Admin Routes --- */
+    $admins = User::all()->where('is_admin');
+
+    $receptionists = User::all()->where('is_receptionist');
+
+    $users = User::all()->filter(function ($user) {
+        return !$user->is_admin && !$user->is_receptionist;
+    })->values();
+
+    $all_users = $admins->merge($receptionists);
+    $all_users = $all_users->merge($users);
+
+    return view('admin.user-list', ['all_users' => $all_users, 'gym_name' => $gym_name]);
+})->name('user-list')->middleware('auth');
