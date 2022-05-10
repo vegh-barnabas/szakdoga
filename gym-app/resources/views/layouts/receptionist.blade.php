@@ -47,6 +47,24 @@
               <a class="nav-link {{ Route::is('let-out') ? 'active' : '' }}"
                 href="{{ route('let-out') }}">Kiléptetés</a>
             </li>
+            <li class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+              <ul class="navbar-nav">
+                <li class="nav-item dropend">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Statisztika
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                    <li><a class="dropdown-item" href="{{ route('purchased-monthly') }}">Megvásárolt bérletek
+                        listája</a></li>
+                    <li><a class="dropdown-item" href="{{ route('purchased-tickets') }}">Megvásárolt jegyek
+                        listája</a></li>
+                    <li><a class="dropdown-item" href="{{ route('buyable-ticket-list') }}">Vásárolható
+                        jegyek/bérletek listája</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
           </ul>
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
@@ -54,20 +72,21 @@
                 aria-expanded="true">{{ Auth::user()->name }}</a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
                 <li>
-                  <a class="nav-link" href="{{ route('settings') }}">Beállítások</a>
+                  <a class="dropdown-item" href="{{ route('settings') }}">Beállítások</a>
                 </li>
-              </ul>
-            </li>
-            <li>
-              <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                {{ __('Logout') }}
-              </a>
+                <li>
+                  <a class="dropdown-item" href="{{ route('logout') }}"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Kilépés
+                  </a>
 
-              <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                @csrf
-              </form>
+                  <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                    @csrf
+                  </form>
+                </li>
             </li>
+          </ul>
+          </li>
           </ul>
         </div>
       </div>

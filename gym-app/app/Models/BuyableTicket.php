@@ -16,14 +16,21 @@ class BuyableTicket extends Model
         'description',
         'quantity',
         'price',
-        'hidden'
+        'hidden',
     ];
 
-    public function tickets() {
+    public function tickets()
+    {
         return $this->hasMany(Ticket::class);
     }
 
-    public function gym() {
+    public function gym()
+    {
         return $this->belongsTo(Gym::class);
+    }
+
+    public function isMonthly()
+    {
+        return $this->type == 'bérlet';
     }
 }

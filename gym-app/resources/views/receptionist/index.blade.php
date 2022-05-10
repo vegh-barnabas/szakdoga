@@ -10,7 +10,7 @@
           <div class="row">
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">Legutóbb megvásárolt bérletek</h5>
+                <h5 class="card-title">Legutóbb megvásárolt 5 bérlet</h5>
                 <h6 class="card-subtitle text-muted mb-2">
                   {{ $gym->name }}
                 </h6>
@@ -25,22 +25,24 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td><b>user1</b></td>
-                      <td>Szaunabérlet</td>
-                      <td>2022.04.14</td>
-                      <td class="text-success">Érvényes</td>
-                    </tr>
-                    <tr>
-                      <td><b>user2</b></td>
-                      <td>Bérlet</td>
-                      <td>2022.01.14</td>
-                      <td class="text-danger">Lejárt</td>
-                    </tr>
+                    @foreach ($monthly_tickets as $ticket)
+                      <tr>
+                        <td><b>{{ $ticket->user->name }}</b></td>
+                        <td>{{ $ticket->type->name }}</td>
+                        <td>{{ $ticket->expiration }}</td>
+                        @if ($ticket->used())
+                          <td class="text-warning">Lejárt</td>
+                        @elseif ($ticket->expiration < date('Y-m-d H:i:s'))
+                          <td class="text-danger">Lejárt</td>
+                        @else
+                          <td class="text-success">Érvényes</td>
+                        @endif
+                      </tr>
+                    @endforeach
                   </tbody>
                 </table>
                 </p>
-                <a href="#" class="card-link">többi bérlet megjelenítése</a>
+                <a href={{ route('purchased-monthly') }} class="card-link">többi bérlet megjelenítése</a>
               </div>
             </div>
           </div>
@@ -51,7 +53,7 @@
           <div class="row">
             <div class="card">
               <div class="card-body">
-                <h5 class="card-title">Legutóbb megvásárolt jegyek</h5>
+                <h5 class="card-title">Legutóbb megvásárolt 5 jegy</h5>
                 <h6 class="card-subtitle text-muted mb-2">
                   {{ $gym->name }}
                 </h6>
@@ -80,28 +82,9 @@
                         @endif
                       </tr>
                     @endforeach
-                    <tr>
-                      <td><b>user2</b></td>
-                      <td>Diákjegy</td>
-                      <td>2022.04.14</td>
-                      <td class="text-success">Érvényes</td>
-                    </tr>
-                    <tr>
-                      <td><b>user2</b></td>
-                      <td>Diákjegy</td>
-                      <td>2022.01.14</td>
-                      <td class="text-danger">Lejárt</td>
-                    </tr>
-                    <tr>
-                      <td><b>user1</b></td>
-                      <td>Diákjegy</td>
-                      <td>2022.05.20</td>
-                      <td class="text-warning">Felhasznált</td>
-                    </tr>
-                  </tbody>
                 </table>
                 </p>
-                <a href="#" class="card-link">többi jegy megjelenítése</a>
+                <a href={{ route('purchased-tickets') }} class="card-link">többi jegy megjelenítése</a>
               </div>
             </div>
           </div>

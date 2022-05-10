@@ -43,12 +43,11 @@ Route::get('/home', function () {
         $tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
             return $ticket->type->type == 'jegy';
         })->take(5);
-        // TODO: rename this
-        $berlets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
+        $monthly_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
             return $ticket->type->type == 'bérlet';
         })->sortByDesc('bought')->take(5);
 
-        return view('receptionist.index', ['enterances' => $enterances, 'tickets' => $tickets, 'berlets' => $berlets, 'gym' => $gym]);
+        return view('receptionist.index', ['enterances' => $enterances, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'gym' => $gym]);
     } else {
         $gym = Gym::find(session('gym'));
 
@@ -305,6 +304,9 @@ Route::post('/buy/{ticket}', function (Request $request, $buyable_ticket_id) {
     $expiration = new DateTime();
     $expiration->modify("+1 month");
 
+    Auth::user()->credits -= $buyable_ticket->price;
+    Auth::user()->save();
+
     Ticket::factory()->create([
         'user_id' => Auth::user()->id,
         'gym_id' => $buyable_ticket->gym_id,
@@ -312,11 +314,6 @@ Route::post('/buy/{ticket}', function (Request $request, $buyable_ticket_id) {
         'bought' => $current_date,
         'expiration' => $expiration,
     ]);
-
-    $user = User::all()->where('id', Auth::user()->id);
-
-    $user->credits -= $buyable_ticket->price;
-    $user->save();
 
     if ($buyable_ticket->quantity != 999) {
         $buyable_ticket->quantity -= 1;
@@ -525,4 +522,49 @@ Route::post('/let-out/{code}', function (Request $request, $code) {
     return Redirect::to('let-out')->with('success', $user->name);
 })->name('let-out-2')->middleware('auth');
 
+// Let-out index page
+Route::get('/buyable-tickets', function () {
+    if (!Auth::user()->is_receptionist) {
+        abort(403);
+    }
+
+    $gym = Gym::find(session('gym'));
+    $monthly_tickets = BuyableTicket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
+        return $ticket->isMonthly();
+    })->values();
+
+    $tickets = BuyableTicket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
+        return !$ticket->isMonthly();
+    })->values();
+
+    $all_tickets = $monthly_tickets->merge($tickets);
+
+    return view('receptionist.buyable-tickets', ['tickets' => $all_tickets, 'gym_name' => $gym->name]);
+})->name('buyable-ticket-list')->middleware('auth');
+
+Route::get('/purchased-monthly', function () {
+    if (!Auth::user()->is_receptionist) {
+        abort(403);
+    }
+
+    $gym = Gym::find(session('gym'));
+    $purchased_monthly_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
+        return $ticket->isMonthly();
+    })->values()->sortByDesc('expiration');
+
+    return view('receptionist.purchased-monthly', ['tickets' => $purchased_monthly_tickets, 'gym_name' => $gym->name]);
+})->name('purchased-monthly')->middleware('auth');
+
+Route::get('/purchased-tickets', function () {
+    if (!Auth::user()->is_receptionist) {
+        abort(403);
+    }
+
+    $gym = Gym::find(session('gym'));
+    $purchased_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
+        return !$ticket->isMonthly();
+    })->values()->sortByDesc('expiration');
+
+    return view('receptionist.purchased-tickets', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
+})->name('purchased-tickets')->middleware('auth');
 /* --- Admin Routes --- */

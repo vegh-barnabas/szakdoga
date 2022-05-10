@@ -26,7 +26,7 @@
                         <th scope="col">Név</th>
                         <th scope="col">Lejárat</th>
                         <th scope="col">Státusz</th>
-                        <th scope="col">Lehetőség</th>
+                        <th scope="col"></th>
                       </tr>
                     </thead>
                     <tbody>

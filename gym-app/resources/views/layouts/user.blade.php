@@ -64,15 +64,16 @@
                 aria-expanded="true">{{ Auth::user()->name }}</a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
                 <li>
-                  <a class="dropdown-item" href="#">Kredit: {{ Auth::user()->credits }}</a>
+                  <a class="dropdown-item" onclick="event.preventDefault()" style="pointer-events: none;">Kredit:
+                    <b>{{ Auth::user()->credits }}</b></a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="settings.html">Beállítások</a>
+                  <a class="dropdown-item" href="{{ route('settings') }}">Beállítások</a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                         document.getElementById('logout-form').submit();">
-                    {{ __('Logout') }}
+                  <a class="dropdown-item" href="{{ route('logout') }}"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Kilépés
                   </a>
 
                   <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
