@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Admin | Főoldal')
+@section('title', 'Főoldal')
 
 @section('content')
   <h2>Üdv újra, <b>admin1</b>!</h2>
@@ -28,8 +28,8 @@
                   <tbody>
                     @foreach ($monthly_tickets as $ticket)
                       <tr>
-                        <td>{{ $ticket->gym->name }}</td>
                         <td><b>{{ $ticket->user->name }}</b></td>
+                        <td>{{ $ticket->gym->name }}</td>
                         <td>{{ $ticket->type->name }}</td>
                         <td>{{ $ticket->expiration }}</td>
                         @if ($ticket->useable())

@@ -615,8 +615,8 @@ Route::get('/purchased-tickets', function () {
         abort(403);
     }
 })->name('purchased-tickets')->middleware('auth');
-/* --- Admin Routes --- */
 
+/* --- Admin Routes --- */
 Route::get('/users', function () {
     if (!Auth::user()->is_admin) {
         abort(403);
@@ -637,3 +637,13 @@ Route::get('/users', function () {
 
     return view('admin.user-list', ['all_users' => $all_users, 'gym_name' => $gym_name]);
 })->name('user-list')->middleware('auth');
+
+Route::get('/users/edit/{id}', function ($id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $user = User::all()->where('id', $id)->first();
+
+    return view('admin.edit-user', ['user' => $user]);
+})->name('edit-user')->middleware('auth');
