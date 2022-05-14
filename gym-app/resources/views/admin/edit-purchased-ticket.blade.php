@@ -1,11 +1,11 @@
 @extends('layouts.admin')
-@section('title', 'Felhasználó szerkesztése')
+@section('title', 'Vásárolt jegy szerkesztése')
 
 @section('content')
   @if (Session::has('success'))
     <p>
     <div class="alert alert-success" role="alert">
-      Sikeresen szerkesztetted <strong>{{ Session::get('success') }}</strong> felhasználót!
+      Sikeresen szerkesztetted <strong>{{ Session::get('success') }}</strong> jegyet!
     </div>
     </p>
   @endif

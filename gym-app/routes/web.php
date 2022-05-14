@@ -32,7 +32,7 @@ Auth::routes();
 
 // Home - User & Receptionist
 Route::get('/home', function () {
-    if (session('gym') == null) {
+    if (session('gym') == null && !Auth::user()->is_admin) {
         return redirect()->route('gyms');
     }
 
@@ -123,13 +123,17 @@ Route::get('/settings', function () {
 
 // Choose Gym
 Route::get('/', function () {
-    if (session('gym') != null) {
+    if (Auth::user()->is_admin) {
         return redirect()->route('index');
-    }
+    } else {
+        if (session('gym') != null) {
+            return redirect()->route('index');
+        }
 
-    if (Auth::user()->prefered_gym != null) {
-        session(['gym' => Auth::user()->prefered_gym]);
-        return redirect()->route('index');
+        if (Auth::user()->prefered_gym != null) {
+            session(['gym' => Auth::user()->prefered_gym]);
+            return redirect()->route('index');
+        }
     }
 
     return view('gyms.index', ['gyms' => Gym::all()]);
@@ -624,13 +628,13 @@ Route::get('/users', function () {
 
     $gym_name = Gym::all()->pluck('name')->implode(',');
 
-    $admins = User::all()->where('is_admin');
+    $admins = User::all()->where('is_admin')->sortBy('name');
 
-    $receptionists = User::all()->where('is_receptionist');
+    $receptionists = User::all()->where('is_receptionist')->sortBy('name');
 
     $users = User::all()->filter(function ($user) {
         return !$user->is_admin && !$user->is_receptionist;
-    })->values();
+    })->values()->sortBy('name');
 
     $all_users = $admins->merge($receptionists);
     $all_users = $all_users->merge($users);
@@ -644,6 +648,39 @@ Route::get('/users/edit/{id}', function ($id) {
     }
 
     $user = User::all()->where('id', $id)->first();
+
+    return view('admin.edit-user', ['user' => $user]);
+})->name('edit-user')->middleware('auth');
+
+Route::post('/users/edit/{id}', function ($id, Request $request) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $validated = $request->validate(
+        // Validation rules
+        [
+            'name' => 'required|min:3|max:32',
+            'email' => 'required',
+            'gender' => 'required|boolean',
+            'permission' => 'required', // TODO: validate this normally
+            'credits' => 'required|integer',
+
+
+            'title' => 'required|min:3|max:144',
+            'description' => 'nullable|max:64',
+            'text' => 'required|min:3',
+            'categories' => 'nullable',
+            'categories.*' => 'integer|distinct|exists:categories,id',
+            'post_hidden' => 'nullable|boolean',
+            // Max 2MB
+            'cover_image' => 'nullable|file|image|max:2048',
+        ],
+    );
+
+    $user = User::all()->where('id', $id)->first();
+
+    $user->update($validated);
 
     return view('admin.edit-user', ['user' => $user]);
 })->name('edit-user')->middleware('auth');

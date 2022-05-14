@@ -89,3 +89,5 @@ recepciós tud képet feltölteni userről
 - admin bérlet listában hányszor volt használva a bérlet
 
 - admin, recis, user nem 2 boolba hanem 1 intbe vagy enumba jogosultság néven vagy ilyesmi
+
+- gombokat linkre pl. a jegy listában

@@ -13,6 +13,7 @@
           <thead>
             <tr>
               <th>Név</th>
+              <th>ID</th>
               <th>Jogosultság</th>
               <th>Edzőterem</th>
               <th>Kreditek</th>
@@ -21,7 +22,10 @@
           <tbody>
             @foreach ($all_users as $user)
               <tr>
-                <td>{{ $user->name }}</td>
+                <form>
+                  <td><a href="{{ route('edit-user', $user->id) }}" class="link-primary">{{ $user->name }}</a></td>
+                </form>
+                <td>{{ $user->id }}</td>
                 <td>{{ $user->getUserType() }}</td>
                 <td>{{ $user->getPreferedGymName() }}</td>
                 <td>{{ $user->getUserType() == 'Vendég' ? $user->credits : '' }}</td>
