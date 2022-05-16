@@ -104,53 +104,31 @@
           <p class="card-text">
             <!-- ikon -->
           <h1>Belépett vendégek: <b class="text-success">{{ $active_enterances->count() }}</b></h1>
-          <p class="card-text">
-            @if ($active_enterances->count() > 0)
-              <table class="table">
-                <thead>
+          @if ($active_enterances->count() > 0)
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Név</th>
+                  <th scope="col">Edzőterem</th>
+                  <th scope="col">Felhasznált bérlet/jegy</th>
+                  <th scope="col">Belépés időpontja</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach ($active_enterances as $enterance)
                   <tr>
-                    <th scope="col">Név</th>
-                    <th scope="col">Edzőterem</th>
-                    <th scope="col">Felhasznált bérlet/jegy</th>
-                    <th scope="col">Belépés időpontja</th>
+                    <td><b>{{ $enterance->user->name }}</b></td>
+                    <td><b>{{ $enterance->gym->name }}</b></td>
+                    <td><b>{{ $enterance->ticket->type->name }}</b></td>
+                    <td><b>{{ $enterance->enter }}</b></td>
                   </tr>
-                </thead>
-                <tbody>
-                  @foreach ($active_enterances as $enterance)
-                    <tr>
-                      <td><b>{{ $enterance->user->name }}</b></td>
-                      <td><b>{{ $enterance->gym->name }}</b></td>
-                      <td><b>{{ $enterance->ticket->type->name }}</b></td>
-                      <td><b>{{ $enterance->enter }}</b></td>
-                    </tr>
-                  @endforeach
-                </tbody>
-              </table>
+                @endforeach
+              </tbody>
+            </table>
 
-              <a href="#" class="card-link">többi belépett vendég megjelenítése</a>
-            @else
-            @endif
-          </p>
-
-          <hr>
-
-          <h1 class="mt-3">Aktív recepciósok: <b class="text-success">1</b></h1>
-          <p class="card-text">
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Név</th>
-                <th scope="col">Munkába állás időpontja</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><b>receptionist2</b></td>
-                <td>2022.04.14 14:30</td>
-              </tr>
-            </tbody>
-          </table>
-          </p>
+            <a href="#" class="card-link">többi belépett vendég megjelenítése</a>
+          @else
+          @endif
           </p>
         </div>
       </div>

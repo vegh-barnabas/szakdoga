@@ -18,6 +18,7 @@
               <th>Leírás</th>
               <th>Elérhető</th>
               <th>Ár</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -29,10 +30,20 @@
                 <td>{{ $ticket->description }}</td>
                 <td>{{ $ticket->quantity == 999 ? 'Végtelen' : $ticket->quantity }}</td>
                 <td>{{ $ticket->price }}</td>
+                <td>
+                  <form>
+                    <a href="{{ route('edit-buyable', $ticket->id) }}" class="link-primary">✏</a>
+                  </form>
+                  <form>
+                    {{-- <a href="{{ route('delete-buyable-ticket', $ticket->id) }}" class="link-primary">❌</a> --}}
+                  </form>
+                </td>
               </tr>
             @endforeach
           </tbody>
         </table>
       </div>
+
+      <a href="{{ route('add-ticket') }}" class="btn btn-primary">Új jegy</a>
     </div>
   @endsection

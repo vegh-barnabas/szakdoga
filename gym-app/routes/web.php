@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\BuyableTicket;
+use App\Models\Category;
 use App\Models\Enterance;
 use App\Models\Gym;
 use App\Models\Locker;
@@ -649,6 +650,10 @@ Route::get('/users/edit/{id}', function ($id) {
 
     $user = User::all()->where('id', $id)->first();
 
+    if ($user == null || $user->is_admin) {
+        abort(403);
+    }
+
     return view('admin.edit-user', ['user' => $user]);
 })->name('edit-user')->middleware('auth');
 
@@ -657,30 +662,175 @@ Route::post('/users/edit/{id}', function ($id, Request $request) {
         abort(403);
     }
 
+    $user = User::all()->where('id', $id)->first();
+
+    if ($user == null || $user->is_admin) {
+        abort(403);
+    }
+
     $validated = $request->validate(
-        // Validation rules
         [
             'name' => 'required|min:3|max:32',
-            'email' => 'required',
+            'email' => 'required|email:rfc',
             'gender' => 'required|boolean',
-            'permission' => 'required', // TODO: validate this normally
+            'permission' => 'required|in:guest,receptionist',
             'credits' => 'required|integer',
-
-
-            'title' => 'required|min:3|max:144',
-            'description' => 'nullable|max:64',
-            'text' => 'required|min:3',
-            'categories' => 'nullable',
-            'categories.*' => 'integer|distinct|exists:categories,id',
-            'post_hidden' => 'nullable|boolean',
-            // Max 2MB
-            'cover_image' => 'nullable|file|image|max:2048',
+            'exitcode' => 'required|min:6|max:6',
+            // 'newpw' => 'min:6|max:32',
+            // 'newpw2' => 'same:newpw',
         ],
     );
 
-    $user = User::all()->where('id', $id)->first();
+    if ($validated['permission'] == 'guest') {
+        $validated['is_receptionist'] = 0;
+    } else if ($validated['permission'] == 'receptionist') {
+        $validated['is_receptionist'] = 1;
+    }
 
     $user->update($validated);
 
-    return view('admin.edit-user', ['user' => $user]);
+    return Redirect::back()->with('success', $user->name);
+    // return view('admin.edit-user', ['user' => $user]);
 })->name('edit-user')->middleware('auth');
+
+Route::get('/ticket/edit/{id}', function ($id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $ticket = Ticket::all()->where('id', $id)->first();
+
+    if ($ticket == null) {
+        abort(403);
+    }
+
+    if ($ticket->isMonthly() == "bérlet") {
+        return view('admin.edit-purchased-monthly', ['ticket' => $ticket]);
+    } else {
+        return view('admin.edit-purchased-ticket', ['ticket' => $ticket]);
+    }
+
+})->name('edit-purchased-ticket')->middleware('auth');
+
+Route::delete('/ticket/delete/{id}', function ($id) {
+    return true;
+})->name('delete-purchased-ticket')->middleware('auth');
+
+Route::get('/ticket/add', function () {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $gyms = Gym::all();
+
+    return view('admin.add-ticket', ['gyms' => $gyms]);
+})->name('add-ticket')->middleware('auth');
+
+Route::post('/ticket/add', function (Request $request) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $validated = $request->validate(
+        [
+            'gym_id' => 'required|in:' . Gym::all()->pluck('id')->implode(','),
+            'name' => 'required|min:4|max:32',
+            'type' => 'required|in:jegy,bérlet',
+            'description' => 'required|min:6|max:128',
+            'quantity' => 'required|integer',
+            'price' => 'required|integer',
+        ],
+    );
+
+    $validated['hidden'] = 0;
+
+    BuyableTicket::create($validated);
+
+    return Redirect::back()->with('success', $validated['name']);
+})->name('add-ticket')->middleware('auth');
+
+Route::get('/buyable/edit/{id}', function ($id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $ticket = BuyableTicket::all()->where('id', $id)->first();
+
+    if ($ticket == null) {
+        abort(403);
+    }
+
+    if ($ticket->isMonthly() == "bérlet") {
+        return view('admin.edit-purchased-monthly', ['ticket' => $ticket]);
+    } else {
+        return view('admin.edit-purchased-ticket', ['ticket' => $ticket]);
+    }
+
+})->name('edit-purchased-ticket')->middleware('auth');
+
+Route::get('/buyable/edit/{id}', function ($id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $ticket = BuyableTicket::all()->where('id', $id)->first();
+
+    if ($ticket == null) {
+        abort(403);
+    }
+
+    $gyms = Gym::all();
+
+    return view('admin.edit-buyable', ['ticket' => $ticket, 'gyms' => $gyms]);
+})->name('edit-buyable')->middleware('auth');
+
+Route::post('/buyable/edit/{id}', function ($id, Request $request) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $ticket = BuyableTicket::all()->where('id', $id)->first();
+
+    if ($ticket == null) {
+        abort(403);
+    }
+
+    $validated = $request->validate(
+        [
+            'gym_id' => 'required|in:' . Gym::all()->pluck('id')->implode(','),
+            'name' => 'required|min:4|max:32',
+            'type' => 'required|in:jegy,bérlet',
+            'description' => 'required|min:6|max:128',
+            'quantity' => 'required|integer',
+            'price' => 'required|integer',
+            'hidden' => 'required|boolean',
+        ],
+    );
+
+    $ticket->update($validated);
+
+    return Redirect::back()->with('success', $ticket->name);
+})->name('edit-buyable')->middleware('auth');
+
+// Categories
+Route::get('/categories', function () {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $categories = Category::all();
+
+    $styles = Category::styles;
+
+    return view('admin.categories-list', ['categories' => $categories, 'styles' => $styles]);
+})->name('categories-list')->middleware('auth');
+
+Route::get('/categories/add', function () {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $styles = Category::styles;
+
+    return view('admin.add-category', ['styles' => $styles]);
+})->name('add-category')->middleware('auth');

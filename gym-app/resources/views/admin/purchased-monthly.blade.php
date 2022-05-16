@@ -21,6 +21,7 @@
               <th>Kód</th>
               <th>Megvásárolva</th>
               <th>Lejárat</th>
+              <th>Opciók</th>
             </tr>
           </thead>
           <tbody>
@@ -41,6 +42,14 @@
                 <td>{{ $ticket->code }}</td>
                 <td>{{ $ticket->bought }}</td>
                 <td>{{ $ticket->expiration }}</td>
+                <td>
+                  <form>
+                    <a href="{{ route('edit-purchased-ticket', $ticket->id) }}" class="link-primary">✏</a>
+                  </form>
+                  <form>
+                    <a href="{{ route('delete-purchased-ticket', $ticket->id) }}" class="link-primary">❌</a>
+                  </form>
+                </td>
               </tr>
             @endforeach
           </tbody>

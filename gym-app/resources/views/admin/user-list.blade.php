@@ -22,9 +22,13 @@
           <tbody>
             @foreach ($all_users as $user)
               <tr>
-                <form>
-                  <td><a href="{{ route('edit-user', $user->id) }}" class="link-primary">{{ $user->name }}</a></td>
-                </form>
+                @if (!$user->is_admin)
+                  <form>
+                    <td><a href="{{ route('edit-user', $user->id) }}" class="link-primary">{{ $user->name }}</a></td>
+                  </form>
+                @else
+                  <td>{{ $user->name }}</td>
+                @endif
                 <td>{{ $user->id }}</td>
                 <td>{{ $user->getUserType() }}</td>
                 <td>{{ $user->getPreferedGymName() }}</td>
