@@ -890,6 +890,10 @@ Route::get('/ticket/hide/{id}', function ($id) {
 
     $ticket = BuyableTicket::all()->where('id', $id)->first();
 
+    if ($ticket == null) {
+        abort(403);
+    }
+
     $gyms = Gym::all();
 
     return view('admin.hide-buyable', ['ticket' => $ticket, 'gyms' => $gyms]);
@@ -911,3 +915,80 @@ Route::post('/ticket/hide/{id}', function ($id) {
 
     return Redirect::back()->with('hidden', $ticket->name);
 })->name('hide-buyable')->middleware('auth');
+
+Route::get('/category/edit/{id}', function ($id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $category = Category::all()->where('id', $id)->first();
+
+    if ($category == null) {
+        abort(403);
+    }
+
+    $styles = Category::styles;
+
+    return view('admin.edit-category', ['category' => $category, 'styles' => $styles]);
+
+})->name('edit-category')->middleware('auth');
+
+Route::post('/category/edit/{id}', function ($id, Request $request) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $category = Category::all()->where('id', $id)->first();
+
+    if ($category == null) {
+        abort(403);
+    }
+
+    $validated = $request->validate(
+        [
+            'name' => 'required|min:4|max:32',
+            'style' => 'required|in:' . implode(',', Category::styles),
+        ],
+    );
+
+    $category->update($validated);
+
+    return Redirect::back()->with('success', $category->name);
+})->name('edit-buyable')->middleware('auth');
+
+Route::get('/category/delete/{id}', function ($id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $category = Category::all()->where('id', $id)->first();
+
+    if ($category == null) {
+        abort(403);
+    }
+
+    $styles = Category::styles;
+
+    return view('admin.delete-category', ['category' => $category, 'styles' => $styles]);
+})->name('delete-purchased-ticket')->middleware('auth');
+
+Route::delete('/category/delete/{id}', function ($id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $category = Category::all()->where('id', $id)->first();
+
+    $category_name = $category->name;
+
+    if ($category == null) {
+        abort(403);
+    }
+
+    $deleted = $category->delete();
+    if (!$deleted) {
+        return abort(500);
+    }
+
+    return Redirect::to('categories')->with('deleted', $category_name);
+})->name('delete-category')->middleware('auth');

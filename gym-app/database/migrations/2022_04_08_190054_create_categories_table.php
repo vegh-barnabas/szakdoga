@@ -21,6 +21,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('gym_id')->references('id')->on('gyms')->onDelete('cascade');
+
+            $table->softDeletes();
         });
     }
 
