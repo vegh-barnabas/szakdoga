@@ -26,6 +26,8 @@ return new class extends Migration
             $table->foreign('type_id')->references('id')->on('buyable_tickets')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('gym_id')->references('id')->on('gyms')->onDelete('cascade');
+
+            $table->softDeletes();
         });
     }
 

@@ -2,6 +2,14 @@
 @section('title', 'Megvásárolt jegyek')
 
 @section('content')
+  @if (Session::has('deleted'))
+    <p>
+    <div class="alert alert-success" role="alert">
+      Sikeresen törölted <strong>{{ Session::get('deleted') }}</strong> jegyet!
+    </div>
+    </p>
+  @endif
+
   <h2 class="mb-3">Megvásárolt jegyek</h2>
   <div class="card">
     <div class="card-header">
@@ -43,12 +51,8 @@
                 <td>{{ $ticket->bought }}</td>
                 <td>{{ $ticket->expiration }}</td>
                 <td>
-                  <form>
-                    <a href="{{ route('edit-purchased-ticket', $ticket->id) }}" class="link-primary">✏</a>
-                  </form>
-                  <form>
-                    <a href="{{ route('delete-purchased-ticket', $ticket->id) }}" class="link-primary">❌</a>
-                  </form>
+                  <a href="{{ route('edit-purchased-ticket', $ticket->id) }}" class="link-primary">✏</a>
+                  <a href="{{ route('delete-purchased-ticket', $ticket->id) }}" class="link-primary">❌</a>
                 </td>
               </tr>
               </tr>

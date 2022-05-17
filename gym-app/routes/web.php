@@ -712,8 +712,35 @@ Route::get('/ticket/edit/{id}', function ($id) {
 
 })->name('edit-purchased-ticket')->middleware('auth');
 
+Route::get('/ticket/delete/{id}', function ($id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $ticket = Ticket::all()->where('id', $id)->first();
+
+    return view('admin.delete-purchased-ticket', ['ticket' => $ticket]);
+})->name('delete-purchased-ticket')->middleware('auth');
+
 Route::delete('/ticket/delete/{id}', function ($id) {
-    return true;
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $ticket = Ticket::all()->where('id', $id)->first();
+
+    $ticket_name = $ticket->type->name;
+
+    if ($ticket == null) {
+        abort(403);
+    }
+
+    $deleted = $ticket->delete();
+    if (!$deleted) {
+        return abort(500);
+    }
+
+    return Redirect::to('purchased-tickets')->with('deleted', $ticket_name);
 })->name('delete-purchased-ticket')->middleware('auth');
 
 Route::get('/ticket/add', function () {
@@ -834,3 +861,53 @@ Route::get('/categories/add', function () {
 
     return view('admin.add-category', ['styles' => $styles]);
 })->name('add-category')->middleware('auth');
+
+// Gyms
+Route::get('/gyms', function () {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $gyms = Gym::all();
+
+    return view('admin.gym-list', ['gyms' => $gyms]);
+})->name('gym-list')->middleware('auth');
+
+Route::get('/gyms/add', function () {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $categories = Category::all();
+
+    return view('admin.add-gym', ['categories' => $categories]);
+})->name('add-gym')->middleware('auth');
+
+Route::get('/ticket/hide/{id}', function ($id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $ticket = BuyableTicket::all()->where('id', $id)->first();
+
+    $gyms = Gym::all();
+
+    return view('admin.hide-buyable', ['ticket' => $ticket, 'gyms' => $gyms]);
+})->name('hide-buyable')->middleware('auth');
+
+Route::post('/ticket/hide/{id}', function ($id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $ticket = BuyableTicket::all()->where('id', $id)->first();
+
+    if ($ticket == null) {
+        abort(403);
+    }
+
+    $ticket->hidden = !$ticket->hidden;
+    $ticket->save();
+
+    return Redirect::back()->with('hidden', $ticket->name);
+})->name('hide-buyable')->middleware('auth');

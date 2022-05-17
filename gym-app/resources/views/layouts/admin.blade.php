@@ -61,6 +61,10 @@
               <a class="nav-link {{ Route::is('categories-list') ? 'active' : '' }}"
                 href="{{ route('categories-list') }}">Kategóriák</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link {{ Route::is('gym-list') ? 'active' : '' }}"
+                href="{{ route('gym-list') }}">Edzőtermek</a>
+            </li>
           </ul>
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
