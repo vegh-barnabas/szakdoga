@@ -9,7 +9,7 @@
     </div>
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('let-in-2', $code, $user, $ticket, $lockers) }}" method="POST">
+        <form action="{{ route('let-in-2', $code, $user, $ticket) }}" method="POST">
           @csrf
           <h2 class="mb-3">Vendég adatai</h2>
           <div class="row g-3 align-items-center mb-3">
@@ -39,16 +39,6 @@
                 value="{{ $ticket->type->name }} ({{ $ticket->id }})" disabled />
             </div>
           </div>
-          <h2 class="mb-3">Beállítandó adatok</h2>
-          {{-- <div class="mb-3">
-            <label for="locker" class="form-label">Válassz szekrényt! ({{ $user->gender == 0 ? 'férfi' : 'női' }}
-              öltöző)</label>
-            <select class="form-select" id="locker" name="locker">
-              @foreach ($lockers as $locker)
-                <option value="{{ $locker->number }}">{{ $locker->number }}</option>
-              @endforeach
-            </select>
-          </div> --}}
           <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="keyGiven" name="keyGiven" />
             <label class="form-check-label" for="keyGiven"><b class="text-danger">A lakatot és a kulcsot
