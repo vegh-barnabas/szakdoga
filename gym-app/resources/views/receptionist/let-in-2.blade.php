@@ -2,6 +2,16 @@
 @section('title', 'Beléptetés')
 
 @section('content')
+  @if ($errors->any())
+    <div class="alert alert-danger">
+      <ul>
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
+
   <h2 class="mb-3">Vendég beléptetése</h2>
   <div class="card">
     <div class="card-header">

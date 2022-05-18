@@ -2,6 +2,16 @@
 @section('title', 'Beléptetés')
 
 @section('content')
+  @if ($errors->any())
+    <div class="alert alert-danger">
+      <ul>
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
+
   <h2 class="mb-3">Vendég kiléptetése</h2>
   <div class="card">
     <div class="card-header">
@@ -50,11 +60,6 @@
             <input type="checkbox" class="form-check-input" id="keyGiven" name="keyGiven" />
             <label class="form-check-label" for="keyGiven"><b class="text-danger">A lakatot és a kulcsot
                 visszakaptam</b></label>
-            @error('keyGiven')
-              <div class="invalid-feedback">
-                {{ $message }}
-              </div>
-            @enderror
           </div>
 
           <button type="submit" class="btn btn-danger">
