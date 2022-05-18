@@ -1038,3 +1038,49 @@ Route::delete('/category/delete/{id}', function ($id) {
 
     return Redirect::to('categories')->with('deleted', $category_name);
 })->name('delete-category')->middleware('auth');
+
+Route::get('/gym/edit/{id}', function ($id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $gym = Gym::all()->where('id', $id)->first();
+
+    if ($gym == null) {
+        abort(403);
+    }
+
+    $categories = Category::all();
+
+    return view('admin.edit-gym', ['gym' => $gym, 'categories' => $categories]);
+
+})->name('edit-gym')->middleware('auth');
+
+Route::post('/gym/edit/{id}', function ($id, Request $request) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $gym = Gym::all()->where('id', $id)->first();
+
+    if ($gym == null) {
+        abort(403);
+    }
+
+    $validated = $request->validate(
+        [
+            'name' => 'required|min:3|max:120',
+            'address' => 'required|min:3|max:120',
+            'description' => 'nullable|max:220',
+            'categories' => 'nullable',
+            'categories.*' => 'integer|distinct|exists:categories,id',
+        ],
+    );
+
+    $gym->update($validated);
+
+    $gym->categories()->detach();
+    $gym->categories()->attach($request->categories);
+
+    return Redirect::back()->with('success', $gym->name);
+})->name('edit-gym')->middleware('auth');

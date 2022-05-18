@@ -14,6 +14,7 @@
               <th>Cím</th>
               <th>Leírás</th>
               <th>Kategóriák</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -26,6 +27,10 @@
                   @foreach ($gym->categories as $category)
                     <span class="badge rounded-pill bg-{{ $category->style }}">{{ $category->name }}</span>
                   @endforeach
+                </td>
+                <td>
+                  <a href="{{ route('edit-gym', $gym->id) }}" class="link-primary">✏</a>
+                  <a href="#" class="link-primary">❌</a>
                 </td>
               </tr>
             @endforeach
