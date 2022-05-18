@@ -2,6 +2,14 @@
 @section('title', 'Felhasználók listája')
 
 @section('content')
+  @if (Session::has('deleted'))
+    <p>
+    <div class="alert alert-success" role="alert">
+      Sikeresen törölted a(z) <strong>{{ Session::get('deleted') }}</strong> edzőtermet!
+    </div>
+    </p>
+  @endif
+
   <h2 class="mb-3">
     Edzőtermek listája</h2>
   <div class="card">
@@ -30,7 +38,7 @@
                 </td>
                 <td>
                   <a href="{{ route('edit-gym', $gym->id) }}" class="link-primary">✏</a>
-                  <a href="#" class="link-primary">❌</a>
+                  <a href="{{ route('delete-gym', $gym->id) }}" class="link-primary">❌</a>
                 </td>
               </tr>
             @endforeach

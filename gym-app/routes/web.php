@@ -1084,3 +1084,38 @@ Route::post('/gym/edit/{id}', function ($id, Request $request) {
 
     return Redirect::back()->with('success', $gym->name);
 })->name('edit-gym')->middleware('auth');
+
+Route::get('/gym/delete/{id}', function ($id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $gym = Gym::all()->where('id', $id)->first();
+
+    if ($gym == null) {
+        abort(403);
+    }
+
+    return view('admin.delete-gym', ['gym' => $gym]);
+})->name('delete-gym')->middleware('auth');
+
+Route::delete('/gym/delete/{id}', function ($id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $gym = Gym::all()->where('id', $id)->first();
+
+    $gym_name = $gym->name;
+
+    if ($gym == null) {
+        abort(403);
+    }
+
+    $deleted = $gym->delete();
+    if (!$deleted) {
+        return abort(500);
+    }
+
+    return Redirect::to('gyms')->with('deleted', $gym_name);
+})->name('delete-gym')->middleware('auth');

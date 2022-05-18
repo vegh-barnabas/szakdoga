@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Gym extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -28,5 +30,36 @@ class Gym extends Model
     public function buyableTickets()
     {
         return $this->hasMany(buyableTicket::class);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($gym) {
+            $gym->buyableTickets()->delete();
+            $gym->tickets()->delete();
+
+            // delete lockers associated with the gym
+            $lockers = Locker::all();
+            foreach ($lockers as $locker) {
+                if ($locker->gym_id == $gym->id) {
+                    $locker->delete();
+                }
+            }
+
+            $users = User::all();
+            foreach ($users as $user) {
+                if ($user->prefered_gym == $gym->id) {
+                    if ($user->is_receptionist) {
+                        // delete receptionists
+                        $user->delete();
+                    } else {
+                        // detach favourite gym fields from users
+                        $user->prefered_gym = null;
+                    }
+                }
+            }
+        });
     }
 }

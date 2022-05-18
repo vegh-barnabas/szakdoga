@@ -23,6 +23,8 @@ return new class extends Migration
             $table->integer('price');
             $table->boolean('hidden');
             $table->timestamps();
+
+            $table->softDeletes();
         });
     }
 
