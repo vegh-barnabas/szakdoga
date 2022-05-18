@@ -46,18 +46,18 @@
               <input type="text" id="usedTicket" class="form-control" value="{{ $enterance->enter }}" disabled />
             </div>
           </div>
-          <div class="row g-3 align-items-center mb-3">
+          {{-- <div class="row g-3 align-items-center mb-3">
             <div class="col-2">
               <label for="usedTicket" class="col-form-label">Szekrényszám</label>
             </div>
             <div class="col-auto">
               <input type="text" id="usedTicket" class="form-control" value="{{ $user->locker->number }}" disabled />
             </div>
-          </div>
+          </div> --}}
           <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="keyGiven" name="keyGiven" />
-            <label class="form-check-label" for="keyGiven"><b class="text-danger">a kulcsot visszakaptam a
-                megfelelő szekrényhez</b></label>
+            <label class="form-check-label" for="keyGiven"><b class="text-danger">A lakatot és a kulcsot
+                visszakaptam</b></label>
             @error('keyGiven')
               <div class="invalid-feedback">
                 {{ $message }}

@@ -40,7 +40,7 @@
             </div>
           </div>
           <h2 class="mb-3">Beállítandó adatok</h2>
-          <div class="mb-3">
+          {{-- <div class="mb-3">
             <label for="locker" class="form-label">Válassz szekrényt! ({{ $user->gender == 0 ? 'férfi' : 'női' }}
               öltöző)</label>
             <select class="form-select" id="locker" name="locker">
@@ -48,11 +48,11 @@
                 <option value="{{ $locker->number }}">{{ $locker->number }}</option>
               @endforeach
             </select>
-          </div>
+          </div> --}}
           <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="keyGiven" name="keyGiven" />
-            <label class="form-check-label" for="keyGiven"><b class="text-danger">a kulcsot odaadtam a megfelelő
-                szekrényhez</b></label>
+            <label class="form-check-label" for="keyGiven"><b class="text-danger">A lakatot és a kulcsot
+                odaadtam</b></label>
           </div>
 
           <button type="submit" class="btn btn-success">

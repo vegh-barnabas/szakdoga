@@ -4,7 +4,6 @@ use App\Models\BuyableTicket;
 use App\Models\Category;
 use App\Models\Enterance;
 use App\Models\Gym;
-use App\Models\Locker;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -409,9 +408,7 @@ Route::get('/let-in/{code}', function ($code) {
 
     $user = $ticket->user;
 
-    $lockers = Locker::all()->where('gender', $user->gender)->where('user_id', null);
-
-    return view('receptionist.let-in-2', ['user' => $user, 'ticket' => $ticket, 'lockers' => $lockers, 'code' => $code]);
+    return view('receptionist.let-in-2', ['user' => $user, 'ticket' => $ticket, 'code' => $code]);
 })->name('let-in-2')->middleware('auth');
 
 // Let someone in POST
@@ -426,20 +423,12 @@ Route::post('/let-in/{code}', function (Request $request, $code) {
     $validated = $request->validate(
         // Validation rules
         [
-            'locker' => [
-                'required',
-                Rule::in(Locker::all()->pluck('number')),
-            ],
             'keyGiven' => [
                 'required',
                 'accepted',
             ],
         ],
     );
-
-    $locker = Locker::all()->where('number', $validated['locker']);
-
-    $user->locker = $locker;
 
     $enter_time = new DateTime();
     $new_enterance = Enterance::factory()->create([
@@ -536,12 +525,6 @@ Route::post('/let-out/{code}', function (Request $request, $code) {
     $date_now = new DateTime();
     $enterance->exit = $date_now;
     $enterance->save();
-
-    // TODO: fix this
-    $user->locker->user_id = null;
-    $user->locker->save();
-    $user->locker_id = null;
-    $user->save();
 
     return Redirect::to('let-out')->with('success', $user->name);
 })->name('let-out-2')->middleware('auth');
