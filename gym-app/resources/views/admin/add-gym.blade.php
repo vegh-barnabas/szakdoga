@@ -64,7 +64,7 @@
               </div>
               <div class="col-auto">
                 @foreach ($categories as $category)
-                  <input type="checkbox" id="{{ $category->name }}" name="categories" value="{{ $category->name }}">
+                  <input type="checkbox" id="{{ $category->name }}" name="categories[]" value="{{ $category->name }}">
 
                   <label for="{{ $category->name }}">
                     <span class="badge rounded-pill bg-{{ $category->style }}">{{ $category->name }}</span>

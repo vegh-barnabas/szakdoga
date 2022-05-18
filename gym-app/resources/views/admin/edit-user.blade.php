@@ -85,6 +85,24 @@
               </div>
             </div>
           </div>
+          @if ($user->is_receptionist)
+            <div class="mb-3">
+              <div class="row g-3 align-items-center">
+                <div class="col-2">
+                  <label for="gym" class="col-form-label">Recepcióshoz tartozó edzőterem</label>
+                </div>
+                <div class="col-auto">
+                  <select id="gym" name="gym" class="form-select">
+                    @foreach ($gyms as $gym)
+                      <option value="{{ $gym->id }}" {{ $user->prefered_gym == $gym->id ? 'selected' : '' }}>
+                        {{ $gym->name }}
+                      </option>
+                    @endforeach
+                  </select>
+                </div>
+              </div>
+            </div>
+          @endif
           <div class="mb-3">
             <div class="row g-3 align-items-center">
               <div class="col-2">

@@ -110,6 +110,8 @@ Route::get('/home', function () {
 Route::get('/settings', function () {
     if (Auth::user()->is_receptionist) {
         return view('receptionist.settings');
+    } else if (Auth::user()->is_admin) {
+        abort(403);
     } else {
         $gyms = Gym::all();
         $selected_gym_id = Auth::user()->prefered_gym;
@@ -640,12 +642,18 @@ Route::get('/users', function () {
     $all_users = $admins->merge($receptionists);
     $all_users = $all_users->merge($users);
 
-    return view('admin.user-list', ['all_users' => $all_users, 'gym_name' => $gym_name]);
+    $gym_count = Gym::all()->count();
+
+    return view('admin.user-list', ['all_users' => $all_users, 'gym_name' => $gym_name, 'gym_count' => $gym_count]);
 })->name('user-list')->middleware('auth');
 
 Route::get('/users/edit/{id}', function ($id) {
     if (!Auth::user()->is_admin) {
         abort(403);
+    }
+
+    if (Gym::all()->count() == 0) {
+        return Redirect::to('users')->with('no-gym-error', 0);
     }
 
     $user = User::all()->where('id', $id)->first();
@@ -654,12 +662,18 @@ Route::get('/users/edit/{id}', function ($id) {
         abort(403);
     }
 
-    return view('admin.edit-user', ['user' => $user]);
+    $gyms = Gym::all();
+
+    return view('admin.edit-user', ['user' => $user, 'gyms' => $gyms]);
 })->name('edit-user')->middleware('auth');
 
 Route::post('/users/edit/{id}', function ($id, Request $request) {
     if (!Auth::user()->is_admin) {
         abort(403);
+    }
+
+    if (Gym::all()->count() == 0) {
+        return Redirect::to('users')->with('no-gym-error');
     }
 
     $user = User::all()->where('id', $id)->first();
@@ -676,6 +690,7 @@ Route::post('/users/edit/{id}', function ($id, Request $request) {
             'permission' => 'required|in:guest,receptionist',
             'credits' => 'required|integer',
             'exitcode' => 'required|min:6|max:6',
+            'gym' => [Rule::requiredIf($user->is_receptionist), Rule::in(Gym::all()->pluck('id')->implode(','))],
             // 'newpw' => 'min:6|max:32',
             // 'newpw2' => 'same:newpw',
         ],
@@ -912,7 +927,7 @@ Route::post('/gyms/add', function (Request $request) {
             'name' => 'required|min:4|max:32',
             'address' => 'required|min:4|max:128',
             'description' => 'required|min:6|max:128',
-            'categories' => 'in:' . Category::all()->pluck('name')->implode(','),
+            'categories.*' => 'integer|distinct|in:' . Category::all()->pluck('name')->implode(','),
         ],
     );
 
@@ -929,7 +944,7 @@ Route::post('/gyms/add', function (Request $request) {
     return Redirect::back()->with('success', $validated['name']);
 })->name('add-gym')->middleware('auth');
 
-Route::get('/ticket/hide/{id}', function ($id) {
+Route::get('/buyable/hide/{id}', function ($id) {
     if (!Auth::user()->is_admin) {
         abort(403);
     }
@@ -945,7 +960,7 @@ Route::get('/ticket/hide/{id}', function ($id) {
     return view('admin.hide-buyable', ['ticket' => $ticket, 'gyms' => $gyms]);
 })->name('hide-buyable')->middleware('auth');
 
-Route::post('/ticket/hide/{id}', function ($id) {
+Route::post('/buyable/hide/{id}', function ($id) {
     if (!Auth::user()->is_admin) {
         abort(403);
     }
@@ -1000,7 +1015,7 @@ Route::post('/category/edit/{id}', function ($id, Request $request) {
     $category->update($validated);
 
     return Redirect::back()->with('success', $category->name);
-})->name('edit-buyable')->middleware('auth');
+})->name('edit-category')->middleware('auth');
 
 Route::get('/category/delete/{id}', function ($id) {
     if (!Auth::user()->is_admin) {

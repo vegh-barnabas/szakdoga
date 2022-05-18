@@ -27,7 +27,7 @@
   <div id="app">
     <nav class="navbar navbar-expand-lg navbar-light shadow-sm" id="receptionist-navbar">
       <div class="container-fluid">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand text-info" href="{{ route('index') }}">
           Beléptető rendszer
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"

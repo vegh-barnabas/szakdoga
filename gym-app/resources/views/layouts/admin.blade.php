@@ -27,7 +27,7 @@
   <div id="app">
     <nav class="navbar navbar-expand-lg navbar-light shadow-sm" id="receptionist-navbar">
       <div class="container-fluid">
-        <a class="navbar-brand" href="{{ route('index') }}">
+        <a class="navbar-brand text-danger" href="{{ route('index') }}">
           Beléptető rendszer
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
@@ -71,9 +71,6 @@
               <a class="nav-link" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown"
                 aria-expanded="true">{{ Auth::user()->name }}</a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
-                <li>
-                  <a class="dropdown-item" href="{{ route('settings') }}">Beállítások</a>
-                </li>
                 <li>
                   <a class="dropdown-item" href="{{ route('logout') }}"
                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

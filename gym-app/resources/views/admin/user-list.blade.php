@@ -2,6 +2,14 @@
 @section('title', 'Felhasználók listája')
 
 @section('content')
+  @if (Session::has('no-gym-error'))
+    <p>
+    <div class="alert alert-danger" role="alert">
+      Nem tudsz felhasználót szerkeszteni úgy, hogy nincs 1 edzőterem sem!
+    </div>
+    </p>
+  @endif
+
   <h2 class="mb-3">Felhasználók listája</h2>
   <div class="card">
     <div class="card-header">
@@ -22,7 +30,7 @@
           <tbody>
             @foreach ($all_users as $user)
               <tr>
-                @if (!$user->is_admin)
+                @if (!$user->is_admin && $gym_count > 0)
                   <form>
                     <td><a href="{{ route('edit-user', $user->id) }}" class="link-primary">{{ $user->name }}</a></td>
                   </form>
