@@ -24,7 +24,7 @@
   <div class="card">
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('add-category') }}" method="POST">
+        <form action="{{ route('add-gym') }}" method="POST">
           @csrf
           <div class="mb-3">
             <div class="row g-3 align-items-center">
@@ -60,12 +60,11 @@
           <div class="mb-3">
             <div class="row g-3 align-items-center">
               <div class="col-2">
-                <label for="description" class="col-form-label">Kategóriák</label>
+                <label for="categories" class="col-form-label">Kategóriák</label>
               </div>
               <div class="col-auto">
                 @foreach ($categories as $category)
-                  <input type="checkbox" id="{{ $category->name }}" name="{{ $category->name }}"
-                    value="{{ $category->name }}">
+                  <input type="checkbox" id="{{ $category->name }}" name="categories" value="{{ $category->name }}">
 
                   <label for="{{ $category->name }}">
                     <span class="badge rounded-pill bg-{{ $category->style }}">{{ $category->name }}</span>

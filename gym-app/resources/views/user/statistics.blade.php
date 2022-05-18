@@ -45,7 +45,8 @@
         </div>
       </div>
     </div>
-    <div class="col-6">
+
+    {{-- <div class="col-6">
       <div class="card">
         <div class="card-header">
           <h5 class="card-title">{{ $gym->name }}</h5>
@@ -74,6 +75,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> --}}
+
   </div>
 @endsection

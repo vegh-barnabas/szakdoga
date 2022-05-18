@@ -41,7 +41,6 @@
                     @endforeach
                   </tbody>
                 </table>
-                <a href="#" class="card-link">többi bérlet megjelenítése</a>
                 </p>
               </div>
             </div>
@@ -87,7 +86,6 @@
                   </tbody>
                 </table>
                 </p>
-                <a href="#" class="card-link">többi jegy megjelenítése</a>
               </div>
             </div>
           </div>
@@ -125,8 +123,6 @@
                 @endforeach
               </tbody>
             </table>
-
-            <a href="#" class="card-link">többi belépett vendég megjelenítése</a>
           @else
           @endif
           </p>

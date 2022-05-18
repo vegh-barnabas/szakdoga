@@ -78,10 +78,18 @@ class DatabaseSeeder extends Seeder
         $categories = ['szauna', '0-24', 'WC', 'súlyok', 'gépek', 'medence'];
 
         for ($i = 0; $i < 6; $i++) {
-            Category::factory()->create([
-                'gym_id' => 1,
+            $category = Category::factory()->create([
                 'name' => $categories[$i],
             ]);
+
+            $attach = rand(0, 1);
+
+            if ($attach) {
+                $gyms = Gym::all();
+                $rand_gym = $gyms->where('id', (rand(1, $gyms->count())))->first();
+
+                $rand_gym->categories()->attach($category->id);
+            }
         }
 
         /* Buyable Tickets */

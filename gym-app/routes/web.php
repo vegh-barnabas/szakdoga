@@ -712,6 +712,25 @@ Route::get('/ticket/edit/{id}', function ($id) {
 
 })->name('edit-purchased-ticket')->middleware('auth');
 
+Route::post('/ticket/edit/{id}', function (Request $request, $id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $validated = $request->validate(
+        [
+            'expiration' => 'required|date',
+            'used' => 'required|boolean',
+        ],
+    );
+
+    $ticket = Ticket::all()->where('id', $id)->first();
+
+    $ticket->update($validated);
+
+    return Redirect::back()->with('success', $ticket->name);
+})->name('edit-purchased-ticket')->middleware('auth');
+
 Route::get('/ticket/delete/{id}', function ($id) {
     if (!Auth::user()->is_admin) {
         abort(403);
@@ -883,6 +902,33 @@ Route::get('/gyms/add', function () {
     return view('admin.add-gym', ['categories' => $categories]);
 })->name('add-gym')->middleware('auth');
 
+Route::post('/gyms/add', function (Request $request) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $validated = $request->validate(
+        [
+            'name' => 'required|min:4|max:32',
+            'address' => 'required|min:4|max:128',
+            'description' => 'required|min:6|max:128',
+            'categories' => 'in:' . Category::all()->pluck('name')->implode(','),
+        ],
+    );
+
+    $category_names = explode(',', $validated['categories']);
+
+    $gym = Gym::create($validated);
+
+    foreach ($category_names as $category_name) {
+        $category = Category::all()->where('name', $category_name)->first();
+
+        $category->gyms()->attach($gym->id);
+    }
+
+    return Redirect::back()->with('success', $validated['name']);
+})->name('add-gym')->middleware('auth');
+
 Route::get('/ticket/hide/{id}', function ($id) {
     if (!Auth::user()->is_admin) {
         abort(403);
@@ -970,7 +1016,7 @@ Route::get('/category/delete/{id}', function ($id) {
     $styles = Category::styles;
 
     return view('admin.delete-category', ['category' => $category, 'styles' => $styles]);
-})->name('delete-purchased-ticket')->middleware('auth');
+})->name('delete-category')->middleware('auth');
 
 Route::delete('/category/delete/{id}', function ($id) {
     if (!Auth::user()->is_admin) {

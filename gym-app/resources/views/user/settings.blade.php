@@ -12,14 +12,14 @@
     <div class="card-body">
       <div class="card-text">
         <form>
-          <div class="mb-3">
+          {{-- <div class="mb-3">
             <label for="theme" class="form-label">Oldal témája</label>
             <select class="form-select" id="theme" name="theme">
               <option value="light" selected="selected">Világos</option>
               <option value="dark">Sötét</option>
               <option value="drawn">Rajzolt</option>
             </select>
-          </div>
+          </div> --}}
           <div class="mb-3">
             <label for="theme" class="form-label">Kiválasztott edzőterem</label>
             <select class="form-select" id="theme" name="theme">
@@ -47,7 +47,7 @@
       </div>
     </div>
   </div>
-  <div class="card mt-2 mb-3">
+  {{-- <div class="card mt-2 mb-3">
     <div class="card-header">
       <h5 class="card-title">további beállítások</h5>
     </div>
@@ -101,6 +101,6 @@
           <button type="submit" class="btn btn-danger">Beállítások alkalmazása</button>
         </form>
       </div>
-    </div>
+    </div> --}}
   </div>
 @endsection

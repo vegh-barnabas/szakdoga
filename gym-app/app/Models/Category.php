@@ -22,13 +22,12 @@ class Category extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'gym_id',
         'name',
         'style',
     ];
 
-    public function gym()
+    public function gyms()
     {
-        return $this->belongsTo(Gym::class);
+        return $this->belongsToMany(Gym::class)->withTimestamps();
     }
 }

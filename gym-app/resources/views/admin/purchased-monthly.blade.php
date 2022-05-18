@@ -43,7 +43,7 @@
                 <td>{{ $ticket->bought }}</td>
                 <td>{{ $ticket->expiration }}</td>
                 <td>
-                  <a href="{{ route('edit-purchased-monthly', $ticket->id) }}" class="link-primary">✏</a>
+                  <a href="{{ route('edit-purchased-ticket', $ticket->id) }}" class="link-primary">✏</a>
                   <a href="{{ route('delete-purchased-ticket', $ticket->id) }}" class="link-primary">❌</a>
                 </td>
               </tr>

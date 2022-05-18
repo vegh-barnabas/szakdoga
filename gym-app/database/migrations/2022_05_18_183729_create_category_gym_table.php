@@ -13,16 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('category_gym', function (Blueprint $table) {
             $table->id();
-            // $table->unsignedBigInteger('gym_id');
-            $table->string('name', 22);
-            $table->enum('style', ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark']);
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('gym_id');
             $table->timestamps();
 
-            // $table->foreign('gym_id')->references('id')->on('gyms')->onDelete('cascade');
-
-            $table->softDeletes();
+            $table->unique(['category_id', 'gym_id']);
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('gym_id')->references('id')->on('gyms')->onDelete('cascade');
         });
     }
 
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('category_gym');
     }
 };

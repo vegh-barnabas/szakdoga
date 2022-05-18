@@ -18,7 +18,7 @@
     </div>
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('let-in') }}" method="POST">
+        <form action="{{ route('edit-purchased-ticket', $ticket->id) }}" method="POST">
           @csrf
           <div class="mb-3">
             <div class="row g-3 align-items-center">
