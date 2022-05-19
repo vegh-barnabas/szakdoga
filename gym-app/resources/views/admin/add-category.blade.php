@@ -40,10 +40,10 @@
           <div class="mb-3">
             <div class="row g-3 align-items-center">
               <div class="col-2">
-                <label for="gender" class="col-form-label">Stílus</label>
+                <label for="style" class="col-form-label">Stílus</label>
               </div>
               <div class="col-auto">
-                <select id="gender" name="gender" class="form-select">
+                <select id="style" name="style" class="form-select">
                   @foreach ($styles as $style)
                     <option value="{{ $style }}" {{ old('name') == $style ? 'selected' : '' }}>
                       {{ $style }}

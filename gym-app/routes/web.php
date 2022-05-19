@@ -869,7 +869,7 @@ Route::get('/categories', function () {
     return view('admin.categories-list', ['categories' => $categories, 'styles' => $styles]);
 })->name('categories-list')->middleware('auth');
 
-Route::get('/categories/add', function () {
+Route::get('/category/add', function () {
     if (!Auth::user()->is_admin) {
         abort(403);
     }
@@ -890,7 +890,7 @@ Route::get('/gyms', function () {
     return view('admin.gym-list', ['gyms' => $gyms]);
 })->name('gym-list')->middleware('auth');
 
-Route::get('/gyms/add', function () {
+Route::get('/gym/add', function () {
     if (!Auth::user()->is_admin) {
         abort(403);
     }
@@ -900,26 +900,25 @@ Route::get('/gyms/add', function () {
     return view('admin.add-gym', ['categories' => $categories]);
 })->name('add-gym')->middleware('auth');
 
-Route::post('/gyms/add', function (Request $request) {
+Route::post('/gym/add', function (Request $request) {
     if (!Auth::user()->is_admin) {
         abort(403);
     }
 
     $validated = $request->validate(
         [
-            'name' => 'required|min:4|max:32',
+            'name' => 'required|min:4|max:32|not_in:' . Gym::all()->pluck('name'),
             'address' => 'required|min:4|max:128',
             'description' => 'required|min:6|max:128',
-            'categories.*' => 'integer|distinct|in:' . Category::all()->pluck('name')->implode(','),
+            'categories' => 'nullable',
+            'categories.*' => 'integer|distinct|in:' . Category::all()->pluck('id'),
         ],
     );
 
-    $category_names = explode(',', $validated['categories']);
-
     $gym = Gym::create($validated);
 
-    foreach ($category_names as $category_name) {
-        $category = Category::all()->where('name', $category_name)->first();
+    foreach ($request->categories as $category_id) {
+        $category = Category::all()->where('id', $category_id)->first();
 
         $category->gyms()->attach($gym->id);
     }
@@ -977,7 +976,7 @@ Route::get('/category/edit/{id}', function ($id) {
 
 })->name('edit-category')->middleware('auth');
 
-Route::post('/category/edit/{id}', function ($id, Request $request) {
+Route::patch('/category/edit/{id}', function ($id, Request $request) {
     if (!Auth::user()->is_admin) {
         abort(403);
     }
@@ -999,6 +998,23 @@ Route::post('/category/edit/{id}', function ($id, Request $request) {
 
     return Redirect::back()->with('success', $category->name);
 })->name('edit-category')->middleware('auth');
+
+Route::post('/category/add', function (Request $request) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $validated = $request->validate(
+        [
+            'name' => 'required|min:4|max:32',
+            'style' => 'required|in:' . implode(',', Category::styles),
+        ],
+    );
+
+    $category = Category::create($validated);
+
+    return Redirect::back()->with('success', $category->name);
+})->name('add-category')->middleware('auth');
 
 Route::get('/category/delete/{id}', function ($id) {
     if (!Auth::user()->is_admin) {

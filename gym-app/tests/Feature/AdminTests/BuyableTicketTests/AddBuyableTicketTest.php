@@ -5,14 +5,15 @@ namespace Tests\Feature;
 use App\Models\BuyableTicket;
 use App\Models\Gym;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase as TestingRefreshDatabase;
 use Tests\TestCase;
 
 class AddBuyableTicketTest extends TestCase
 {
+    use TestingRefreshDatabase;
+
     public function test_admin_can_create_buyable_ticket()
     {
-        $this->artisan('migrate:fresh');
-
         // Create Gym
         $gym = Gym::factory()->create();
 
@@ -31,7 +32,7 @@ class AddBuyableTicketTest extends TestCase
             'price' => 1024,
         ]);
 
-        // Check if response gives back redirect so the response is successfull
+        // Check if response gives back redirect so the response is successful
         $response->assertStatus(302);
 
         // Check if new buyable ticket is created
@@ -42,8 +43,6 @@ class AddBuyableTicketTest extends TestCase
 
     public function test_admin_cant_create_buyable_ticket_with_invalid_data()
     {
-        $this->artisan('migrate:fresh');
-
         // Create Gym
         $gym = Gym::factory()->create();
 
@@ -70,8 +69,6 @@ class AddBuyableTicketTest extends TestCase
 
     public function test_not_admin_cant_create_buyable_ticket()
     {
-        $this->artisan('migrate:fresh');
-
         // Create Gym
         $gym = Gym::factory()->create();
 

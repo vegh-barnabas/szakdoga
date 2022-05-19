@@ -29,6 +29,7 @@
       <div class="card-text">
         <form action="{{ route('edit-category', $category->id) }}" method="POST">
           @csrf
+          @method('patch')
           <div class="mb-3">
             <div class="row g-3 align-items-center">
               <div class="col-2">

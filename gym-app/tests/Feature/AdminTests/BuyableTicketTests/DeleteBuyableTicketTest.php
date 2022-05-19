@@ -5,14 +5,15 @@ namespace Tests\Feature;
 use App\Models\BuyableTicket;
 use App\Models\Gym;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase as TestingRefreshDatabase;
 use Tests\TestCase;
 
 class DeleteBuyableTicketTest extends TestCase
 {
+    use TestingRefreshDatabase;
+
     public function test_admin_can_hide_buyable_ticket()
     {
-        $this->artisan('migrate:fresh');
-
         // Create Gym
         $gym = Gym::factory()->create();
 
@@ -34,7 +35,7 @@ class DeleteBuyableTicketTest extends TestCase
         // Send request
         $response = $this->actingAs($admin)->patch('/buyable/hide/' . $buyable_ticket_id);
 
-        // Check if response gives back redirect so the response is successfull
+        // Check if response gives back redirect so the response is successful
         $response->assertStatus(302);
 
         // Check if the buyable ticket is modified
@@ -44,8 +45,6 @@ class DeleteBuyableTicketTest extends TestCase
 
     public function test_admin_can_show_buyable_ticket()
     {
-        $this->artisan('migrate:fresh');
-
         // Create Gym
         $gym = Gym::factory()->create();
 
@@ -67,7 +66,7 @@ class DeleteBuyableTicketTest extends TestCase
         // Send request
         $response = $this->actingAs($admin)->patch('/buyable/hide/' . $buyable_ticket_id);
 
-        // Check if response gives back redirect so the response is successfull
+        // Check if response gives back redirect so the response is successful
         $response->assertStatus(302);
 
         // Check if the buyable ticket is modified
@@ -77,8 +76,6 @@ class DeleteBuyableTicketTest extends TestCase
 
     public function test_not_admin_cant_hide_buyable_ticket()
     {
-        $this->artisan('migrate:fresh');
-
         // Create Gym
         $gym = Gym::factory()->create();
 
@@ -98,7 +95,7 @@ class DeleteBuyableTicketTest extends TestCase
         // Send request
         $response = $this->actingAs($user)->patch('/buyable/hide/' . $buyable_ticket_id);
 
-        // Check if response gives back redirect so the response is successfull
+        // Check if response gives back redirect so the response is successful
         $response->assertStatus(403);
 
         // Check if the buyable ticket is modified
@@ -108,8 +105,6 @@ class DeleteBuyableTicketTest extends TestCase
 
     public function test_not_admin_cant_show_buyable_ticket()
     {
-        $this->artisan('migrate:fresh');
-
         // Create Gym
         $gym = Gym::factory()->create();
 
@@ -129,7 +124,7 @@ class DeleteBuyableTicketTest extends TestCase
         // Send request
         $response = $this->actingAs($user)->patch('/buyable/hide/' . $buyable_ticket_id);
 
-        // Check if response gives back redirect so the response is successfull
+        // Check if response gives back redirect so the response is successful
         $response->assertStatus(403);
 
         // Check if the buyable ticket is modified

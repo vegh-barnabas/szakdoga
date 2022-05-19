@@ -10,8 +10,8 @@
     <div class="card-body">
       <div class="card-text">
         <form action="{{ route('delete-category', $category->id) }}" method="POST">
-          @method('delete')
           @csrf
+          @method('delete')
           <div class="mb-3">
             <div class="row g-3 align-items-center">
               <div class="col-2">
