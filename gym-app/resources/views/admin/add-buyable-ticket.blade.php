@@ -24,7 +24,7 @@
   <div class="card">
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('add-ticket') }}" method="POST">
+        <form action="{{ route('add-buyable-ticket') }}" method="POST">
           @csrf
           <div class="mb-3">
             <div class="row g-3 align-items-center">

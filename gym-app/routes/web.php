@@ -760,17 +760,17 @@ Route::delete('/ticket/delete/{id}', function ($id) {
     return Redirect::to('purchased-tickets')->with('deleted', $ticket_name);
 })->name('delete-purchased-ticket')->middleware('auth');
 
-Route::get('/ticket/add', function () {
+Route::get('/buyable/add', function () {
     if (!Auth::user()->is_admin) {
         abort(403);
     }
 
     $gyms = Gym::all();
 
-    return view('admin.add-ticket', ['gyms' => $gyms]);
-})->name('add-ticket')->middleware('auth');
+    return view('admin.add-buyable-ticket', ['gyms' => $gyms]);
+})->name('add-buyable-ticket')->middleware('auth');
 
-Route::post('/ticket/add', function (Request $request) {
+Route::post('/buyable/add', function (Request $request) {
     if (!Auth::user()->is_admin) {
         abort(403);
     }
@@ -791,9 +791,9 @@ Route::post('/ticket/add', function (Request $request) {
     BuyableTicket::create($validated);
 
     return Redirect::back()->with('success', $validated['name']);
-})->name('add-ticket')->middleware('auth');
+})->name('add-buyable-ticket')->middleware('auth'); // TODO: rename this
 
-Route::get('/buyable/edit/{id}', function ($id) {
+Route::get('/ticket/edit/{id}', function ($id) {
     if (!Auth::user()->is_admin) {
         abort(403);
     }
@@ -828,7 +828,7 @@ Route::get('/buyable/edit/{id}', function ($id) {
     return view('admin.edit-buyable', ['ticket' => $ticket, 'gyms' => $gyms]);
 })->name('edit-buyable')->middleware('auth');
 
-Route::post('/buyable/edit/{id}', function ($id, Request $request) {
+Route::patch('/buyable/edit/{id}', function ($id, Request $request) {
     if (!Auth::user()->is_admin) {
         abort(403);
     }
@@ -841,13 +841,13 @@ Route::post('/buyable/edit/{id}', function ($id, Request $request) {
 
     $validated = $request->validate(
         [
-            'gym_id' => 'required|in:' . Gym::all()->pluck('id')->implode(','),
-            'name' => 'required|min:4|max:32',
-            'type' => 'required|in:jegy,bérlet',
-            'description' => 'required|min:6|max:128',
-            'quantity' => 'required|integer',
-            'price' => 'required|integer',
-            'hidden' => 'required|boolean',
+            'gym_id' => 'in:' . Gym::all()->pluck('id')->implode(','),
+            'name' => 'min:4|max:32',
+            'type' => 'in:jegy,bérlet',
+            'description' => 'min:6|max:128',
+            'quantity' => 'integer|min:1',
+            'price' => 'integer',
+            'hidden' => 'boolean',
         ],
     );
 

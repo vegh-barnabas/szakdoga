@@ -44,6 +44,6 @@
         </table>
       </div>
 
-      <a href="{{ route('add-ticket') }}" class="btn btn-primary">Új jegy</a>
+      <a href="{{ route('add-buyable-ticket') }}" class="btn btn-primary">Új jegy</a>
     </div>
   @endsection
