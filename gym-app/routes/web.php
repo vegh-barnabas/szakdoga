@@ -718,7 +718,6 @@ Route::patch('/ticket/edit/{id}', function (Request $request, $id) {
     $validated = $request->validate(
         [
             'expiration' => 'required|date',
-            'used' => 'required|boolean',
         ],
     );
 
