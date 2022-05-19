@@ -702,15 +702,15 @@ Route::get('/ticket/edit/{id}', function ($id) {
         abort(403);
     }
 
-    if ($ticket->isMonthly() == "bérlet") {
-        return view('admin.edit-purchased-monthly', ['ticket' => $ticket]);
-    } else {
-        return view('admin.edit-purchased-ticket', ['ticket' => $ticket]);
+    if ($ticket->isMonthly()) {
+        return Redirect::back();
     }
+
+    return view('admin.edit-purchased-ticket', ['ticket' => $ticket]);
 
 })->name('edit-purchased-ticket')->middleware('auth');
 
-Route::post('/ticket/edit/{id}', function (Request $request, $id) {
+Route::patch('/ticket/edit/{id}', function (Request $request, $id) {
     if (!Auth::user()->is_admin) {
         abort(403);
     }
@@ -724,10 +724,56 @@ Route::post('/ticket/edit/{id}', function (Request $request, $id) {
 
     $ticket = Ticket::all()->where('id', $id)->first();
 
+    if ($ticket->isMonthly()) {
+        abort(403);
+    }
+
     $ticket->update($validated);
 
     return Redirect::back()->with('success', $ticket->name);
 })->name('edit-purchased-ticket')->middleware('auth');
+
+Route::get('/monthly-ticket/edit/{id}', function ($id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $ticket = Ticket::all()->where('id', $id)->first();
+
+    if ($ticket == null) {
+        abort(403);
+    }
+
+    if (!$ticket->isMonthly()) {
+        return Redirect::back();
+    }
+
+    return view('admin.edit-purchased-ticket', ['ticket' => $ticket]);
+
+})->name('edit-purchased-monthly-ticket')->middleware('auth');
+
+Route::patch('/monthly-ticket/edit/{id}', function (Request $request, $id) {
+    if (!Auth::user()->is_admin) {
+        abort(403);
+    }
+
+    $validated = $request->validate(
+        [
+            'bought' => 'required|date',
+            'expiration' => 'required|date',
+        ],
+    );
+
+    $ticket = Ticket::all()->where('id', $id)->first();
+
+    if (!$ticket->isMonthly()) {
+        abort(403);
+    }
+
+    $ticket->update($validated);
+
+    return Redirect::back()->with('success', $ticket->name);
+})->name('edit-purchased-monthly-ticket')->middleware('auth');
 
 Route::get('/ticket/delete/{id}', function ($id) {
     if (!Auth::user()->is_admin) {
@@ -792,25 +838,6 @@ Route::post('/buyable/add', function (Request $request) {
 
     return Redirect::back()->with('success', $validated['name']);
 })->name('add-buyable-ticket')->middleware('auth'); // TODO: rename this
-
-Route::get('/ticket/edit/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
-        abort(403);
-    }
-
-    $ticket = BuyableTicket::all()->where('id', $id)->first();
-
-    if ($ticket == null) {
-        abort(403);
-    }
-
-    if ($ticket->isMonthly() == "bérlet") {
-        return view('admin.edit-purchased-monthly', ['ticket' => $ticket]);
-    } else {
-        return view('admin.edit-purchased-ticket', ['ticket' => $ticket]);
-    }
-
-})->name('edit-purchased-ticket')->middleware('auth');
 
 Route::get('/buyable/edit/{id}', function ($id) {
     if (!Auth::user()->is_admin) {
