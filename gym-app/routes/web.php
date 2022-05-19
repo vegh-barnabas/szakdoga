@@ -1070,7 +1070,7 @@ Route::get('/gym/edit/{id}', function ($id) {
 
 })->name('edit-gym')->middleware('auth');
 
-Route::post('/gym/edit/{id}', function ($id, Request $request) {
+Route::patch('/gym/edit/{id}', function ($id, Request $request) {
     if (!Auth::user()->is_admin) {
         abort(403);
     }
