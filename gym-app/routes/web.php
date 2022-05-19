@@ -943,7 +943,7 @@ Route::get('/buyable/hide/{id}', function ($id) {
     return view('admin.hide-buyable', ['ticket' => $ticket, 'gyms' => $gyms]);
 })->name('hide-buyable')->middleware('auth');
 
-Route::post('/buyable/hide/{id}', function ($id) {
+Route::patch('/buyable/hide/{id}', function ($id) {
     if (!Auth::user()->is_admin) {
         abort(403);
     }

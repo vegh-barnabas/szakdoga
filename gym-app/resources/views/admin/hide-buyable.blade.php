@@ -19,6 +19,7 @@
       <div class="card-text">
         <form action="{{ route('hide-buyable', $ticket->id) }}" method="POST">
           @csrf
+          @method('patch')
           <div class="mb-3">
             <div class="row g-3 align-items-center">
               <div class="col-2">
