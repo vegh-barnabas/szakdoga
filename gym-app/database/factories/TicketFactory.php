@@ -22,8 +22,8 @@ class TicketFactory extends Factory
         $expiration = Carbon::create($bought)->add(30, 'days');
 
         return [
-            'bought' => $bought,
-            'expiration' => $expiration,
+            'bought' => $bought->format('Y-m-d'),
+            'expiration' => $expiration->format('Y-m-d'),
             'code' => $this->faker->unique()->bothify('?#?#?#'),
         ];
     }

@@ -32,7 +32,7 @@
                         <td>{{ $ticket->expiration }}</td>
                         @if ($ticket->used())
                           <td class="text-warning">Lejárt</td>
-                        @elseif ($ticket->expiration < date('Y-m-d H:i:s'))
+                        @elseif ($ticket->expired())
                           <td class="text-danger">Lejárt</td>
                         @else
                           <td class="text-success">Érvényes</td>
@@ -75,7 +75,7 @@
                         <td>{{ $ticket->expiration }}</td>
                         @if ($ticket->used())
                           <td class="text-warning">Lejárt</td>
-                        @elseif ($ticket->expiration < date('Y-m-d H:i:s'))
+                        @elseif ($ticket->expired())
                           <td class="text-danger">Lejárt</td>
                         @else
                           <td class="text-success">Érvényes</td>

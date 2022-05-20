@@ -31,13 +31,13 @@
                       @if ($ticket->useable())
                         <tr>
                             <td>{{ $ticket->get_type() }}</td>
-                          @if ($ticket->isMonthly()
+                          @if ($ticket->isMonthly())
                             <td class="text-primary"><b>{{ $ticket->get_type()  }}</b></td>
                           @else
                             <td class="text-success"><b>{{ $ticket->get_type()  }}</b></td>
                           @endif
-                          <td>{{ $ticket->expiration }}</td>
-                          @if ($ticket->expiration < date('Y-m-d H:i:s'))
+                          <td>{{ $ticket->expiration() }}</td>
+                          @if ($ticket->expired())
                             <td class="text-danger">Lejárt</td>
                             <td><button type="submit" class="btn btn-light">Hosszabbítás</button></td>
                           @else
@@ -107,8 +107,8 @@
                             @else
                               <td class="text-success"><b>{{ $ticket->get_type()  }}</b></td>
                             @endif
-                            <td>{{ $ticket->expiration }}</td>
-                            @if ($ticket->expiration < date('Y-m-d H:i:s'))
+                            <td>{{ $ticket->expiration() }}</td>
+                            @if ($ticket->expired())
                               <td class="text-danger">Lejárt</td>
                               <td><button type="submit" class="btn btn-light">Hosszabbítás</button></td>
                             @else

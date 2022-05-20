@@ -47,7 +47,7 @@
                       <td>{{ $ticket->price }}</td>
                     @endif
                     <td>
-                      @if (Auth::user()->tickets->where('type_id', $ticket->id)->first()->expiration < date('Y-m-d H:i:s'))
+                      @if (Auth::user()->tickets->where('type_id', $ticket->id)->first()->expired())
                         <button class="btn btn-primary">Hosszabbítás</button>
                       @endif
                     </td>

@@ -263,7 +263,7 @@ Route::get('/extend/{ticket}', function (Request $request, Ticket $ticket) {
         return redirect()->route('index');
     }
 
-    if ($ticket->expiration >= date('Y-m-d H:i:s')) {
+    if ($ticket->expired()) {
         return redirect()->route('tickets');
     }
 
@@ -284,7 +284,7 @@ Route::post('/extend/{ticket}', function (Request $request, Ticket $ticket) {
         return redirect()->route('index');
     }
 
-    if (strtotime($ticket->expiration) >= date('Y-m-d H:i:s')) {
+    if ($ticket->usable()) {
         return redirect()->route('tickets');
     }
 
@@ -293,8 +293,9 @@ Route::post('/extend/{ticket}', function (Request $request, Ticket $ticket) {
     }
     // TODO: error
 
-    $expiration = new DateTime();
-    $expiration->modify("+1 month");
+    $expiration = Carbon::create();
+    $expiration->add(1, 'month');
+
     $ticket->expiration = $expiration;
     $ticket->save();
 

@@ -32,8 +32,8 @@
                       @foreach ($monthly_tickets as $ticket)
                         <tr>
                           <td>{{ $ticket->type->name }}</td>
-                          <td>{{ $ticket->expiration }}</td>
-                          @if ($ticket->expiration < date('Y-m-d H:i:s'))
+                          <td>{{ $ticket->expiration() }}</td>
+                          @if ($ticket->expired())
                             <td class="text-danger">Lejárt</td>
                             <td><button type="button" class="btn btn-light">Hosszabbítás</button></td>
                           @else
@@ -89,11 +89,11 @@
                       @foreach ($tickets as $ticket)
                         <tr>
                           <td>{{ $ticket->type->name }}</td>
-                          <td>{{ $ticket->expiration }}</td>
+                          <td>{{ $ticket->expiration() }}</td>
                           @if ($ticket->used() == true)
                             <td class="text-warning">Felhasznált</td>
                             <td><button type="button" class="btn btn-light">Új vásárlása</button></td>
-                          @elseif ($ticket->expiration < date('Y-m-d H:i:s'))
+                          @elseif ($ticket->expired())
                             <td class="text-danger">Lejárt</td>
                             <td><button type="button" class="btn btn-light">Új vásárlása</button></td>
                           @else

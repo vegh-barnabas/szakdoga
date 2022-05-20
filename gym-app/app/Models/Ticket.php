@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use Carbon\CarbonImmutable;
+
 class Ticket extends Model
 {
     use HasFactory;
@@ -61,11 +63,18 @@ class Ticket extends Model
 
     public function useable()
     {
-        return ($this->expiration >= date('Y-m-d H:i:s') && !$this->used());
+        return ($this->expiration >= date('Y-m-d') && !$this->used());
     }
 
     public function expired()
     {
         return (!$this->useable() || $this->used());
+    }
+
+    public function expiration()
+    {
+        $expiration = CarbonImmutable::Create($this->expiration);
+
+        return $expiration->format('Y. m. d.');
     }
 }
