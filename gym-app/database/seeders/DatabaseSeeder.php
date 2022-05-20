@@ -4,10 +4,12 @@ namespace Database\Seeders;
 
 use App\Models\BuyableTicket;
 use App\Models\Category;
+use App\Models\Enterance;
 use App\Models\Gym;
 use App\Models\Locker;
 use App\Models\Ticket;
 use App\Models\User;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -157,17 +159,80 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+        /* Tickets */
+        $users = User::all()->where('permission', 'user');
+        $buyable_tickets = BuyableTicket::all()->where('type', 'jegy');
+        $buyable_monthly_tickets = BuyableTicket::all()->where('type', 'bérlet');
+        foreach ($users as $user) {
+            // one-time tickets
+            for ($i = 0; $i < rand(0, 10); $i++) {
+                $random_gym_id = $gyms->random()->id;
+                $gym_buyable_ticket = $buyable_tickets->where('gym_id', $random_gym_id)->random();
+                Ticket::factory()->create([
+                    'user_id' => $user,
+                    'gym_id' => $random_gym_id,
+                    'type_id' => $gym_buyable_ticket->id,
+                ]);
+            }
 
-        // Test user
-        Ticket::factory()->create([
-            'user_id' => 1,
-            'gym_id' => 1,
-            'type_id' => 1,
-        ]);
-        Ticket::factory()->create([
-            'user_id' => 1,
-            'gym_id' => 1,
-            'type_id' => 4,
-        ]);
+            // monthly tickets
+            $random_gym_id = $gyms->random()->id;
+            $gym_random_buyable_monthly_tickets = $buyable_monthly_tickets->where('gym_id', $random_gym_id)->random(rand(0, $buyable_monthly_tickets->count()));
+
+            foreach ($gym_random_buyable_monthly_tickets as $gym_random_buyable_monthly_ticket) {
+                Ticket::factory()->create([
+                    'user_id' => $user,
+                    'gym_id' => $random_gym_id,
+                    'type_id' => $gym_random_buyable_monthly_ticket->id,
+                ]);
+            }
+        }
+
+        /* Enterances */
+        $tickets = Ticket::all()->filter(function ($ticket) {
+            return !$ticket->isMonthly();
+        });
+        $monthly_tickets = Ticket::all()->filter(function ($ticket) {
+            return $ticket->isMonthly();
+        });
+
+        $random_tickets = $tickets->random(rand(0, $tickets->count()));
+        $random_monthly_tickets = $monthly_tickets->random(rand(0, $monthly_tickets->count()));
+
+        foreach ($random_tickets as $random_ticket) {
+            $enterances = 1;
+            if ($random_ticket->isMonthly()) {
+                $enterances = rand(0, 15);
+            }
+
+            for ($i = 0; $i < $enterances; $i++) {
+                $random_ticket_bought_date = CarbonImmutable::Create($random_ticket->bought);
+
+                $random_enterance_date = $random_ticket_bought_date->add(rand(0, 20), 'day')->add(rand(0, 12), 'hour')->add(rand(0, 55), 'minute');
+
+                $random_exit_date = CarbonImmutable::Create($random_enterance_date)->add(rand(1, 4), 'hour')->add(rand(11, 55), 'minute');
+
+                Enterance::factory()->create([
+                    'gym_id' => $random_ticket->gym->id,
+                    'user_id' => $random_ticket->user->id,
+                    'ticket_id' => $random_ticket->id,
+                    'enter' => $random_enterance_date,
+                    'exit' => $random_exit_date,
+                ]);
+            }
+
+        }
+
+        // // Test user
+        // Ticket::factory()->create([
+        //     'user_id' => 1,
+        //     'gym_id' => 1,
+        //     'type_id' => 1,
+        // ]);
+        // Ticket::factory()->create([
+        //     'user_id' => 1,
+        //     'gym_id' => 1,
+        //     'type_id' => 4,
+        // ]);
     }
 }
