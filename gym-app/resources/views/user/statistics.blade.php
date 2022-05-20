@@ -1,5 +1,5 @@
 @extends('layouts.user')
-@section('title', 'Főoldal')
+@section('title', 'Statisztika')
 
 @section('content')
   <h2>Statisztika</h2>

@@ -1,11 +1,11 @@
 @extends('layouts.user')
-@section('title', 'Beléptetés')
+@section('title', 'Bérlet meghosszabbítása')
 
 @section('content')
-  <h2 class="mb-3">Jegy meghosszabbítása</h2>
+  <h2 class="mb-3">Bérlet meghosszabbítása</h2>
   <div class="card">
     <div class="card-header">
-      <h5 class="card-title">Harap utcai edzőterem</h5>
+      <h5 class="card-title">{{ $gym->name }}</h5>
     </div>
     <div class="card-body">
       <div class="card-text">

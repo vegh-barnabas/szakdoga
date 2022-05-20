@@ -7,7 +7,7 @@
   <p>Ezen az oldalon tudod a beállításaidat módosítani.</p>
   <div class="card">
     <div class="card-header">
-      <h5 class="card-title"><b>user1</b> beállításai</h5>
+      <h5 class="card-title"><b>{{ Auth::user()->name }}</b> beállításai</h5>
     </div>
     <div class="card-body">
       <div class="card-text">

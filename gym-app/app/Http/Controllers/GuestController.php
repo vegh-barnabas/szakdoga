@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class GuestController extends Controller
 {
@@ -31,7 +32,7 @@ class GuestController extends Controller
         return view('gyms.index', ['gyms' => Gym::all()]);
     }
 
-    public function choose_gym()
+    public function choose_gym(Request $request)
     {
         if (session('gym') != null) {
             return redirect()->route('index');
@@ -100,7 +101,7 @@ class GuestController extends Controller
         return view('user.buy_ticket', ['ticket' => $ticket, 'ticket_type' => $ticket_type]);
     }
 
-    public function buy_ticket_create(Request $request, $buyable_ticket_id)
+    public function buy_ticket_create($buyable_ticket_id)
     {
         $buyable_ticket = BuyableTicket::find($buyable_ticket_id);
 
@@ -149,7 +150,7 @@ class GuestController extends Controller
         return view('user.extend_ticket', ['ticket' => $ticket]);
     }
 
-    public function extend_ticket(Request $request, Ticket $ticket)
+    public function extend_ticket(Ticket $ticket)
     {
         if (session('gym') == null) {
             return redirect()->route('gyms');

@@ -40,12 +40,12 @@
               <a class="nav-link {{ Route::is('index') ? 'active' : '' }}" href="{{ route('index') }}">Főoldal</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ Route::is('let-in') ? 'active' : '' }}"
-                href="{{ route('let-in') }}">Beléptetés</a>
+              <a class="nav-link {{ Route::is('receptionist.let-in.index-page') ? 'active' : '' }}"
+                href="{{ route('receptionist.let-in.index-page') }}">Beléptetés</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ Route::is('let-out') ? 'active' : '' }}"
-                href="{{ route('let-out') }}">Kiléptetés</a>
+              <a class="nav-link {{ Route::is('receptionist.let-out.index-page') ? 'active' : '' }}"
+                href="{{ route('receptionist.let-out.index-page') }}">Kiléptetés</a>
             </li>
             <li class="collapse navbar-collapse" id="navbarNavDarkDropdown">
               <ul class="navbar-nav">
@@ -59,7 +59,7 @@
                         listája</a></li>
                     <li><a class="dropdown-item" href="{{ route('purchased-tickets') }}">Megvásárolt jegyek
                         listája</a></li>
-                    <li><a class="dropdown-item" href="{{ route('buyable-ticket-list') }}">Vásárolható
+                    <li><a class="dropdown-item" href="{{ route('buyable-tickets.index') }}">Vásárolható
                         jegyek/bérletek listája</a></li>
                   </ul>
                 </li>

@@ -51,11 +51,11 @@ Route::resource('users', UserController::class)->middleware('auth');
 /* Guest routes */
 Route::get('/', [GuestController::class, 'choose_gym_page'])->name('guest.gyms.list')->middleware('auth');
 Route::post('/', [GuestController::class, 'choose_gym'])->name('guest.gyms.choose')->middleware('auth');
+Route::get('/tickets', [GuestController::class, 'tickets'])->name('guest.tickets')->middleware('auth');
 
-Route::get('/buy-ticket', [GuestController::class, 'tickets'])->name('guest.ticket.index')->middleware('auth');
-Route::get('/buy-ticket/list', [GuestController::class, 'buy_ticket_list'])->name('guest.ticket.list')->middleware('auth');
-Route::get('/buy-ticket/{id}', [GuestController::class, 'buy_ticket_show'])->name('guest.ticket.show')->middleware('auth');
-Route::post('/buy-ticket/{id}', [GuestController::class, 'buy_ticket_create'])->name('guest.ticket.create')->middleware('auth');
+Route::get('/buy-ticket', [GuestController::class, 'buy_ticket_list'])->name('guest.buy-ticket')->middleware('auth');
+Route::get('/buy-ticket/{id}', [GuestController::class, 'buy_ticket_show'])->name('guest.buy-ticket.show')->middleware('auth');
+Route::post('/buy-ticket/{id}', [GuestController::class, 'buy_ticket_create'])->name('guest.buy-ticket.create')->middleware('auth');
 
 Route::get('/extend-ticket/{id}', [GuestController::class, 'extend_ticket_page'])->name('guest.extend-ticket.show')->middleware('auth');
 Route::patch('/extend-ticket/{id}', [GuestController::class, 'extend_ticket'])->name('guest.extend-ticket.extend')->middleware('auth');

@@ -1,5 +1,5 @@
 @extends('layouts.user')
-@section('title', 'Főoldal')
+@section('title', 'Jegyek és bérletek listája')
 
 @section('content')
   <h2>Jegyek, bérletek</h2>
@@ -30,11 +30,11 @@
                     @foreach ($tickets as $ticket)
                       @if ($ticket->useable())
                         <tr>
-                            <td>{{ $ticket->get_type() }}</td>
+                          <td>{{ $ticket->get_type() }}</td>
                           @if ($ticket->isMonthly())
-                            <td class="text-primary"><b>{{ $ticket->get_type()  }}</b></td>
+                            <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
                           @else
-                            <td class="text-success"><b>{{ $ticket->get_type()  }}</b></td>
+                            <td class="text-success"><b>{{ $ticket->get_type() }}</b></td>
                           @endif
                           <td>{{ $ticket->expiration() }}</td>
                           @if ($ticket->expired())
@@ -100,12 +100,12 @@
                     @foreach ($tickets as $ticket)
                       @if ($ticket->isMonthly() && !$ticket->useable())
                         <tr>
-                          <form action="{{ route('extend_ticket', $ticket) }}" method="GET">
+                          <form action="{{ route('guest.extend-ticket.show', $ticket) }}" method="GET">
                             <td>{{ $ticket->get_type() }}</td>
                             @if ($ticket->isMonthly())
-                              <td class="text-primary"><b>{{ $ticket->get_type()  }}</b></td>
+                              <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
                             @else
-                              <td class="text-success"><b>{{ $ticket->get_type()  }}</b></td>
+                              <td class="text-success"><b>{{ $ticket->get_type() }}</b></td>
                             @endif
                             <td>{{ $ticket->expiration() }}</td>
                             @if ($ticket->expired())

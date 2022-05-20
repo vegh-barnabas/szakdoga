@@ -1,18 +1,18 @@
 @extends('layouts.user')
-@section('title', 'Beléptetés')
+@section('title', 'Jegy/bérlet vásárlása')
 
 @section('content')
-  <h2 class="mb-3">Jegy vásárlása</h2>
+  <h2 class="mb-3">Jegy/bérlet vásárlása</h2>
   <div class="card">
     <div class="card-header">
-      <h5 class="card-title">Harap utcai edzőterem</h5>
+      <h5 class="card-title">{{ $gym->name }}</h5>
     </div>
     <div class="card-body">
       <div class="card-text">
         <div class="alert alert-warning text-center" role="alert">
           <h3 class="mb-3">A {{ $ticket_type }} vásárlása 1 hónapra vonatkozik!</h2>
         </div>
-        <form action="" method="POST">
+        <form action="{{ route('guest.buy-ticket.create') }}" method="POST">
           @csrf
           <h2 class="mb-3">{{ $ticket_type }} adatai</h2>
           <div class="row g-3 align-items-center mb-3">

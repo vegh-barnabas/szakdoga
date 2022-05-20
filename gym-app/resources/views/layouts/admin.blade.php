@@ -40,8 +40,8 @@
               <a class="nav-link {{ Route::is('index') ? 'active' : '' }}" href="{{ route('index') }}">Főoldal</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ Route::is('user-list') ? 'active' : '' }}"
-                href="{{ route('user-list') }}">Felhasználók
+              <a class="nav-link {{ Route::is('users.index') ? 'active' : '' }}"
+                href="{{ route('users.index') }}">Felhasználók
               </a>
             </li>
             <li class="nav-item">
@@ -53,7 +53,7 @@
                 href="{{ route('purchased-tickets') }}">Megvásárolt jegyek</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ Route::is('buyable-ticket-list') ? 'active' : '' }}"
+              <a class="nav-link {{ Route::is('buyable-tickets.index') ? 'active' : '' }}"
                 href="{{ route('buyable-tickets.index') }}">Vásárolható
                 jegyek/bérletek</a>
             </li>
@@ -62,8 +62,8 @@
                 href="{{ route('categories.index') }}">Kategóriák</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ Route::is('gym-list') ? 'active' : '' }}"
-                href="{{ route('gym-list') }}">Edzőtermek</a>
+              <a class="nav-link {{ Route::is('gyms.index') ? 'active' : '' }}"
+                href="{{ route('gyms.index') }}">Edzőtermek</a>
             </li>
           </ul>
           <ul class="navbar-nav ms-auto">

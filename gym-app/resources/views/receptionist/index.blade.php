@@ -2,7 +2,7 @@
 @section('title', 'Főoldal')
 
 @section('content')
-  <h2>Üdv újra, <b>receptionist1</b>!</h2>
+  <h2>Üdv újra, <b>{{ Auth::user()->name }}</b>!</h2>
   <div class="row">
     <div class="col p-4">
       <div class="row">

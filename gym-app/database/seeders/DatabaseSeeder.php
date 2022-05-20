@@ -214,19 +214,6 @@ class DatabaseSeeder extends Seeder
                     'exit' => $random_exit_date,
                 ]);
             }
-
         }
-
-        // // Test user
-        // Ticket::factory()->create([
-        //     'user_id' => 1,
-        //     'gym_id' => 1,
-        //     'type_id' => 1,
-        // ]);
-        // Ticket::factory()->create([
-        //     'user_id' => 1,
-        //     'gym_id' => 1,
-        //     'type_id' => 4,
-        // ]);
     }
 }

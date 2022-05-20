@@ -1,5 +1,5 @@
 @extends('layouts.user')
-@section('title', 'Főoldal')
+@section('title', 'Jegy/bérlet vásárlás')
 
 @section('content')
   <h2>Jegy/bérlet vásárlás</h2>
@@ -30,7 +30,7 @@
               {{-- existing bérlet --}}
               @if (Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->isMonthly())
                 <form
-                  action="{{ route('extend_ticket',Auth::user()->tickets->where('type_id', $ticket->id)->first()) }}"
+                  action="{{ route('guest.extend-ticket.show',Auth::user()->tickets->where('type_id', $ticket->id)->first()) }}"
                   method="GET">
                   <tr>
                     <td>{{ $ticket->name }}</td>
@@ -58,7 +58,7 @@
             @foreach ($buyable_tickets as $ticket)
               {{-- existing ticket --}}
               @if (Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && !$ticket->isMonthly())
-                <form action="{{ route('buy_ticket', $ticket->id) }}" method="GET">
+                <form action="{{ route('guest.buy-ticket.show', $ticket->id) }}" method="GET">
                   <tr>
                     <td>{{ $ticket->name }}</td>
                     <td>{{ $ticket->get_type() }}</td>
@@ -83,7 +83,7 @@
             @foreach ($buyable_tickets as $ticket)
               {{-- non-existing bérlet --}}
               @if (!Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->isMonthly())
-                <form action="{{ route('buy_ticket', $ticket->id) }}" method="GET">
+                <form action="{{ route('guest.buy-ticket.show', $ticket->id) }}" method="GET">
                   <tr>
                     <td>{{ $ticket->name }}</td>
                     <td>{{ $ticket->get_type() }}</td>
@@ -108,7 +108,7 @@
             @foreach ($buyable_tickets as $ticket)
               {{-- non-existing ticket --}}
               @if (!Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && !$ticket->isMonthly())
-                <form action="{{ route('buy_ticket', $ticket->id) }}" method="GET">
+                <form action="{{ route('guest.buy-ticket.show', $ticket->id) }}" method="GET">
                   <tr>
                     <td>{{ $ticket->name }}</td>
                     <td>{{ $ticket->get_type() }}</td>

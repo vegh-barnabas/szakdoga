@@ -46,16 +46,16 @@
               <a class="nav-link {{ Route::is('index') ? 'active' : '' }}" href="{{ route('index') }}">Főoldal</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ Route::is('tickets') ? 'active' : '' }}"
-                href="{{ route('tickets') }}">Jegyeim</a>
+              <a class="nav-link {{ Route::is('guest.tickets') ? 'active' : '' }}"
+                href="{{ route('guest.tickets') }}">Jegyeim</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ Route::is('buyticketpage') ? 'active' : '' }}"
-                href="{{ route('buyticketpage') }}">Jegyvásárlás</a>
+              <a class="nav-link {{ Route::is('guest.buy-ticket') ? 'active' : '' }}"
+                href="{{ route('guest.buy-ticket') }}">Jegyvásárlás</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ Route::is('userstats') ? 'active' : '' }}"
-                href="{{ route('userstats') }}">Statisztika</a>
+              <a class="nav-link {{ Route::is('guest.statistics') ? 'active' : '' }}"
+                href="{{ route('guest.statistics') }}">Statisztika</a>
             </li>
           </ul>
           <ul class="navbar-nav ms-auto">
