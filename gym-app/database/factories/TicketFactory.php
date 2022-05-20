@@ -18,18 +18,13 @@ class TicketFactory extends Factory
      */
     public function definition()
     {
-        $code = "";
-        do {
-            $code = $this->faker->bothify('?#?#?#');
-        } while (Ticket::all()->where('code', $code)->count() > 0);
-
         $bought = $this->faker->dateTimeBetween('-2 month', '+1 month');
         $expiration = Carbon::create($bought)->add(30, 'days');
 
         return [
             'bought' => $bought,
             'expiration' => $expiration,
-            'code' => $code,
+            'code' => $this->faker->unique()->bothify('?#?#?#'),
         ];
     }
 }

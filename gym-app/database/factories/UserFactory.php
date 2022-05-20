@@ -20,12 +20,12 @@ class UserFactory extends Factory
         $entered = $this->faker->boolean();
 
         return [
-            'name' => $this->faker->name(),
+            'name' => $this->faker->unique()->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'credits' => $this->faker->numberBetween(0, 15000),
             'gender' => $this->faker->boolean() ? 'male' : 'female',
             'permission' => 'user',
-            'exit_code' => $this->faker->bothify('?#?#??'),
+            'exit_code' => $this->faker->unique()->bothify('?#?#??'),
             'prefered_gym' => null,
             'email_verified_at' => now(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password

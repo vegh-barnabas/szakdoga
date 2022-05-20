@@ -18,7 +18,7 @@ class BuyableTicketFactory extends Factory
     {
         return [
             'type' => $this->faker->boolean() ? 'monthly' : 'one-time',
-            'name' => $this->faker->word(rand(1, 3), true),
+            'name' => $this->faker->unique()->word(rand(1, 3), true),
             'description' => $this->faker->sentence(),
             'quantity' => $this->faker->boolean() ? 999 : $this->faker->numberBetween(0, 30),
             'price' => $this->faker->boolean() ? 0 : $this->faker->numberBetween(500, 10000),
