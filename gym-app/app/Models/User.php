@@ -23,7 +23,6 @@ class User extends Authenticatable
         'permission',
         'credits',
         'gender',
-        'locker_id',
         'exit_code',
         'prefered_gym',
     ];
