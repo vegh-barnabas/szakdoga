@@ -6,7 +6,6 @@ use App\Models\BuyableTicket;
 use App\Models\Category;
 use App\Models\Enterance;
 use App\Models\Gym;
-use App\Models\Locker;
 use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -152,28 +151,6 @@ class DatabaseSeeder extends Seeder
                         ]);
                     }
                 }
-            }
-        }
-
-/* Lockers */
-        foreach ($gyms as $gym) {
-            for ($i = 0; $i < rand(10, 20); $i++) {
-                Locker::factory()->create([
-                    'gym_id' => $gym->id,
-                    'number' => $i,
-                ]);
-            }
-        }
-
-        $enterances = Enterance::all();
-        foreach ($enterances as $index => $enterance) {
-            if ($enterance->exit == null) {
-                Locker::factory()->create([
-                    'gym_id' => $enterance->gym_id,
-                    'user_id' => $enterance->user_id,
-                    'gender' => $enterance->user->gender,
-                    'number' => $index,
-                ]);
             }
         }
     }

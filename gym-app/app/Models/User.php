@@ -56,11 +56,6 @@ class User extends Authenticatable
         return $this->hasMany(Enterance::class);
     }
 
-    public function locker()
-    {
-        return $this->hasOne(Locker::class);
-    }
-
     public function getPreferedGymName()
     {
         if ($this->prefered_gym == null) {

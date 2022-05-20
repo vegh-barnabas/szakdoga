@@ -6,7 +6,6 @@ use App\Models\BuyableTicket;
 use App\Models\Category;
 use App\Models\Enterance;
 use App\Models\Gym;
-use App\Models\Locker;
 use App\Models\Ticket;
 use App\Models\User;
 use Carbon\CarbonImmutable;
@@ -150,15 +149,6 @@ class DatabaseSeeder extends Seeder
             'hidden' => 0,
         ]);
 
-        /* Lockers */
-        foreach ($gyms as $gym) {
-            for ($i = 0; $i < rand(10, 20); $i++) {
-                Locker::factory()->create([
-                    'gym_id' => $gym->id,
-                    'number' => $i,
-                ]);
-            }
-        }
         /* Tickets */
         $users = User::all()->where('permission', 'user');
         $buyable_tickets = BuyableTicket::all()->filter(function ($ticket) {

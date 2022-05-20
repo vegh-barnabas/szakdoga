@@ -40,14 +40,6 @@ class Gym extends Model
             $gym->buyableTickets()->delete();
             $gym->tickets()->delete();
 
-            // delete lockers associated with the gym
-            $lockers = Locker::all();
-            foreach ($lockers as $locker) {
-                if ($locker->gym_id == $gym->id) {
-                    $locker->delete();
-                }
-            }
-
             $users = User::all();
             foreach ($users as $user) {
                 if ($user->prefered_gym == $gym->id) {
