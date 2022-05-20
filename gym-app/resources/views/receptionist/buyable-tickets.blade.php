@@ -23,7 +23,7 @@
             @foreach ($tickets as $ticket)
               <tr>
                 <td class="text-{{ $ticket->isMonthly() ? 'primary' : 'success' }}">{{ $ticket->name }}</td>
-                <td>{{ $ticket->type }}</td>
+                <td>{{ $ticket->get_type() }}</td>
                 <td>{{ $ticket->description }}</td>
                 <td>{{ $ticket->quantity == 999 ? 'Végtelen' : $ticket->quantity }}</td>
                 <td>{{ $ticket->price }}</td>

@@ -26,7 +26,7 @@
             @foreach ($tickets as $ticket)
               <tr>
                 <td>{{ $ticket->type->name }}</td>
-                <td>{{ $ticket->type->type }}</td>
+                <td>{{ $ticket->get_type() }}</td>
                 <td>{{ $ticket->type->description }}</td>
                 <td>{{ $ticket->user->name }} (ID {{ $ticket->user->id }})</td>
                 @if ($ticket->useable())

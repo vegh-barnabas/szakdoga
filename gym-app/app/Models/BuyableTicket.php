@@ -35,4 +35,9 @@ class BuyableTicket extends Model
     {
         return $this->type == 'monthly';
     }
+
+    public function get_type()
+    {
+        return $this->isMonthly() ? 'bérlet' : 'jegy';
+    }
 }
