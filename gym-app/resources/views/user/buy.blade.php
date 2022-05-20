@@ -28,13 +28,13 @@
           <tbody>
             @foreach ($buyable_tickets as $ticket)
               {{-- existing bérlet --}}
-              @if (Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->type == 'bérlet')
+              @if (Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->isMonthly())
                 <form
                   action="{{ route('extend_ticket',Auth::user()->tickets->where('type_id', $ticket->id)->first()) }}"
                   method="GET">
                   <tr>
                     <td>{{ $ticket->name }}</td>
-                    <td>{{ $ticket->type }}</td>
+                    <td>{{ $ticket->get_type() }}</td>
                     <td>{{ $ticket->description }}</td>
                     @if ($ticket->quantity == 999)
                       <td>végtelen</td>
@@ -57,11 +57,11 @@
             @endforeach
             @foreach ($buyable_tickets as $ticket)
               {{-- existing ticket --}}
-              @if (Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->type == 'jegy')
+              @if (Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && !$ticket->isMonthly())
                 <form action="{{ route('buy_ticket', $ticket->id) }}" method="GET">
                   <tr>
                     <td>{{ $ticket->name }}</td>
-                    <td>{{ $ticket->type }}</td>
+                    <td>{{ $ticket->get_type() }}</td>
                     <td>{{ $ticket->description }}</td>
                     @if ($ticket->quantity == 999)
                       <td>végtelen</td>
@@ -82,11 +82,11 @@
             @endforeach
             @foreach ($buyable_tickets as $ticket)
               {{-- non-existing bérlet --}}
-              @if (!Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->type == 'bérlet')
+              @if (!Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->isMonthly())
                 <form action="{{ route('buy_ticket', $ticket->id) }}" method="GET">
                   <tr>
                     <td>{{ $ticket->name }}</td>
-                    <td>{{ $ticket->type }}</td>
+                    <td>{{ $ticket->get_type() }}</td>
                     <td>{{ $ticket->description }}</td>
                     @if ($ticket->quantity == 999)
                       <td>végtelen</td>
@@ -107,11 +107,11 @@
             @endforeach
             @foreach ($buyable_tickets as $ticket)
               {{-- non-existing ticket --}}
-              @if (!Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->type == 'jegy')
+              @if (!Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && !$ticket->isMonthly())
                 <form action="{{ route('buy_ticket', $ticket->id) }}" method="GET">
                   <tr>
                     <td>{{ $ticket->name }}</td>
-                    <td>{{ $ticket->type }}</td>
+                    <td>{{ $ticket->get_type() }}</td>
                     <td>{{ $ticket->description }}</td>
                     @if ($ticket->quantity == 999)
                       <td>végtelen</td>

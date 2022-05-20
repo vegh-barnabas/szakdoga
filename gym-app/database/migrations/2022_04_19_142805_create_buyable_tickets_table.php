@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('buyable_tickets', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('gym_id');
-            $table->string('type', 25);
+            $table->enum('type', ['one-time', 'monthly']);
             $table->string('name', 45);
             $table->text('description');
             $table->integer('quantity');

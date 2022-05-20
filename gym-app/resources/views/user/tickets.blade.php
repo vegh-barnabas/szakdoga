@@ -30,11 +30,11 @@
                     @foreach ($tickets as $ticket)
                       @if ($ticket->useable())
                         <tr>
-                          <td>{{ $ticket->type->name }}</td>
-                          @if ($ticket->type->type == 'bérlet')
-                            <td class="text-primary"><b>{{ $ticket->type->type }}</b></td>
+                            <td>{{ $ticket->get_type() }}</td>
+                          @if ($ticket->isMonthly()
+                            <td class="text-primary"><b>{{ $ticket->get_type()  }}</b></td>
                           @else
-                            <td class="text-success"><b>{{ $ticket->type->type }}</b></td>
+                            <td class="text-success"><b>{{ $ticket->get_type()  }}</b></td>
                           @endif
                           <td>{{ $ticket->expiration }}</td>
                           @if ($ticket->expiration < date('Y-m-d H:i:s'))
@@ -44,7 +44,7 @@
                             <td class="text-success">Aktív</td>
                             <td>
                               <p>
-                                @if ($ticket->type->type == 'bérlet')
+                                @if ($ticket->isMonthly())
                                   <button class="btn btn-primary" type="submit" data-bs-toggle="collapse"
                                     data-bs-target="{{ '#' . Str::slug($ticket->type->name . $ticket->id) }}"
                                     aria-expanded="false" aria-controls="{{ $ticket->id }}">
@@ -98,14 +98,14 @@
                   </thead>
                   <tbody>
                     @foreach ($tickets as $ticket)
-                      @if ($ticket->type->type == 'bérlet' && !$ticket->useable())
+                      @if ($ticket->isMonthly() && !$ticket->useable())
                         <tr>
                           <form action="{{ route('extend_ticket', $ticket) }}" method="GET">
-                            <td>{{ $ticket->type->name }}</td>
-                            @if ($ticket->type->type == 'bérlet')
-                              <td class="text-primary"><b>{{ $ticket->type->type }}</b></td>
+                            <td>{{ $ticket->get_type() }}</td>
+                            @if ($ticket->isMonthly())
+                              <td class="text-primary"><b>{{ $ticket->get_type()  }}</b></td>
                             @else
-                              <td class="text-success"><b>{{ $ticket->type->type }}</b></td>
+                              <td class="text-success"><b>{{ $ticket->get_type()  }}</b></td>
                             @endif
                             <td>{{ $ticket->expiration }}</td>
                             @if ($ticket->expiration < date('Y-m-d H:i:s'))

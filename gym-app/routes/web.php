@@ -41,10 +41,10 @@ Route::get('/home', function () {
         $enterances = Enterance::all()->where('gym_id', $gym->id)->where('exit', null);
 
         $tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
-            return $ticket->type->type == 'jegy';
+            return !$ticket->isMonthly();
         })->take(5);
         $monthly_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
-            return $ticket->type->type == 'bérlet';
+            return $ticket->isMonthly();
         })->sortByDesc('bought')->take(5);
 
         return view('receptionist.index', ['enterances' => $enterances, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'gym' => $gym]);
@@ -53,13 +53,15 @@ Route::get('/home', function () {
         $gym_name = Gym::all()->pluck('name')->implode(',');
 
         $tickets = Ticket::all()->filter(function ($ticket) {
-            return $ticket->type->type == 'jegy';
+            return !$ticket->isMonthly();
         })->sortByDesc('bought')->take(5);
         $monthly_tickets = Ticket::all()->filter(function ($ticket) {
-            return $ticket->type->type == 'bérlet';
+            return $ticket->isMonthly();
         })->sortByDesc('bought')->take(5);
 
-        $active_enterances = Enterance::all();
+        $active_enterances = Enterance::all()->filter(function ($enterance) {
+            return !$enterance->exited();
+        });
 
         // TODO: receptionist login
         $active_receptionists = User::all()->where('is_receptionist()');
@@ -187,7 +189,7 @@ Route::get('/tickets', function () {
         ->where('gym_id', $gym->id)
         ->sortByDesc('expiration')
         ->sortBy(function ($ticket) {
-            return $ticket->type->type;
+            return $ticket->get_type() ;
         });
 
     return view('user.tickets', ['gym' => $gym, 'tickets' => $tickets, 'showPagination' => is_null(request('all'))]);
@@ -314,7 +316,7 @@ Route::get('/buy/{ticket}', function (Request $request, $buyable_ticket_id) {
 
     $ticket = BuyableTicket::find($buyable_ticket_id);
 
-    $ticket_type = $ticket->type == "bérlet" ? "Bérlet" : "Jegy";
+    $ticket_type = $ticket->isMonthly() ? "Bérlet" : "Jegy";
 
     return view('user.buy_ticket', ['ticket' => $ticket, 'ticket_type' => $ticket_type]);
 })->name('buy_ticket')->middleware('auth');

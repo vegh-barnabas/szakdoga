@@ -42,12 +42,17 @@ class Ticket extends Model
 
     public function isMonthly()
     {
-        return $this->type->type == "bérlet";
+        return $this->type->isMonthly();
+    }
+
+    public function get_type()
+    {
+        return $this->type->isMonthly() ? 'bérlet' : 'jegy';
     }
 
     public function used()
     {
-        if ($this->type == "jegy" && $this->enterances->count() > 0) {
+        if (!$this->isMonthly() && $this->enterances->count() > 0) {
             return true;
         }
 

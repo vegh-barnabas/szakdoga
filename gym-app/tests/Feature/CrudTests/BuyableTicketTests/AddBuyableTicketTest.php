@@ -26,7 +26,7 @@ class AddBuyableTicketTest extends TestCase
         $response = $this->actingAs($admin)->post('/buyable/add', [
             'gym_id' => $gym->id,
             'name' => 'Test Ticket',
-            'type' => 'jegy',
+            'type' => 'one-time',
             'description' => 'Test ticket description',
             'quantity' => 32,
             'price' => 1024,
@@ -83,7 +83,7 @@ class AddBuyableTicketTest extends TestCase
         $response_1 = $this->actingAs($receptionist)->post('/buyable/add', [
             'gym_id' => $gym->id,
             'name' => 'Test Ticket',
-            'type' => 'jegy',
+            'type' => 'one-time',
             'description' => 'Test ticket description',
             'quantity' => 32,
             'price' => 1024,
@@ -96,7 +96,7 @@ class AddBuyableTicketTest extends TestCase
         $response_2 = $this->actingAs($user)->post('/buyable/add', [
             'gym_id' => $gym->id,
             'name' => 'Test Ticket',
-            'type' => 'jegy',
+            'type' => 'one-time',
             'description' => 'Test ticket description',
             'quantity' => 32,
             'price' => 1024,

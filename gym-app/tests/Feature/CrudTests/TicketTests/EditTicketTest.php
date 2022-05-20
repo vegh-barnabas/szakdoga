@@ -33,7 +33,7 @@ class EditTicketTest extends TestCase
         $buyable_ticket = BuyableTicket::factory()->create(
             [
                 'gym_id' => $gym->id,
-                'type' => 'jegy',
+                'type' => 'one-time',
             ]
         );
 
@@ -83,7 +83,7 @@ class EditTicketTest extends TestCase
         $buyable_ticket = BuyableTicket::factory()->create(
             [
                 'gym_id' => $gym->id,
-                'type' => 'bérlet',
+                'type' => 'monthly',
             ]
         );
 
@@ -133,7 +133,7 @@ class EditTicketTest extends TestCase
         $buyable_ticket = BuyableTicket::factory()->create(
             [
                 'gym_id' => $gym->id,
-                'type' => 'jegy',
+                'type' => 'one-time',
             ]
         );
 
@@ -182,7 +182,7 @@ class EditTicketTest extends TestCase
         $buyable_ticket = BuyableTicket::factory()->create(
             [
                 'gym_id' => $gym->id,
-                'type' => 'bérlet',
+                'type' => 'monthly',
             ]
         );
 
@@ -235,7 +235,7 @@ class EditTicketTest extends TestCase
         $buyable_ticket = BuyableTicket::factory()->create(
             [
                 'gym_id' => $gym->id,
-                'type' => 'jegy',
+                'type' => 'one-time',
             ]
         );
 
@@ -286,7 +286,7 @@ class EditTicketTest extends TestCase
         $buyable_ticket = BuyableTicket::factory()->create(
             [
                 'gym_id' => $gym->id,
-                'type' => 'bérlet',
+                'type' => 'monthly',
             ]
         );
 

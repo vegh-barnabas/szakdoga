@@ -33,6 +33,6 @@ class BuyableTicket extends Model
 
     public function isMonthly()
     {
-        return $this->type == 'bérlet';
+        return $this->type == 'monthly';
     }
 }

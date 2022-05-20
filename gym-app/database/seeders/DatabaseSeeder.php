@@ -97,7 +97,7 @@ class DatabaseSeeder extends Seeder
         // TODO: rethink what hidden should be used for
         BuyableTicket::factory()->create([
             'gym_id' => 1,
-            'type' => 'bérlet',
+            'type' => 'monthly',
             'name' => 'Normál bérlet',
             'description' => 'Sima bérlet, feljogosít minden használatára az edzőteremben',
             'quantity' => 999,
@@ -106,7 +106,7 @@ class DatabaseSeeder extends Seeder
         ]);
         BuyableTicket::factory()->create([
             'gym_id' => 1,
-            'type' => 'bérlet',
+            'type' => 'monthly',
             'name' => 'Diákbérlet',
             'description' => 'Hónapos normál bérlet diákkedvezménnyel (diákigazolvány szükséges!)',
             'quantity' => 999,
@@ -115,7 +115,7 @@ class DatabaseSeeder extends Seeder
         ]);
         BuyableTicket::factory()->create([
             'gym_id' => 1,
-            'type' => 'jegy',
+            'type' => 'one-time',
             'name' => 'Normál jegy',
             'description' => 'Napi normál jegy, feljogosít minden használatára az edzőteremben',
             'quantity' => 999,
@@ -124,7 +124,7 @@ class DatabaseSeeder extends Seeder
         ]);
         BuyableTicket::factory()->create([
             'gym_id' => 1,
-            'type' => 'jegy',
+            'type' => 'one-time',
             'name' => 'Diákjegy',
             'description' => 'Napi normál jegy diákkedvezménnyel, feljogosít minden használatára az edzőteremben (diákigazolvány szükséges!)',
             'quantity' => 999,
@@ -133,7 +133,7 @@ class DatabaseSeeder extends Seeder
         ]);
         BuyableTicket::factory()->create([
             'gym_id' => 1,
-            'type' => 'jegy',
+            'type' => 'one-time',
             'name' => 'Szaunajegy',
             'description' => 'Első 5 darab 50% kedvezményes áron! Csak szaunára vonatkozik',
             'quantity' => 5,
@@ -142,7 +142,7 @@ class DatabaseSeeder extends Seeder
         ]);
         BuyableTicket::factory()->create([
             'gym_id' => 1,
-            'type' => 'jegy',
+            'type' => 'one-time',
             'name' => 'Szaunajegy',
             'description' => 'Csak szaunára vonatkozik',
             'quantity' => 999,
@@ -161,8 +161,12 @@ class DatabaseSeeder extends Seeder
         }
         /* Tickets */
         $users = User::all()->where('permission', 'user');
-        $buyable_tickets = BuyableTicket::all()->where('type', 'jegy');
-        $buyable_monthly_tickets = BuyableTicket::all()->where('type', 'bérlet');
+        $buyable_tickets = BuyableTicket::all()->filter(function ($ticket) {
+            return $ticket->isMonthly();
+        });
+        $buyable_monthly_tickets = BuyableTicket::all()->filter(function ($ticket) {
+            return !$ticket->isMonthly();
+        });
         foreach ($users as $user) {
             // one-time tickets
             for ($i = 0; $i < rand(0, 10); $i++) {

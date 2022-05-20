@@ -34,8 +34,6 @@ class Enterance extends Model
 
     public function exited()
     {
-        error_log($this->exit == null);
-
         return $this->exit != null;
     }
 }
