@@ -23,7 +23,7 @@ class UserFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'credits' => $this->faker->numberBetween(0, 15000),
-            'gender' => $this->faker->boolean() ? 0 : 1,
+            'gender' => $this->faker->boolean() ? 'male' : 'female',
             'permission' => 'user',
             'exit_code' => $this->faker->bothify('?#?#??'),
             'locker_id' => null,

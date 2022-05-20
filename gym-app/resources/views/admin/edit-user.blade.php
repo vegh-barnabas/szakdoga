@@ -66,8 +66,8 @@
               </div>
               <div class="col-auto">
                 <select id="gender" name="gender" class="form-select">
-                  <option value="0" {{ $user->gender == 0 ? 'selected' : '' }}>férfi</option>
-                  <option value="1" {{ $user->gender == 1 ? 'selected' : '' }}>nő</option>
+                  <option value="male" {{ $user->gender == 'male' ? 'selected' : '' }}>férfi</option>
+                  <option value="female" {{ $user->gender == 'female' ? 'selected' : '' }}>nő</option>
                 </select>
               </div>
             </div>

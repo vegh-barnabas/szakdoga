@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('password');
             $table->enum('permission', ['user', 'receptionist', 'admin']);
             $table->integer('credits')->default(0);
-            $table->integer('gender');
+            $table->enum('gender', ['male', 'female']);
             $table->unsignedBigInteger('locker_id')->nullable()->unique();
             $table->string('exit_code')->unique();
             $table->integer('prefered_gym')->nullable();

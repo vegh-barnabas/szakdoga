@@ -36,7 +36,7 @@
             </div>
             <div class="col-auto">
               <input type="text" id="enteranceCode" class="form-control"
-                value="{{ $user->gender == 0 ? 'férfi' : 'nő' }}" disabled />
+                value="{{ $user->gender == 'male' ? 'férfi' : 'nő' }}" disabled />
             </div>
           </div>
           <div class="row g-3 align-items-center mb-3">

@@ -669,7 +669,7 @@ Route::post('/users/edit/{id}', function ($id, Request $request) {
         [
             'name' => 'required|min:3|max:32',
             'email' => 'required|email:rfc',
-            'gender' => 'required|boolean',
+            'gender' => 'required|in:male,female',
             'permission' => 'required|in:guest,receptionist',
             'credits' => 'required|integer',
             'exitcode' => 'required|min:6|max:6',
