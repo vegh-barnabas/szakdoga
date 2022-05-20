@@ -19,7 +19,7 @@ class EditBuyableTicketTest extends TestCase
 
         // Create User
         $admin = User::factory()->create([
-            'is_admin' => true,
+            'permission' => 'admin',
         ]);
 
         // Create buyable ticket
@@ -54,7 +54,7 @@ class EditBuyableTicketTest extends TestCase
 
         // Create User
         $admin = User::factory()->create([
-            'is_admin' => true,
+            'permission' => 'admin',
         ]);
 
         // Create buyable ticket

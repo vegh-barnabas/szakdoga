@@ -51,7 +51,7 @@ class Gym extends Model
             $users = User::all();
             foreach ($users as $user) {
                 if ($user->prefered_gym == $gym->id) {
-                    if ($user->is_receptionist) {
+                    if ($user->is_receptionist()) {
                         // delete receptionists
                         $user->delete();
                     } else {

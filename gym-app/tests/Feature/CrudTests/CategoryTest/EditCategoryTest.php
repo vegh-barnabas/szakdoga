@@ -18,7 +18,7 @@ class EditCategoryTest extends TestCase
 
         // Create User
         $admin = User::factory()->create([
-            'is_admin' => true,
+            'permission' => 'admin',
         ]);
 
         // Get styles from Category
@@ -53,7 +53,7 @@ class EditCategoryTest extends TestCase
 
         // Create User
         $admin = User::factory()->create([
-            'is_admin' => true,
+            'permission' => 'admin',
         ]);
 
         // Get styles from Category

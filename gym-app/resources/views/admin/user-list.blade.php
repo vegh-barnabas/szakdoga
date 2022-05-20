@@ -30,7 +30,7 @@
           <tbody>
             @foreach ($all_users as $user)
               <tr>
-                @if (!$user->is_admin && $gym_count > 0)
+                @if (!$user->is_admin() && $gym_count > 0)
                   <form>
                     <td><a href="{{ route('edit-user', $user->id) }}" class="link-primary">{{ $user->name }}</a></td>
                   </form>

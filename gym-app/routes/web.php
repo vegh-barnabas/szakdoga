@@ -32,11 +32,11 @@ Auth::routes();
 
 // Home - User & Receptionist
 Route::get('/home', function () {
-    if (session('gym') == null && !Auth::user()->is_admin) {
+    if (session('gym') == null && !Auth::user()->is_admin()) {
         return redirect()->route('gyms');
     }
 
-    if (Auth::user()->is_receptionist) {
+    if (Auth::user()->is_receptionist()) {
         $gym = Gym::find(session('gym'));
         $enterances = Enterance::all()->where('gym_id', $gym->id)->where('exit', null);
 
@@ -48,7 +48,7 @@ Route::get('/home', function () {
         })->sortByDesc('bought')->take(5);
 
         return view('receptionist.index', ['enterances' => $enterances, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'gym' => $gym]);
-    } else if (Auth::user()->is_admin) {
+    } else if (Auth::user()->is_admin()) {
 
         $gym_name = Gym::all()->pluck('name')->implode(',');
 
@@ -62,7 +62,7 @@ Route::get('/home', function () {
         $active_enterances = Enterance::all();
 
         // TODO: receptionist login
-        $active_receptionists = User::all()->where('is_receptionist');
+        $active_receptionists = User::all()->where('is_receptionist()');
 
         return view('admin.index', ['gym_name' => $gym_name, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'active_enterances' => $active_enterances, 'active_receptionists' => $active_receptionists]);
     } else {
@@ -107,9 +107,9 @@ Route::get('/home', function () {
 
 // Settings - User & Receptionist
 Route::get('/settings', function () {
-    if (Auth::user()->is_receptionist) {
+    if (Auth::user()->is_receptionist()) {
         return view('receptionist.settings');
-    } else if (Auth::user()->is_admin) {
+    } else if (Auth::user()->is_admin()) {
         abort(403);
     } else {
         $gyms = Gym::all();
@@ -125,7 +125,7 @@ Route::get('/settings', function () {
 
 // Choose Gym
 Route::get('/', function () {
-    if (Auth::user()->is_admin) {
+    if (Auth::user()->is_admin()) {
         return redirect()->route('index');
     } else {
         if (session('gym') != null) {
@@ -176,7 +176,7 @@ Route::get('/tickets', function () {
         return redirect()->route('gyms');
     }
 
-    if (Auth::user()->is_receptionist) {
+    if (Auth::user()->is_receptionist()) {
         return redirect()->route('home');
     }
 
@@ -253,7 +253,7 @@ Route::get('/extend/{ticket}', function (Request $request, Ticket $ticket) {
         return redirect()->route('gyms');
     }
 
-    if (Auth::user()->is_receptionist) {
+    if (Auth::user()->is_receptionist()) {
         return redirect()->route('index');
     }
 
@@ -274,7 +274,7 @@ Route::post('/extend/{ticket}', function (Request $request, Ticket $ticket) {
         return redirect()->route('gyms');
     }
 
-    if (Auth::user()->is_receptionist) {
+    if (Auth::user()->is_receptionist()) {
         return redirect()->route('index');
     }
 
@@ -308,7 +308,7 @@ Route::get('/buy/{ticket}', function (Request $request, $buyable_ticket_id) {
         return redirect()->route('gyms');
     }
 
-    if (Auth::user()->is_receptionist) {
+    if (Auth::user()->is_receptionist()) {
         return redirect()->route('index');
     }
 
@@ -350,7 +350,7 @@ Route::post('/buy/{ticket}', function (Request $request, $buyable_ticket_id) {
 
 // Let-in index page
 Route::get('/let-in', function () {
-    if (!Auth::user()->is_receptionist) {
+    if (!Auth::user()->is_receptionist()) {
         abort(403);
     }
 
@@ -359,7 +359,7 @@ Route::get('/let-in', function () {
 
 // Let-in index page POST
 Route::post('/let-in', function (Request $request) {
-    if (!Auth::user()->is_receptionist) {
+    if (!Auth::user()->is_receptionist()) {
         abort(403);
     }
 
@@ -391,7 +391,7 @@ Route::post('/let-in', function (Request $request) {
 
 // List data of user page
 Route::get('/let-in/{code}', function ($code) {
-    if (!Auth::user()->is_receptionist) {
+    if (!Auth::user()->is_receptionist()) {
         abort(403);
     }
 
@@ -413,7 +413,7 @@ Route::get('/let-in/{code}', function ($code) {
 
 // Let someone in POST
 Route::post('/let-in/{code}', function (Request $request, $code) {
-    if (!Auth::user()->is_receptionist) {
+    if (!Auth::user()->is_receptionist()) {
         abort(403);
     }
 
@@ -444,7 +444,7 @@ Route::post('/let-in/{code}', function (Request $request, $code) {
 
 // Let-out index page
 Route::get('/let-out', function () {
-    if (!Auth::user()->is_receptionist) {
+    if (!Auth::user()->is_receptionist()) {
         abort(403);
     }
 
@@ -453,7 +453,7 @@ Route::get('/let-out', function () {
 
 // Let-out index page POST
 Route::post('/let-out', function (Request $request) {
-    if (!Auth::user()->is_receptionist) {
+    if (!Auth::user()->is_receptionist()) {
         abort(403);
     }
 
@@ -481,7 +481,7 @@ Route::post('/let-out', function (Request $request) {
 
 // List data of user page
 Route::get('/let-out/{code}', function ($code) {
-    if (!Auth::user()->is_receptionist) {
+    if (!Auth::user()->is_receptionist()) {
         abort(403);
     }
 
@@ -500,7 +500,7 @@ Route::get('/let-out/{code}', function ($code) {
 
 // Let someone out POST
 Route::post('/let-out/{code}', function (Request $request, $code) {
-    if (!Auth::user()->is_receptionist) {
+    if (!Auth::user()->is_receptionist()) {
         abort(403);
     }
 
@@ -531,7 +531,7 @@ Route::post('/let-out/{code}', function (Request $request, $code) {
 
 // Let-out index page
 Route::get('/buyable-tickets', function () {
-    if (Auth::user()->is_receptionist) {
+    if (Auth::user()->is_receptionist()) {
         $gym = Gym::find(session('gym'));
         $monthly_tickets = BuyableTicket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
             return $ticket->isMonthly();
@@ -544,7 +544,7 @@ Route::get('/buyable-tickets', function () {
         $all_tickets = $monthly_tickets->merge($tickets);
 
         return view('receptionist.buyable-tickets', ['tickets' => $all_tickets, 'gym_name' => $gym->name]);
-    } else if (Auth::user()->is_admin) {
+    } else if (Auth::user()->is_admin()) {
         $gym_name = Gym::all()->pluck('name')->implode(',');
 
         $monthly_tickets = BuyableTicket::all()->filter(function ($ticket) {
@@ -564,14 +564,14 @@ Route::get('/buyable-tickets', function () {
 })->name('buyable-ticket-list')->middleware('auth');
 
 Route::get('/purchased-monthly', function () {
-    if (Auth::user()->is_receptionist) {
+    if (Auth::user()->is_receptionist()) {
         $gym = Gym::find(session('gym'));
         $purchased_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
             return $ticket->isMonthly();
         })->values()->sortByDesc('expiration');
 
         return view('receptionist.purchased-monthly', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
-    } else if (Auth::user()->is_admin) {
+    } else if (Auth::user()->is_admin()) {
         $gym_name = Gym::all()->pluck('name')->implode(',');
 
         $purchased_tickets = Ticket::all()->filter(function ($ticket) {
@@ -586,14 +586,14 @@ Route::get('/purchased-monthly', function () {
 
 Route::get('/purchased-tickets', function () {
 
-    if (Auth::user()->is_receptionist) {
+    if (Auth::user()->is_receptionist()) {
         $gym = Gym::find(session('gym'));
         $purchased_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
             return !$ticket->isMonthly();
         })->values()->sortByDesc('expiration');
 
         return view('receptionist.purchased-tickets', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
-    } else if (Auth::user()->is_admin) {
+    } else if (Auth::user()->is_admin()) {
         $gym_name = Gym::all()->pluck('name')->implode(',');
 
         $purchased_tickets = Ticket::all()->filter(function ($ticket) {
@@ -608,18 +608,18 @@ Route::get('/purchased-tickets', function () {
 
 /* --- Admin Routes --- */
 Route::get('/users', function () {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
     $gym_name = Gym::all()->pluck('name')->implode(',');
 
-    $admins = User::all()->where('is_admin')->sortBy('name');
+    $admins = User::all()->where('is_admin()')->sortBy('name');
 
-    $receptionists = User::all()->where('is_receptionist')->sortBy('name');
+    $receptionists = User::all()->where('is_receptionist()')->sortBy('name');
 
     $users = User::all()->filter(function ($user) {
-        return !$user->is_admin && !$user->is_receptionist;
+        return !$user->is_admin() && !$user->is_receptionist();
     })->values()->sortBy('name');
 
     $all_users = $admins->merge($receptionists);
@@ -631,7 +631,7 @@ Route::get('/users', function () {
 })->name('user-list')->middleware('auth');
 
 Route::get('/users/edit/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -641,7 +641,7 @@ Route::get('/users/edit/{id}', function ($id) {
 
     $user = User::all()->where('id', $id)->first();
 
-    if ($user == null || $user->is_admin) {
+    if ($user == null || $user->is_admin()) {
         abort(403);
     }
 
@@ -651,7 +651,7 @@ Route::get('/users/edit/{id}', function ($id) {
 })->name('edit-user')->middleware('auth');
 
 Route::post('/users/edit/{id}', function ($id, Request $request) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -661,7 +661,7 @@ Route::post('/users/edit/{id}', function ($id, Request $request) {
 
     $user = User::all()->where('id', $id)->first();
 
-    if ($user == null || $user->is_admin) {
+    if ($user == null || $user->is_admin()) {
         abort(403);
     }
 
@@ -673,16 +673,16 @@ Route::post('/users/edit/{id}', function ($id, Request $request) {
             'permission' => 'required|in:guest,receptionist',
             'credits' => 'required|integer',
             'exitcode' => 'required|min:6|max:6',
-            'gym' => [Rule::requiredIf($user->is_receptionist), Rule::in(Gym::all()->pluck('id')->implode(','))],
+            'gym' => [Rule::requiredIf($user->is_receptionist()), Rule::in(Gym::all()->pluck('id')->implode(','))],
             // 'newpw' => 'min:6|max:32',
             // 'newpw2' => 'same:newpw',
         ],
     );
 
     if ($validated['permission'] == 'guest') {
-        $validated['is_receptionist'] = 0;
+        $validated['is_receptionist()'] = 0;
     } else if ($validated['permission'] == 'receptionist') {
-        $validated['is_receptionist'] = 1;
+        $validated['is_receptionist()'] = 1;
     }
 
     $user->update($validated);
@@ -692,7 +692,7 @@ Route::post('/users/edit/{id}', function ($id, Request $request) {
 })->name('edit-user')->middleware('auth');
 
 Route::get('/ticket/edit/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -711,7 +711,7 @@ Route::get('/ticket/edit/{id}', function ($id) {
 })->name('edit-purchased-ticket')->middleware('auth');
 
 Route::patch('/ticket/edit/{id}', function (Request $request, $id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -724,7 +724,7 @@ Route::patch('/ticket/edit/{id}', function (Request $request, $id) {
     $ticket = Ticket::all()->where('id', $id)->first();
 
     if ($ticket->isMonthly()) {
-        abort(403);
+        return abort(403);
     }
 
     $ticket->update($validated);
@@ -733,7 +733,7 @@ Route::patch('/ticket/edit/{id}', function (Request $request, $id) {
 })->name('edit-purchased-ticket')->middleware('auth');
 
 Route::get('/monthly-ticket/edit/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -752,7 +752,7 @@ Route::get('/monthly-ticket/edit/{id}', function ($id) {
 })->name('edit-purchased-monthly-ticket')->middleware('auth');
 
 Route::patch('/monthly-ticket/edit/{id}', function (Request $request, $id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -766,7 +766,7 @@ Route::patch('/monthly-ticket/edit/{id}', function (Request $request, $id) {
     $ticket = Ticket::all()->where('id', $id)->first();
 
     if (!$ticket->isMonthly()) {
-        abort(403);
+        return abort(403);
     }
 
     $ticket->update($validated);
@@ -775,7 +775,7 @@ Route::patch('/monthly-ticket/edit/{id}', function (Request $request, $id) {
 })->name('edit-purchased-monthly-ticket')->middleware('auth');
 
 Route::get('/ticket/delete/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -785,7 +785,7 @@ Route::get('/ticket/delete/{id}', function ($id) {
 })->name('delete-purchased-ticket')->middleware('auth');
 
 Route::delete('/ticket/delete/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -806,7 +806,7 @@ Route::delete('/ticket/delete/{id}', function ($id) {
 })->name('delete-purchased-ticket')->middleware('auth');
 
 Route::get('/buyable/add', function () {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -816,7 +816,7 @@ Route::get('/buyable/add', function () {
 })->name('add-buyable-ticket')->middleware('auth');
 
 Route::post('/buyable/add', function (Request $request) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -839,7 +839,7 @@ Route::post('/buyable/add', function (Request $request) {
 })->name('add-buyable-ticket')->middleware('auth'); // TODO: rename this
 
 Route::get('/buyable/edit/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -855,7 +855,7 @@ Route::get('/buyable/edit/{id}', function ($id) {
 })->name('edit-buyable')->middleware('auth');
 
 Route::patch('/buyable/edit/{id}', function ($id, Request $request) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -884,7 +884,7 @@ Route::patch('/buyable/edit/{id}', function ($id, Request $request) {
 
 // Categories
 Route::get('/categories', function () {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -896,7 +896,7 @@ Route::get('/categories', function () {
 })->name('categories-list')->middleware('auth');
 
 Route::get('/category/add', function () {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -907,7 +907,7 @@ Route::get('/category/add', function () {
 
 // Gyms
 Route::get('/gyms', function () {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -917,7 +917,7 @@ Route::get('/gyms', function () {
 })->name('gym-list')->middleware('auth');
 
 Route::get('/gym/add', function () {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -927,7 +927,7 @@ Route::get('/gym/add', function () {
 })->name('add-gym')->middleware('auth');
 
 Route::post('/gym/add', function (Request $request) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -953,7 +953,7 @@ Route::post('/gym/add', function (Request $request) {
 })->name('add-gym')->middleware('auth');
 
 Route::get('/buyable/hide/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -969,7 +969,7 @@ Route::get('/buyable/hide/{id}', function ($id) {
 })->name('hide-buyable')->middleware('auth');
 
 Route::patch('/buyable/hide/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -986,7 +986,7 @@ Route::patch('/buyable/hide/{id}', function ($id) {
 })->name('hide-buyable')->middleware('auth');
 
 Route::get('/category/edit/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -1003,7 +1003,7 @@ Route::get('/category/edit/{id}', function ($id) {
 })->name('edit-category')->middleware('auth');
 
 Route::patch('/category/edit/{id}', function ($id, Request $request) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -1026,7 +1026,7 @@ Route::patch('/category/edit/{id}', function ($id, Request $request) {
 })->name('edit-category')->middleware('auth');
 
 Route::post('/category/add', function (Request $request) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -1043,7 +1043,7 @@ Route::post('/category/add', function (Request $request) {
 })->name('add-category')->middleware('auth');
 
 Route::get('/category/delete/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -1059,7 +1059,7 @@ Route::get('/category/delete/{id}', function ($id) {
 })->name('delete-category')->middleware('auth');
 
 Route::delete('/category/delete/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -1080,7 +1080,7 @@ Route::delete('/category/delete/{id}', function ($id) {
 })->name('delete-category')->middleware('auth');
 
 Route::get('/gym/edit/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -1097,7 +1097,7 @@ Route::get('/gym/edit/{id}', function ($id) {
 })->name('edit-gym')->middleware('auth');
 
 Route::patch('/gym/edit/{id}', function ($id, Request $request) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -1126,7 +1126,7 @@ Route::patch('/gym/edit/{id}', function ($id, Request $request) {
 })->name('edit-gym')->middleware('auth');
 
 Route::get('/gym/delete/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 
@@ -1140,7 +1140,7 @@ Route::get('/gym/delete/{id}', function ($id) {
 })->name('delete-gym')->middleware('auth');
 
 Route::delete('/gym/delete/{id}', function ($id) {
-    if (!Auth::user()->is_admin) {
+    if (!Auth::user()->is_admin()) {
         abort(403);
     }
 

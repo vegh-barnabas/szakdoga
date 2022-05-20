@@ -55,7 +55,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'admin',
             'email' => 'admin@br.hu',
             'password' => Hash::make('password'),
-            'is_admin' => true,
+            'permission' => 'admin',
         ]);
 
         // Receptionists
@@ -64,7 +64,7 @@ class DatabaseSeeder extends Seeder
                 'name' => 'receptionist' . $i,
                 'email' => 'receptionist' . $i . '@br.hu',
                 'password' => Hash::make('password'),
-                'is_receptionist' => true,
+                'permission' => 'receptionist',
                 // 'prefered_gym' => $gyms->random(), // TODO: uncomment this
                 'prefered_gym' => 1,
             ]);

@@ -16,7 +16,7 @@ class AddGymTest extends TestCase
     {
         // Create User
         $admin = User::factory()->create([
-            'is_admin' => true,
+            'permission' => 'admin',
         ]);
 
         $categories = Category::factory(5)->create();
@@ -42,7 +42,7 @@ class AddGymTest extends TestCase
     {
         // Create User
         $admin = User::factory()->create([
-            'is_admin' => true,
+            'permission' => 'admin',
         ]);
 
         $categories = Category::factory(5)->create();
@@ -92,7 +92,7 @@ class AddGymTest extends TestCase
     {
         // Create User
         $admin = User::factory()->create([
-            'is_admin' => true,
+            'permission' => 'admin',
         ]);
 
         $categories = Category::factory(5)->create();

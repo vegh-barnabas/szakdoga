@@ -19,8 +19,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->boolean('is_admin')->default(false);
-            $table->boolean('is_receptionist')->default(false);
+            $table->enum('permission', ['user', 'receptionist', 'admin']);
             $table->integer('credits')->default(0);
             $table->integer('gender');
             $table->unsignedBigInteger('locker_id')->nullable()->unique();

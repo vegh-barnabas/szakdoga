@@ -35,7 +35,7 @@ class EditGymTest extends TestCase
 
         // Create User
         $admin = User::factory()->create([
-            'is_admin' => true,
+            'permission' => 'admin',
         ]);
 
         // Send request
@@ -80,7 +80,7 @@ class EditGymTest extends TestCase
 
         // Create User
         $admin = User::factory()->create([
-            'is_admin' => true,
+            'permission' => 'admin',
         ]);
 
         // Send request

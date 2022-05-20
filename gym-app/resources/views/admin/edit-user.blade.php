@@ -79,13 +79,13 @@
               </div>
               <div class="col-auto">
                 <select id="permission" name="permission" class="form-select">
-                  <option value="guest" {{ !$user->is_receptionist ? 'selected' : '' }}>vendég</option>
-                  <option value="receptionist" {{ $user->is_receptionist ? 'selected' : '' }}>recepciós</option>
+                  <option value="guest" {{ !$user->is_receptionist() ? 'selected' : '' }}>vendég</option>
+                  <option value="receptionist" {{ $user->is_receptionist() ? 'selected' : '' }}>recepciós</option>
                 </select>
               </div>
             </div>
           </div>
-          @if ($user->is_receptionist)
+          @if ($user->is_receptionist())
             <div class="mb-3">
               <div class="row g-3 align-items-center">
                 <div class="col-2">
@@ -118,7 +118,7 @@
               </div>
             </div>
           </div>
-          @if (!$user->is_receptionist)
+          @if (!$user->is_receptionist())
             <div class="mb-3">
               <div class="row g-3 align-items-center">
                 <div class="col-2">

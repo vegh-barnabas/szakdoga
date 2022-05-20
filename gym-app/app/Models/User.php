@@ -20,8 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'is_admin',
-        'is_receptionist',
+        'permission',
         'credits',
         'gender',
         'locker_id',
@@ -74,13 +73,24 @@ class User extends Authenticatable
 
     public function getUserType()
     {
-        if ($this->is_receptionist) {
+        if ($this->permission == 'receptionist') {
             return "Recepciós";
-        } else if ($this->is_admin) {
-            return "Admin";
-        } else {
-            return "Vendég";
         }
 
+        if ($this->permission == 'admin') {
+            return "Admin";
+        }
+
+        return "Vendég";
+    }
+
+    public function is_admin()
+    {
+        return $this->permission == 'admin';
+    }
+
+    public function is_receptionist()
+    {
+        return $this->permission == 'receptionist';
     }
 }

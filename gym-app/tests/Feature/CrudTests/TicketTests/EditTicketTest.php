@@ -26,7 +26,7 @@ class EditTicketTest extends TestCase
 
         // Create User
         $admin = User::factory()->create([
-            'is_admin' => true,
+            'permission' => 'admin',
         ]);
 
         // Create Ticket Type
@@ -50,8 +50,8 @@ class EditTicketTest extends TestCase
         );
 
         // Send request
-        $response = $this->actingAs($admin)->patch('/ticket/edit/' . $ticket->id, [
-            'expiration' => '2022.11.11',
+        $response = $this->actingAs($admin)->patch('/monthly-ticket/edit/' . $ticket->id, [
+            'expiration' => '2011.11.11',
         ]);
 
         // Check if response gives back redirect so the response is successful
@@ -61,7 +61,262 @@ class EditTicketTest extends TestCase
         $edited_ticket = Ticket::all()->where('id', $ticket->id)->first();
 
         $this->assertNotEquals($ticket->expiration, $edited_ticket->expiration);
-        $this->assertNotEquals($ticket->used, $edited_ticket->used);
-
     }
+
+    public function test_admin_can_edit_monthly_ticket()
+    {
+        // Create Gym
+        $gym = Gym::factory()->create(
+            [
+                'name' => 'Test Gym',
+                'address' => 'Test street 5.',
+                'description' => 'Test description for the gym',
+            ]
+        );
+
+        // Create User
+        $admin = User::factory()->create([
+            'permission' => 'admin',
+        ]);
+
+        // Create Ticket Type
+        $buyable_ticket = BuyableTicket::factory()->create(
+            [
+                'gym_id' => $gym->id,
+                'type' => 'bérlet',
+            ]
+        );
+
+        // Create User for the ticket
+        $user = User::factory()->create();
+
+        // Create the Ticket
+        $ticket = Ticket::factory()->create(
+            [
+                'user_id' => $user->id,
+                'gym_id' => $gym->id,
+                'type_id' => $buyable_ticket->id,
+            ]
+        );
+
+        // Send request
+        $response = $this->actingAs($admin)->patch('/monthly-ticket/edit/' . $ticket->id, [
+            'bought' => '2011.11.11',
+            'expiration' => '2011.11.11',
+        ]);
+
+        // Check if response gives back redirect so the response is successful
+        $response->assertStatus(302);
+
+        // Check edited gym data is modified
+        $edited_ticket = Ticket::all()->where('id', $ticket->id)->first();
+
+        $this->assertNotEquals($ticket->bought, $edited_ticket->bought);
+        $this->assertNotEquals($ticket->expiration, $edited_ticket->expiration);
+    }
+
+    public function test_not_admin_cant_edit_ticket()
+    {
+        // Create Gym
+        $gym = Gym::factory()->create(
+            [
+                'name' => 'Test Gym',
+                'address' => 'Test street 5.',
+                'description' => 'Test description for the gym',
+            ]
+        );
+
+        // Create User
+        $admin = User::factory()->create();
+
+        // Create Ticket Type
+        $buyable_ticket = BuyableTicket::factory()->create(
+            [
+                'gym_id' => $gym->id,
+                'type' => 'jegy',
+            ]
+        );
+
+        // Create User for the ticket
+        $user = User::factory()->create();
+
+        // Create the Ticket
+        Ticket::factory()->create(
+            [
+                'user_id' => $user->id,
+                'gym_id' => $gym->id,
+                'type_id' => $buyable_ticket->id,
+            ]
+        );
+        $ticket = Ticket::all()->first();
+
+        // Send request
+        $response = $this->actingAs($admin)->patch('/ticket/edit/' . $ticket->id, [
+            'expiration' => '2011.11.11',
+        ]);
+
+        // Check if response gives back redirect so the response is successful
+        $response->assertStatus(403);
+
+        // Check edited gym data is modified
+        $edited_ticket = Ticket::all()->where('id', $ticket->id)->first();
+
+        $this->assertEquals($ticket->expiration, $edited_ticket->expiration);
+    }
+
+    public function test_not_admin_cant_edit_monthly_ticket()
+    {
+        // Create Gym
+        $gym = Gym::factory()->create(
+            [
+                'name' => 'Test Gym',
+                'address' => 'Test street 5.',
+                'description' => 'Test description for the gym',
+            ]
+        );
+
+        // Create User
+        $admin = User::factory()->create();
+
+        // Create Ticket Type
+        $buyable_ticket = BuyableTicket::factory()->create(
+            [
+                'gym_id' => $gym->id,
+                'type' => 'bérlet',
+            ]
+        );
+
+        // Create User for the ticket
+        $user = User::factory()->create();
+
+        // Create the Ticket
+        Ticket::factory()->create(
+            [
+                'user_id' => $user->id,
+                'gym_id' => $gym->id,
+                'type_id' => $buyable_ticket->id,
+            ]
+        );
+        $ticket = Ticket::all()->first();
+
+        // Send request
+        $response = $this->actingAs($admin)->patch('/monthly-ticket/edit/' . $ticket->id, [
+            'bought' => '2011.11.11',
+            'expiration' => '2011.11.11',
+        ]);
+
+        // Check if response gives back redirect so the response is successful
+        $response->assertStatus(403);
+
+        // Check edited gym data is modified
+        $edited_ticket = Ticket::all()->where('id', $ticket->id)->first();
+
+        $this->assertEquals($ticket->bought, $edited_ticket->bought);
+        $this->assertEquals($ticket->expiration, $edited_ticket->expiration);
+    }
+
+    public function test_admin_cant_edit_ticket_with_invalid_data()
+    {
+        // Create Gym
+        $gym = Gym::factory()->create(
+            [
+                'name' => 'Test Gym',
+                'address' => 'Test street 5.',
+                'description' => 'Test description for the gym',
+            ]
+        );
+
+        // Create User
+        $admin = User::factory()->create([
+            'permission' => 'admin',
+        ]);
+
+        // Create Ticket Type
+        $buyable_ticket = BuyableTicket::factory()->create(
+            [
+                'gym_id' => $gym->id,
+                'type' => 'jegy',
+            ]
+        );
+
+        // Create User for the ticket
+        $user = User::factory()->create();
+
+        // Create the Ticket
+        Ticket::factory()->create(
+            [
+                'user_id' => $user->id,
+                'gym_id' => $gym->id,
+                'type_id' => $buyable_ticket->id,
+            ]
+        );
+        $ticket = Ticket::all()->first();
+
+        // Send request
+        $response = $this->actingAs($admin)->patch('/ticket/edit/' . $ticket->id, [
+            'expiration' => null,
+        ]);
+
+        // Check if response gives back redirect so the response is successful
+        $response->assertStatus(302);
+
+        // Check edited gym data is modified
+        $edited_ticket = Ticket::all()->where('id', $ticket->id)->first();
+
+        $this->assertEquals($ticket->expiration, $edited_ticket->expiration);
+    }
+
+    public function test_admin_cant_edit_monthly_ticket_with_invalid_data()
+    {
+        // Create Gym
+        $gym = Gym::factory()->create(
+            [
+                'name' => 'Test Gym',
+                'address' => 'Test street 5.',
+                'description' => 'Test description for the gym',
+            ]
+        );
+
+        // Create User
+        $admin = User::factory()->create([
+            'permission' => 'admin',
+        ]);
+
+        // Create Ticket Type
+        $buyable_ticket = BuyableTicket::factory()->create(
+            [
+                'gym_id' => $gym->id,
+                'type' => 'bérlet',
+            ]
+        );
+
+        // Create User for the ticket
+        $user = User::factory()->create();
+
+        // Create the Ticket
+        Ticket::factory()->create(
+            [
+                'user_id' => $user->id,
+                'gym_id' => $gym->id,
+                'type_id' => $buyable_ticket->id,
+            ]
+        );
+        $ticket = Ticket::all()->first();
+
+        // Send request
+        $response = $this->actingAs($admin)->patch('/monthly-ticket/edit/' . $ticket->id, [
+            'bought' => null,
+            'expiration' => null,
+        ]);
+
+        // Check if response gives back redirect so the response is successful
+        $response->assertStatus(302);
+
+        // Check edited gym data is modified
+        $edited_ticket = Ticket::all()->where('id', $ticket->id)->first();
+
+        $this->assertEquals($ticket->expiration, $edited_ticket->expiration);
+        $this->assertEquals($ticket->bought, $edited_ticket->bought);
+    }
+
 }

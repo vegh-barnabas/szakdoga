@@ -19,7 +19,7 @@ class AddBuyableTicketTest extends TestCase
 
         // Create User
         $admin = User::factory()->create([
-            'is_admin' => true,
+            'permission' => 'admin',
         ]);
 
         // Send request
@@ -48,7 +48,7 @@ class AddBuyableTicketTest extends TestCase
 
         // Create User
         $admin = User::factory()->create([
-            'is_admin' => true,
+            'permission' => 'admin',
         ]);
 
         // Send request
@@ -74,7 +74,7 @@ class AddBuyableTicketTest extends TestCase
 
         // Create Users
         $receptionist = User::factory()->create([
-            'is_receptionist' => true,
+            'permission' => 'receptionist',
         ]);
 
         $user = User::factory()->create([]);
