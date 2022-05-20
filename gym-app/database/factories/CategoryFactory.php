@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,7 @@ class CategoryFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
-            'style' => $this->faker->randomElement(['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark']),
+            'style' => $this->faker->randomElement(Category::styles),
         ];
     }
 }

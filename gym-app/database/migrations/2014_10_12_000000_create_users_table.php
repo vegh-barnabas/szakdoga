@@ -22,7 +22,6 @@ return new class extends Migration
             $table->enum('permission', ['user', 'receptionist', 'admin']);
             $table->integer('credits')->default(0);
             $table->enum('gender', ['male', 'female']);
-            $table->unsignedBigInteger('locker_id')->nullable()->unique();
             $table->string('exit_code')->unique();
             $table->integer('prefered_gym')->nullable();
             $table->rememberToken();
