@@ -58,8 +58,8 @@
                 jegyek/bérletek</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ Route::is('categories-list') ? 'active' : '' }}"
-                href="{{ route('categories-list') }}">Kategóriák</a>
+              <a class="nav-link {{ Route::is('categories.index') ? 'active' : '' }}"
+                href="{{ route('categories.index') }}">Kategóriák</a>
             </li>
             <li class="nav-item">
               <a class="nav-link {{ Route::is('gym-list') ? 'active' : '' }}"

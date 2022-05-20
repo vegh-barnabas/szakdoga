@@ -28,8 +28,8 @@
                 <td>{{ $category->name }}</td>
                 <td><span class="badge rounded-pill bg-{{ $category->style }}">{{ $category->style }}</span></td>
                 <td>
-                  <a href="{{ route('edit-category', $category->id) }}" class="link-primary">✏</a>
-                  <a href="{{ route('delete-category', $category->id) }}" class="link-primary">❌</a>
+                  <a href="{{ route('categories.edit', $category->id) }}" class="link-primary">✏</a>
+                  <a href="{{ route('categories.delete', $category->id) }}" class="link-primary">❌</a>
                 </td>
               </tr>
             @endforeach
@@ -37,7 +37,7 @@
         </table>
       </div>
 
-      <a href="{{ route('add-category') }}" class="btn btn-primary">Új kategória</a>
+      <a href="{{ route('categories.create') }}" class="btn btn-primary">Új kategória</a>
     </div>
   </div>
 @endsection

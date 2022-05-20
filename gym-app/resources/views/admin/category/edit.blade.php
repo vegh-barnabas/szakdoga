@@ -27,7 +27,7 @@
     </div>
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('edit-category', $category->id) }}" method="POST">
+        <form action="{{ route('admin.category.edit', $category->id) }}" method="POST">
           @csrf
           @method('patch')
           <div class="mb-3">

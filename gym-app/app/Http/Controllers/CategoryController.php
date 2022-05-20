@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class CategoryController extends Controller
 {
@@ -13,7 +16,15 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        if (!Auth::user()->is_admin()) {
+            abort(403);
+        }
+
+        $categories = Category::all();
+
+        $styles = Category::styles;
+
+        return view('admin.category.index', ['categories' => $categories, 'styles' => $styles]);
     }
 
     /**
@@ -23,7 +34,13 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        if (!Auth::user()->is_admin()) {
+            abort(403);
+        }
+
+        $styles = Category::styles;
+
+        return view('admin.category.create', ['styles' => $styles]);
     }
 
     /**
@@ -34,18 +51,20 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        if (!Auth::user()->is_admin()) {
+            abort(403);
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        $validated = $request->validate(
+            [
+                'name' => 'required|min:4|max:32',
+                'style' => 'required|in:' . implode(',', Category::styles),
+            ],
+        );
+
+        $category = Category::create($validated);
+
+        return Redirect::to('admin.category.create')->with('success', $category->name);
     }
 
     /**
@@ -56,7 +75,19 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+        if (!Auth::user()->is_admin()) {
+            abort(403);
+        }
+
+        $category = Category::all()->where('id', $id)->first();
+
+        if ($category == null) {
+            abort(403);
+        }
+
+        $styles = Category::styles;
+
+        return view('edit', ['category' => $category, 'styles' => $styles]);
     }
 
     /**
@@ -68,7 +99,43 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if (!Auth::user()->is_admin()) {
+            abort(403);
+        }
+
+        $category = Category::all()->where('id', $id)->first();
+
+        if ($category == null) {
+            abort(403);
+        }
+
+        $validated = $request->validate(
+            [
+                'name' => 'required|min:4|max:32',
+                'style' => 'required|in:' . implode(',', Category::styles),
+            ],
+        );
+
+        $category->update($validated);
+
+        return Redirect::to('admin.category.edit')->with('success', $category->name);
+    }
+
+    public function delete($id)
+    {
+        if (!Auth::user()->is_admin()) {
+            abort(403);
+        }
+
+        $category = Category::all()->where('id', $id)->first();
+
+        if ($category == null) {
+            abort(403);
+        }
+
+        $styles = Category::styles;
+
+        return view('admin.category.delete', ['category' => $category, 'styles' => $styles]);
     }
 
     /**
@@ -79,6 +146,23 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (!Auth::user()->is_admin()) {
+            abort(403);
+        }
+
+        $category = Category::all()->where('id', $id)->first();
+
+        $category_name = $category->name;
+
+        if ($category == null) {
+            abort(403);
+        }
+
+        $deleted = $category->delete();
+        if (!$deleted) {
+            return abort(500);
+        }
+
+        return Redirect::to('admin.category.index')->with('deleted', $category_name);
     }
 }
