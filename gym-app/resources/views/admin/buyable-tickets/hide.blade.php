@@ -1,38 +1,32 @@
 @extends('layouts.admin')
-@section('title', 'Felhasználó szerkesztése')
+@section('title', 'Vásárolt jegy szerkesztése')
 
 @section('content')
-  @if (Session::has('success'))
+  @if (Session::has('hidden'))
     <p>
     <div class="alert alert-success" role="alert">
-      Sikeresen létrehoztad <strong>{{ Session::get('success') }}</strong> jegyet!
+      Sikeresen elrejtetted <strong>{{ Session::get('hidden') }}</strong> jegyet!
     </div>
     </p>
   @endif
 
-  @if ($errors->any())
-    <div class="alert alert-danger">
-      <ul>
-        @foreach ($errors->all() as $error)
-          <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    </div>
-  @endif
-
-  <h2 class="mb-3">Megvásárolható jegy hozzáadása</h2>
+  <h2 class="mb-3">Megvásárolható jegy elrejtése</h2>
   <div class="card">
+    <div class="card-header">
+      <h5 class="card-title">{{ $ticket->name }}</h5>
+    </div>
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('add-buyable-ticket') }}" method="POST">
+        <form action="{{ route('buyable-tickets.hide', $ticket->id) }}" method="POST">
           @csrf
+          @method('patch')
           <div class="mb-3">
             <div class="row g-3 align-items-center">
               <div class="col-2">
                 <label for="gym_id" class="col-form-label">Edzőterem</label>
               </div>
               <div class="col-auto">
-                <select id="gym_id" name="gym_id" class="form-select">
+                <select id="gym_id" name="gym_id" class="form-select" disabled>
                   @foreach ($gyms as $gym)
                     <option value="{{ $gym->id }}">{{ $gym->name }}</option>
                   @endforeach
@@ -46,7 +40,7 @@
                 <label for="name" class="col-form-label">Név</label>
               </div>
               <div class="col-auto">
-                <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" />
+                <input type="text" id="name" name="name" class="form-control" disabled value="{{ $ticket->name }}" />
               </div>
             </div>
           </div>
@@ -56,9 +50,9 @@
                 <label for="type" class="col-form-label">Típus</label>
               </div>
               <div class="col-auto">
-                <select id="type" name="type" class="form-select">
-                  <option value="jegy">jegy</option>
-                  <option value="bérlet">bérlet</option>
+                <select id="type" name="type" class="form-select" disabled>
+                  <option value="jegy" {{ !$ticket->isMonthly() ? 'selected' : '' }}>jegy</option>
+                  <option value="bérlet" {{ $ticket->isMonthly() ? 'selected' : '' }}>bérlet</option>
                 </select>
               </div>
             </div>
@@ -69,7 +63,7 @@
                 <label for="description" class="col-form-label">Leírás</label>
               </div>
               <div class="col-auto">
-                <textarea id="description" name="description" rows="4" cols="50">{{ old('description') }}</textarea>
+                <textarea id="description" name="description" rows="4" cols="50" disabled>{{ $ticket->description }}</textarea>
               </div>
             </div>
           </div>
@@ -80,7 +74,7 @@
               </div>
               <div class="col-auto">
                 <input type="number" id="quantity" name="quantity" class="form-control"
-                  value="{{ old('quantity') }}" />
+                  value="{{ $ticket->quantity }}" disabled />
               </div>
             </div>
           </div>
@@ -90,14 +84,32 @@
                 <label for="price" class="col-form-label">Ár</label>
               </div>
               <div class="col-auto">
-                <input type="number" id="price" name="price" class="form-control" value="{{ old('price') }}" />
+                <input type="number" id="price" name="price" class="form-control" value="{{ $ticket->price }}"
+                  disabled />
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <div class="row g-3 align-items-center">
+              <div class="col-2">
+                <label for="price" class="col-form-label">Rejtett</label>
+              </div>
+              <div class="col-auto">
+                <input type="radio" id="false" name="hidden" value="0" {{ !$ticket->hidden ? 'checked' : '' }}
+                  disabled>
+                <label for="false">nem</label>
+                <input type="radio" id="true" name="hidden" value="1" {{ $ticket->hidden ? 'checked' : '' }} disabled>
+                <label for="true">igen</label>
               </div>
             </div>
           </div>
 
-          <button type="submit" class="btn btn-success">Hozzáadás</button>
+          @if ($ticket->hidden)
+            <button type="submit" class="btn btn-secondary">Láthatóvá tétel</button>
+          @else
+            <button type="submit" class="btn btn-secondary">Elrejtés</button>
+          @endif
         </form>
       </div>
     </div>
-  </div>
-@endsection
+  @endsection

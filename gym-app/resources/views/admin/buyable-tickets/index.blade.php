@@ -34,8 +34,8 @@
                 <td>{{ $ticket->price }}</td>
                 <td>
                 <td>
-                  <a href="{{ route('edit-buyable', $ticket->id) }}" class="link-primary">✏</a>
-                  <a href="{{ route('hide-buyable', $ticket->id) }}" class="link-primary">👁</a>
+                  <a href="{{ route('buyable-tickets.edit', $ticket->id) }}" class="link-primary">✏</a>
+                  <a href="{{ route('buyable-tickets.hide', $ticket->id) }}" class="link-primary">👁</a>
                 </td>
                 </td>
               </tr>
@@ -44,6 +44,6 @@
         </table>
       </div>
 
-      <a href="{{ route('add-buyable-ticket') }}" class="btn btn-primary">Új jegy</a>
+      <a href="{{ route('buyable-tickets.create') }}" class="btn btn-primary">Új jegy</a>
     </div>
   @endsection
