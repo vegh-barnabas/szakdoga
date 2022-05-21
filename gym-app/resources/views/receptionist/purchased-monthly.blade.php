@@ -26,17 +26,17 @@
             @foreach ($tickets as $ticket)
               <tr>
                 <td>{{ $ticket->type->name }}</td>
-                <td>{{ $ticket->get_type() }}</td>
+                <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
                 <td>{{ $ticket->type->description }}</td>
                 <td>{{ $ticket->user->name }} (ID {{ $ticket->user->id }})</td>
                 @if ($ticket->useable())
-                  <td>Felhasználható</td>
-                @elseif($ticket->used())
-                  <td>Felhasznált</td>
+                  <td class="text-success">Felhasználható</td>
+                @elseif($ticket->expired())
+                  <td class="text-warning">Lejárt</td>
                 @endif
                 <td>{{ $ticket->code }}</td>
-                <td>{{ $ticket->bought }}</td>
-                <td>{{ $ticket->expiration }}</td>
+                <td>{{ $ticket->bought() }}</td>
+                <td>{{ $ticket->expiration() }}</td>
               </tr>
             @endforeach
           </tbody>

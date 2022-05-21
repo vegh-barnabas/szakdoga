@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -35,5 +36,19 @@ class Enterance extends Model
     public function exited()
     {
         return $this->exit != null;
+    }
+
+    public function enter()
+    {
+        $expiration = CarbonImmutable::Create($this->enter);
+
+        return $expiration->format('Y. m. d. H:i');
+    }
+
+    public function exit()
+    {
+        $expiration = CarbonImmutable::Create($this->exit);
+
+        return $expiration->format('Y. m. d. H:i');
     }
 }

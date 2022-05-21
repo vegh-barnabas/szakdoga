@@ -9,26 +9,6 @@ use Illuminate\Support\Facades\Redirect;
 
 class TicketController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-
-    }
-
-    public function index_ticket()
-    {
-        //
-    }
-
-    public function index_monthly()
-    {
-        //
-    }
-
     public function edit_ticket($id)
     {
         if (!Auth::user()->is_admin()) {
@@ -45,7 +25,7 @@ class TicketController extends Controller
             return Redirect::back();
         }
 
-        return view('admin.edit-purchased-ticket', ['ticket' => $ticket]);
+        return view('admin.tickets.edit-ticket', ['ticket' => $ticket]);
 
     }
 
@@ -65,7 +45,7 @@ class TicketController extends Controller
             return Redirect::back();
         }
 
-        return view('admin.edit-purchased-ticket', ['ticket' => $ticket]);
+        return view('admin.tickets.edit-monthly-ticket', ['ticket' => $ticket]);
 
     }
 
@@ -95,7 +75,7 @@ class TicketController extends Controller
 
         $ticket->update($validated);
 
-        return Redirect::back()->with('success', $ticket->name);
+        return redirect()->route('purchased-tickets')->with('edit', $ticket->name);
     }
 
     public function update_monthly(Request $request, $id)
@@ -119,7 +99,8 @@ class TicketController extends Controller
 
         $ticket->update($validated);
 
-        return Redirect::back()->with('success', $ticket->name);
+        // TODO: not working
+        return redirect()->route('purchased-monthly')->with('edit', $ticket->name);
     }
 
     public function delete($id)
@@ -130,7 +111,7 @@ class TicketController extends Controller
 
         $ticket = Ticket::all()->where('id', $id)->first();
 
-        return view('admin.delete-purchased-ticket', ['ticket' => $ticket]);
+        return view('admin.tickets.delete', ['ticket' => $ticket]);
     }
 
     /**
@@ -148,6 +129,7 @@ class TicketController extends Controller
         $ticket = Ticket::all()->where('id', $id)->first();
 
         $ticket_name = $ticket->type->name;
+        $ticket_is_monthly = $ticket->isMonthly();
 
         if ($ticket == null) {
             abort(403);
@@ -158,6 +140,10 @@ class TicketController extends Controller
             return abort(500);
         }
 
-        return Redirect::to('purchased-tickets')->with('deleted', $ticket_name);
+        if ($ticket_is_monthly) {
+            return redirect()->route('purchased-monthly')->with('delete', $ticket_name);
+        } else {
+            return redirect()->route('purchased-tickets')->with('delete', $ticket_name);
+        }
     }
 }

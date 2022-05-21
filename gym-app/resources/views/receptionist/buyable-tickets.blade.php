@@ -15,6 +15,7 @@
               <th>Név</th>
               <th>Típus</th>
               <th>Leírás</th>
+              <th>Rejtett</th>
               <th>Elérhető</th>
               <th>Ár</th>
             </tr>
@@ -22,9 +23,14 @@
           <tbody>
             @foreach ($tickets as $ticket)
               <tr>
-                <td class="text-{{ $ticket->isMonthly() ? 'primary' : 'success' }}">{{ $ticket->name }}</td>
-                <td>{{ $ticket->get_type() }}</td>
+                <td>{{ $ticket->name }}</td>
+                @if ($ticket->isMonthly())
+                  <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
+                @else
+                  <td class="text-success"><b>{{ $ticket->get_type() }}</b></td>
+                @endif
                 <td>{{ $ticket->description }}</td>
+                <td>{{ $ticket->hidden ? 'igen' : 'nem' }}</td>
                 <td>{{ $ticket->quantity == 999 ? 'Végtelen' : $ticket->quantity }}</td>
                 <td>{{ $ticket->price }}</td>
               </tr>

@@ -2,6 +2,21 @@
 @section('title', 'Megvásárolt bérletek')
 
 @section('content')
+  @if (Session::has('delete'))
+    <p>
+    <div class="alert alert-danger" role="alert">
+      Sikeresen törölted a(z) <strong>{{ Session::get('delete') }}</strong> jegyet!
+    </div>
+    </p>
+  @endif
+  @if (Session::has('edit'))
+    <p>
+    <div class="alert alert-success" role="alert">
+      Sikeresen szerkesztetted a(z) <strong>{{ Session::get('edit') }}</strong> jegyet!
+    </div>
+    </p>
+  @endif
+
   <h2 class="mb-3">Megvásárolt bérletek</h2>
   <div class="card">
     <div class="card-header">
@@ -29,7 +44,7 @@
               <tr>
                 <td>{{ $ticket->gym->name }}</td>
                 <td>{{ $ticket->type->name }}</td>
-                <td>{{ $ticket->get_type() }}</td>
+                <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
                 <td>{{ $ticket->type->description }}</td>
                 <td>{{ $ticket->user->name }} (ID {{ $ticket->user->id }})</td>
                 @if ($ticket->useable())
@@ -40,11 +55,15 @@
                   <td>Lejárt</td>
                 @endif
                 <td>{{ $ticket->code }}</td>
-                <td>{{ $ticket->bought }}</td>
-                <td>{{ $ticket->expiration }}</td>
+                <td>{{ $ticket->bought() }}</td>
+                <td>{{ $ticket->expiration() }}</td>
                 <td>
-                  <a href="{{ route('edit-purchased-ticket', $ticket->id) }}" class="link-primary">✏</a>
-                  <a href="{{ route('delete-purchased-ticket', $ticket->id) }}" class="link-primary">❌</a>
+                  <a href="{{ route('monthly-ticket.edit', $ticket->id) }}" class="link-primary">
+                    <x-ri-edit-fill class="icon" style="height: 22px" />
+                  </a>
+                  <a href="{{ route('ticket.delete', $ticket->id) }}" class="link-primary">
+                    <x-ri-delete-back-2-fill class="icon" style="height: 22px" />
+                  </a>
                 </td>
               </tr>
             @endforeach

@@ -35,6 +35,11 @@ class DatabaseSeeder extends Seeder
             'address' => "Sajt utca 11",
             'description' => "Közel a Kálvin térhez, a Sajt utcában helyezkedik el a jól felszerelt edzőtermünk. Mindenkit szívesen várunk. Kedvezményes árak, kedves recepciósok!",
         ]);
+        Gym::factory()->create([
+            'name' => "Harap utcai edzőterem",
+            'address' => "Harap utca 3",
+            'description' => "Astoria körül éjjel nappali edzőterem, a szauna elromlott :(",
+        ]);
         $gyms = Gym::all();
 
         /* Users */
@@ -62,6 +67,7 @@ class DatabaseSeeder extends Seeder
                 'email' => 'receptionist' . $i . '@br.hu',
                 'password' => Hash::make('password'),
                 'permission' => 'receptionist',
+                'prefered_gym' => $gyms->random()->id,
             ]);
         }
 
@@ -149,6 +155,25 @@ class DatabaseSeeder extends Seeder
             'hidden' => 0,
         ]);
 
+        BuyableTicket::factory()->create([
+            'gym_id' => 2,
+            'type' => 'monthly',
+            'name' => 'Normál bérlet',
+            'description' => 'Sima bérlet, feljogosít minden használatára az edzőteremben',
+            'quantity' => 999,
+            'price' => 8000,
+            'hidden' => 0,
+        ]);
+        BuyableTicket::factory()->create([
+            'gym_id' => 2,
+            'type' => 'one-time',
+            'name' => 'Szaunajegy',
+            'description' => 'Csak szaunára vonatkozik',
+            'quantity' => 999,
+            'price' => 1000,
+            'hidden' => 0,
+        ]);
+
         /* Tickets */
         $users = User::all()->where('permission', 'user');
         $buyable_tickets = BuyableTicket::all()->filter(function ($ticket) {
@@ -171,7 +196,9 @@ class DatabaseSeeder extends Seeder
 
             // monthly tickets
             $random_gym_id = $gyms->random()->id;
-            $gym_random_buyable_monthly_tickets = $buyable_monthly_tickets->where('gym_id', $random_gym_id)->random(rand(0, $buyable_monthly_tickets->count()));
+            $gym_random_buyable_monthly_tickets = $buyable_monthly_tickets
+                ->where('gym_id', $random_gym_id)
+                ->random(rand(0, $buyable_monthly_tickets->where('gym_id', $random_gym_id)->count()));
 
             foreach ($gym_random_buyable_monthly_tickets as $gym_random_buyable_monthly_ticket) {
                 Ticket::factory()->create([

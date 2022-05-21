@@ -15,11 +15,11 @@
   <h2 class="mb-3">Vendég beléptetése</h2>
   <div class="card">
     <div class="card-header">
-      <h5 class="card-title">Harap utcai edzőterem</h5>
+      <h5 class="card-title">{{ $gym->name }}</h5>
     </div>
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('let-in-2', $code, $user, $ticket) }}" method="POST">
+        <form action="{{ route('receptionist.let-in', $code) }}" method="POST">
           @csrf
           <h2 class="mb-3">Vendég adatai</h2>
           <div class="row g-3 align-items-center mb-3">

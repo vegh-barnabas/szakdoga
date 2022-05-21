@@ -9,10 +9,10 @@
       (<strong>{{ Session::get('error.user') }}</strong>) már be van lépve!
     </div>
     </p>
-  @elseif (Session::has('doesnt_exist'))
+  @elseif (Session::has('not-found'))
     <p>
     <div class="alert alert-danger" role="alert">
-      Nem létezik <strong>{{ Session::get('doesnt_exist.code') }}</strong> kódú jegy!
+      Nem létezik <strong>{{ Session::get('not-found.code') }}</strong> kódú jegy!
     </div>
     </p>
   @elseif (Session::has('success'))
@@ -21,17 +21,33 @@
       Sikeresen beengedted <strong>{{ Session::get('success') }}</strong> vendéget!
     </div>
     </p>
+  @elseif (Session::has('not-this-gym'))
+    <p>
+    <div class="alert alert-danger" role="alert">
+      A(z) <strong>{{ Session::get('not-this-gym.code') }}</strong> kódú jeggyel nem ebbe az edzőterembe léptek be!
+    </div>
+    </p>
+  @endif
+
+  @if ($errors->any())
+    <div class="alert alert-danger">
+      <ul>
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
   @endif
 
   <h2 class="mb-3">Vendég beléptetése</h2>
   <div class="card">
     <div class="card-header">
-      <h5 class="card-title">Harap utcai edzőterem</h5>
+      <h5 class="card-title">{{ $gym->name }}</h5>
     </div>
     <div class="card-body">
       <div class="card-text">
         <h2 class="mb-3">Add meg a vendég belépési kódját!</h2>
-        <form action="{{ route('let-in') }}" method="POST">
+        <form action="{{ route('receptionist.let-in.index') }}" method="POST">
           @csrf
           <div class="mb-3">
             <div class="row g-3 align-items-center">

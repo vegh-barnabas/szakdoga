@@ -24,7 +24,7 @@ class CategoryController extends Controller
 
         $styles = Category::styles;
 
-        return view('admin.category.index', ['categories' => $categories, 'styles' => $styles]);
+        return view('admin.categories.index', ['categories' => $categories, 'styles' => $styles]);
     }
 
     /**
@@ -40,7 +40,7 @@ class CategoryController extends Controller
 
         $styles = Category::styles;
 
-        return view('admin.category.create', ['styles' => $styles]);
+        return view('admin.categories.create', ['styles' => $styles]);
     }
 
     /**
@@ -57,14 +57,14 @@ class CategoryController extends Controller
 
         $validated = $request->validate(
             [
-                'name' => 'required|min:4|max:32',
+                'name' => 'required|min:2|max:32',
                 'style' => 'required|in:' . implode(',', Category::styles),
             ],
         );
 
         $category = Category::create($validated);
 
-        return Redirect::to('admin.category.create')->with('success', $category->name);
+        return redirect()->route('categories.index')->with('create', $category->name);
     }
 
     /**
@@ -87,7 +87,7 @@ class CategoryController extends Controller
 
         $styles = Category::styles;
 
-        return view('edit', ['category' => $category, 'styles' => $styles]);
+        return view('admin.categories.edit', ['category' => $category, 'styles' => $styles]);
     }
 
     /**
@@ -111,14 +111,14 @@ class CategoryController extends Controller
 
         $validated = $request->validate(
             [
-                'name' => 'required|min:4|max:32',
+                'name' => 'required|min:2|max:32',
                 'style' => 'required|in:' . implode(',', Category::styles),
             ],
         );
 
         $category->update($validated);
 
-        return Redirect::to('admin.category.edit')->with('success', $category->name);
+        return redirect()->route('categories.index')->with('edit', $category->name);
     }
 
     public function delete($id)
@@ -135,7 +135,7 @@ class CategoryController extends Controller
 
         $styles = Category::styles;
 
-        return view('admin.category.delete', ['category' => $category, 'styles' => $styles]);
+        return view('admin.categories.delete', ['category' => $category, 'styles' => $styles]);
     }
 
     /**
@@ -163,6 +163,6 @@ class CategoryController extends Controller
             return abort(500);
         }
 
-        return Redirect::to('admin.category.index')->with('deleted', $category_name);
+        return redirect()->route('categories.index')->with('delete', $category_name);
     }
 }

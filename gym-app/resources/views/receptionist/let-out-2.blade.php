@@ -1,5 +1,5 @@
 @extends('layouts.receptionist')
-@section('title', 'Beléptetés')
+@section('title', 'Kiléptetés')
 
 @section('content')
   @if ($errors->any())
@@ -15,11 +15,11 @@
   <h2 class="mb-3">Vendég kiléptetése</h2>
   <div class="card">
     <div class="card-header">
-      <h5 class="card-title">Harap utcai edzőterem</h5>
+      <h5 class="card-title">{{ $gym->name }}</h5>
     </div>
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('let-out-2', $user->exit_code) }}" method="POST">
+        <form action="{{ route('receptionist.let-out', $user->exit_code) }}" method="POST">
           @csrf
           <h2 class="mb-3">Vendég adatai</h2>
           <div class="row g-3 align-items-center mb-3">
@@ -53,7 +53,7 @@
               <label for="usedTicket" class="col-form-label">Belépés időpontja</label>
             </div>
             <div class="col-auto">
-              <input type="text" id="usedTicket" class="form-control" value="{{ $enterance->enter }}" disabled />
+              <input type="text" id="usedTicket" class="form-control" value="{{ $enterance->enter() }}" disabled />
             </div>
           </div>
           <div class="mb-3 form-check">

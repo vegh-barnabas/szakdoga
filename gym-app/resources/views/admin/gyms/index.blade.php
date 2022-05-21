@@ -2,13 +2,29 @@
 @section('title', 'Felhasználók listája')
 
 @section('content')
-  @if (Session::has('deleted'))
+  @if (Session::has('create'))
     <p>
     <div class="alert alert-success" role="alert">
-      Sikeresen törölted a(z) <strong>{{ Session::get('deleted') }}</strong> edzőtermet!
+      Sikeresen törölted a(z) <strong>{{ Session::get('create') }}</strong> edzőtermet!
     </div>
     </p>
   @endif
+  @if (Session::has('edit'))
+    <p>
+    <div class="alert alert-success" role="alert">
+      Sikeresen szerkesztetted <strong>{{ Session::get('edit') }}</strong> edzőtermet!
+    </div>
+    </p>
+  @endif
+
+  @if (Session::has('delete'))
+    <p>
+    <div class="alert alert-danger" role="alert">
+      Sikeresen törölted <strong>{{ Session::get('delete') }}</strong> edzőtermet!
+    </div>
+    </p>
+  @endif
+
 
   <h2 class="mb-3">
     Edzőtermek listája</h2>
@@ -37,8 +53,12 @@
                   @endforeach
                 </td>
                 <td>
-                  <a href="{{ route('edit-gym', $gym->id) }}" class="link-primary">✏</a>
-                  <a href="{{ route('delete-gym', $gym->id) }}" class="link-primary">❌</a>
+                  <a href="{{ route('gyms.edit', $gym->id) }}" class="link-primary">
+                    <x-ri-edit-fill class="icon" style="height: 22px" />
+                  </a>
+                  <a href="{{ route('gyms.delete', $gym->id) }}" class="link-primary">
+                    <x-ri-delete-back-2-fill class="icon" style="height: 22px" />
+                  </a>
                 </td>
               </tr>
             @endforeach
@@ -46,7 +66,7 @@
         </table>
       </div>
 
-      <a href="{{ route('add-gym') }}" class="btn btn-primary">Új edzőterem</a>
+      <a href="{{ route('gyms.create') }}" class="btn btn-primary">Új edzőterem</a>
     </div>
   </div>
 @endsection

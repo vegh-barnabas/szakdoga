@@ -2,14 +2,6 @@
 @section('title', 'Vásárolt jegy szerkesztése')
 
 @section('content')
-  @if (Session::has('hidden'))
-    <p>
-    <div class="alert alert-success" role="alert">
-      Sikeresen elrejtetted <strong>{{ Session::get('hidden') }}</strong> jegyet!
-    </div>
-    </p>
-  @endif
-
   <h2 class="mb-3">Megvásárolható jegy elrejtése</h2>
   <div class="card">
     <div class="card-header">
@@ -51,8 +43,8 @@
               </div>
               <div class="col-auto">
                 <select id="type" name="type" class="form-select" disabled>
-                  <option value="jegy" {{ !$ticket->isMonthly() ? 'selected' : '' }}>jegy</option>
-                  <option value="bérlet" {{ $ticket->isMonthly() ? 'selected' : '' }}>bérlet</option>
+                  <option value="one-time" {{ !$ticket->isMonthly() ? 'selected' : '' }}>jegy</option>
+                  <option value="monthly" {{ $ticket->isMonthly() ? 'selected' : '' }}>bérlet</option>
                 </select>
               </div>
             </div>

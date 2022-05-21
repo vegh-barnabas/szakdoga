@@ -2,14 +2,6 @@
 @section('title', 'Felhasználó szerkesztése')
 
 @section('content')
-  @if (Session::has('success'))
-    <p>
-    <div class="alert alert-success" role="alert">
-      Sikeresen létrehoztad <strong>{{ Session::get('success') }}</strong> jegyet!
-    </div>
-    </p>
-  @endif
-
   @if ($errors->any())
     <div class="alert alert-danger">
       <ul>
@@ -24,7 +16,7 @@
   <div class="card">
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('buyable-tickets.create') }}" method="POST">
+        <form action="{{ route('buyable-tickets.store') }}" method="POST">
           @csrf
           <div class="mb-3">
             <div class="row g-3 align-items-center">
@@ -57,8 +49,8 @@
               </div>
               <div class="col-auto">
                 <select id="type" name="type" class="form-select">
-                  <option value="jegy">jegy</option>
-                  <option value="bérlet">bérlet</option>
+                  <option value="one-time">jegy</option>
+                  <option value="monthly">bérlet</option>
                 </select>
               </div>
             </div>

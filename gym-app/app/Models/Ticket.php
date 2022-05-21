@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
-use Carbon\CarbonImmutable;
 
 class Ticket extends Model
 {
@@ -71,10 +70,28 @@ class Ticket extends Model
         return (!$this->useable() || $this->used());
     }
 
+    public function bought()
+    {
+        $expiration = CarbonImmutable::Create($this->bought);
+
+        return $expiration->format('Y. m. d.');
+    }
+
     public function expiration()
     {
         $expiration = CarbonImmutable::Create($this->expiration);
 
         return $expiration->format('Y. m. d.');
+    }
+
+    public function use_date()
+    {
+        if ($this->isMonthly()) {
+            return null;
+        }
+
+        $enterance = CarbonImmutable::Create($this->enterances->first()->enter);
+
+        return $enterance->format('Y. m. d. H:i');
     }
 }

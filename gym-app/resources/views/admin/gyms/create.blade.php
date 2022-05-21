@@ -2,14 +2,6 @@
 @section('title', 'Edzőterem létrehozása')
 
 @section('content')
-  @if (Session::has('success'))
-    <p>
-    <div class="alert alert-success" role="alert">
-      Sikeresen létrehoztad <strong>{{ Session::get('success') }}</strong> edzőtermet!
-    </div>
-    </p>
-  @endif
-
   @if ($errors->any())
     <div class="alert alert-danger">
       <ul>
@@ -24,7 +16,7 @@
   <div class="card">
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('add-gym') }}" method="POST">
+        <form action="{{ route('gyms.store') }}" method="POST">
           @csrf
           <div class="mb-3">
             <div class="row g-3 align-items-center">

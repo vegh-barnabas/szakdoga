@@ -87,4 +87,9 @@ class User extends Authenticatable
     {
         return $this->permission == 'receptionist';
     }
+
+    public function is_guest()
+    {
+        return $this->permission == 'user';
+    }
 }

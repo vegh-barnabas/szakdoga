@@ -2,6 +2,14 @@
 @section('title', 'Felhasználók listája')
 
 @section('content')
+  @if (Session::has('edit'))
+    <p>
+    <div class="alert alert-success" role="alert">
+      Sikeresen szerkesztetted <strong>{{ Session::get('edit') }}</strong> felhasználót!
+    </div>
+    </p>
+  @endif
+
   @if (Session::has('no-gym-error'))
     <p>
     <div class="alert alert-danger" role="alert">
@@ -32,7 +40,8 @@
               <tr>
                 @if (!$user->is_admin() && $gym_count > 0)
                   <form>
-                    <td><a href="{{ route('edit-user', $user->id) }}" class="link-primary">{{ $user->name }}</a></td>
+                    <td><a href="{{ route('users.edit', $user->id) }}" class="link-primary">{{ $user->name }}</a>
+                    </td>
                   </form>
                 @else
                   <td>{{ $user->name }}</td>

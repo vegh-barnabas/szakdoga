@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('gym_id');
             $table->enum('type', ['one-time', 'monthly']);
-            $table->string('name', 45);
+            $table->string('name', 45)->unique(array('gym_id', 'name'));
             $table->text('description');
             $table->integer('quantity');
             $table->integer('price');

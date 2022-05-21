@@ -7,6 +7,7 @@ use App\Models\Gym;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 
 class BuyableTicketController extends Controller
 {
@@ -31,7 +32,7 @@ class BuyableTicketController extends Controller
 
             return view('receptionist.buyable-tickets', ['tickets' => $all_tickets, 'gym_name' => $gym->name]);
         } else if (Auth::user()->is_admin()) {
-            $gym_name = Gym::all()->pluck('name')->implode(',');
+            $gym_name = Gym::all()->pluck('name')->implode(', ');
 
             $monthly_tickets = BuyableTicket::all()->filter(function ($ticket) {
                 return $ticket->isMonthly();
@@ -80,19 +81,26 @@ class BuyableTicketController extends Controller
         $validated = $request->validate(
             [
                 'gym_id' => 'required|in:' . Gym::all()->pluck('id')->implode(','),
-                'name' => 'required|min:4|max:32',
-                'type' => 'required|in:jegy,bérlet',
-                'description' => 'required|min:6|max:128',
-                'quantity' => 'required|integer',
-                'price' => 'required|integer',
+                'name' => [
+                    'required',
+                    'min:3',
+                    'max:32',
+                    Rule::unique('buyable_tickets')->where(function ($query) use ($request) {
+                        return $query->where('gym_id', $request->gym_id);
+                    }),
+                ],
+                'type' => 'required|in:monthly,one-time',
+                'description' => 'min:6|max:128',
+                'quantity' => 'required|integer|min:1',
+                'price' => 'required|integer|min:0',
             ],
         );
 
         $validated['hidden'] = 0;
 
-        BuyableTicket::create($validated);
+        $ticket = BuyableTicket::create($validated);
 
-        return Redirect::back()->with('success', $validated['name']);
+        return redirect()->route('buyable-tickets.index')->with('create', $ticket->name);
     }
 
     /**
@@ -140,18 +148,25 @@ class BuyableTicketController extends Controller
         $validated = $request->validate(
             [
                 'gym_id' => 'in:' . Gym::all()->pluck('id')->implode(','),
-                'name' => 'min:4|max:32',
-                'type' => 'in:jegy,bérlet',
+                'name' => [
+                    'required',
+                    'min:3',
+                    'max:32',
+                    Rule::unique('buyable_tickets')->where(function ($query) use ($request) {
+                        return $query->where('gym_id', $request->gym_id);
+                    })->ignore($ticket->id),
+                ],
+                'type' => 'required|in:monthly,one-time',
                 'description' => 'min:6|max:128',
                 'quantity' => 'integer|min:1',
-                'price' => 'integer',
+                'price' => 'integer|min:0',
                 'hidden' => 'boolean',
             ],
         );
 
         $ticket->update($validated);
 
-        return Redirect::back()->with('success', $ticket->name);
+        return redirect()->route('buyable-tickets.index')->with('edit', $ticket->name);
     }
 
     public function hide_form($id)
@@ -171,7 +186,7 @@ class BuyableTicketController extends Controller
         return view('admin.buyable-tickets.hide', ['ticket' => $ticket, 'gyms' => $gyms]);
     }
 
-    public function hide(Request $request, $id)
+    public function hide($id)
     {
         if (!Auth::user()->is_admin()) {
             abort(403);
@@ -186,6 +201,6 @@ class BuyableTicketController extends Controller
         $ticket->hidden = !$ticket->hidden;
         $ticket->save();
 
-        return Redirect::back()->with('hidden', $ticket->name);
+        return redirect()->route('buyable-tickets.index')->with('hide', $ticket->name);
     }
 }

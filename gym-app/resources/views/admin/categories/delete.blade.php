@@ -9,7 +9,7 @@
     </div>
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('delete-category', $category->id) }}" method="POST">
+        <form action="{{ route('categories.destroy', $category->id) }}" method="POST">
           @csrf
           @method('delete')
           <div class="mb-3">

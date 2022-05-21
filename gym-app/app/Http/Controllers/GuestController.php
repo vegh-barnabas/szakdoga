@@ -6,10 +6,12 @@ use App\Models\BuyableTicket;
 use App\Models\Enterance;
 use App\Models\Gym;
 use App\Models\Ticket;
+use App\Models\User;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 
 class GuestController extends Controller
@@ -79,7 +81,7 @@ class GuestController extends Controller
     {
         $gym = Gym::find(session('gym'));
 
-        $buyable_tickets = $gym->buyableTickets; // TODO: filter this to only list quantity > 0 tickets
+        $buyable_tickets = BuyableTicket::all()->where('gym_id', $gym->id)->where('hidden', false);
 
         return view('user.buy', ['gym' => $gym, 'buyable_tickets' => $buyable_tickets]);
     }
@@ -98,7 +100,9 @@ class GuestController extends Controller
 
         $ticket_type = $ticket->isMonthly() ? "Bérlet" : "Jegy";
 
-        return view('user.buy_ticket', ['ticket' => $ticket, 'ticket_type' => $ticket_type]);
+        $gym = Gym::all()->where('id', $ticket->gym_id)->first();
+
+        return view('user.buy_ticket', ['ticket' => $ticket, 'ticket_type' => $ticket_type, 'gym' => $gym]);
     }
 
     public function buy_ticket_create($buyable_ticket_id)
@@ -122,6 +126,11 @@ class GuestController extends Controller
 
         if ($buyable_ticket->quantity != 999) {
             $buyable_ticket->quantity -= 1;
+
+            if ($buyable_ticket->quantity == 0) {
+                $buyable_ticket->hidden = true;
+            }
+
             $buyable_ticket->save();
         }
 
@@ -236,5 +245,28 @@ class GuestController extends Controller
         $minutes = $min_avg % 60;
 
         return view('user.statistics', ['gym' => $gym, 'hour_avg' => $hours, 'min_avg' => $minutes, 'people_inside' => $people_inside]);
+    }
+
+    public function settings(Request $request)
+    {
+        $user = User::all()->where('id', Auth::user()->id)->first();
+
+        $gyms = Gym::all();
+
+        $validated = $request->validate(
+            [
+                'current' => [
+                    Rule::in($gyms->pluck('name')),
+                ],
+                'prefered' => [
+                    Rule::in($gyms->pluck('name')),
+                ],
+            ]
+        );
+
+        $user->update($validated);
+
+        // TODO: success message not working
+        return Redirect::to('guest.settings')->with('success');
     }
 }

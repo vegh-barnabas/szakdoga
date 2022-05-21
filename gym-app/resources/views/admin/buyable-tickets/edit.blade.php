@@ -2,14 +2,6 @@
 @section('title', 'Vásárolt jegy szerkesztése')
 
 @section('content')
-  @if (Session::has('success'))
-    <p>
-    <div class="alert alert-success" role="alert">
-      Sikeresen szerkesztetted <strong>{{ Session::get('success') }}</strong> jegyet!
-    </div>
-    </p>
-  @endif
-
   @if ($errors->any())
     <div class="alert alert-danger">
       <ul>
@@ -27,8 +19,9 @@
     </div>
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('buyable-tickets.edit', $ticket->id) }}" method="POST">
+        <form action="{{ route('buyable-tickets.update', $ticket->id) }}" method="POST">
           @csrf
+          @method('patch')
           <div class="mb-3">
             <div class="row g-3 align-items-center">
               <div class="col-2">
@@ -61,8 +54,14 @@
               </div>
               <div class="col-auto">
                 <select id="type" name="type" class="form-select">
-                  <option value="jegy">jegy</option>
-                  <option value="bérlet">bérlet</option>
+                  <option value="one-time"
+                    {{ (old('type') == 'one-time' ? 'selected' : !$ticket->isMonthly()) ? 'selected' : '' }}>
+                    jegy
+                  </option>
+                  <option value="monthly"
+                    {{ (old('type') == 'monthly' ? 'selected' : $ticket->isMonthly()) ? 'selected' : '' }}>
+                    bérlet
+                  </option>
                 </select>
               </div>
             </div>

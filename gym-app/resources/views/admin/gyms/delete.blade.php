@@ -10,7 +10,7 @@
     </div>
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('delete-gym', $gym->id) }}" method="POST">
+        <form action="{{ route('gyms.destroy', $gym->id) }}" method="POST">
           @csrf
           @method('delete')
           <div class="mb-3">

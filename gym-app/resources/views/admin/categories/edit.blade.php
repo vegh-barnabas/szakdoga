@@ -2,14 +2,6 @@
 @section('title', 'Felhasználó szerkesztése')
 
 @section('content')
-  @if (Session::has('success'))
-    <p>
-    <div class="alert alert-success" role="alert">
-      Sikeresen szerkesztetted <strong>{{ Session::get('success') }}</strong> kategóriát!
-    </div>
-    </p>
-  @endif
-
   @if ($errors->any())
     <div class="alert alert-danger">
       <ul>
@@ -27,7 +19,7 @@
     </div>
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('admin.category.edit', $category->id) }}" method="POST">
+        <form action="{{ route('categories.update', $category->id) }}" method="POST">
           @csrf
           @method('patch')
           <div class="mb-3">

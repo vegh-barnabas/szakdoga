@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Enterance;
+use App\Models\Gym;
 use App\Models\Ticket;
+use App\Models\User;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +19,9 @@ class ReceptionistController extends Controller
             abort(403);
         }
 
-        return view('receptionist.let-in');
+        $gym = Gym::find(session('gym'));
+
+        return view('receptionist.let-in', ['gym' => $gym]);
     }
 
     public function let_in_index(Request $request)
@@ -41,7 +45,7 @@ class ReceptionistController extends Controller
         $ticket = Ticket::all()->where('code', $code)->first();
 
         if ($ticket == null) {
-            return Redirect::back()->with('doesnt_exist', ['code' => $code]);
+            return Redirect::back()->with('not-found', ['code' => $code]);
         }
 
         $user = $ticket->user;
@@ -49,7 +53,11 @@ class ReceptionistController extends Controller
             return Redirect::back()->with('error', ['code' => $code, 'user' => $user->name]);
         }
 
-        return redirect()->route('let-in-2', $code);
+        if ($ticket->gym_id != Gym::find(session('gym'))->id) {
+            return Redirect::back()->with('not-this-gym', ['code' => $code]);
+        }
+
+        return redirect()->route('receptionist.let-in.page', $code);
     }
 
     public function let_in_page($code)
@@ -71,7 +79,9 @@ class ReceptionistController extends Controller
 
         $user = $ticket->user;
 
-        return view('receptionist.let-in-2', ['user' => $user, 'ticket' => $ticket, 'code' => $code]);
+        $gym = Gym::all()->where('id', $ticket->gym_id)->first();
+
+        return view('receptionist.let-in-2', ['user' => $user, 'ticket' => $ticket, 'code' => $code, 'gym' => $gym]);
 
     }
 
@@ -112,7 +122,9 @@ class ReceptionistController extends Controller
             abort(403);
         }
 
-        return view('receptionist.let-out');
+        $gym = Gym::find(session('gym'));
+
+        return view('receptionist.let-out', ['gym' => $gym]);
     }
 
     public function let_out_index(Request $request)
@@ -134,13 +146,19 @@ class ReceptionistController extends Controller
         $user = User::all()->where('exit_code', $exit_code)->first();
 
         if ($user == null) {
-            return Redirect::back()->with('error-not-found', $exit_code);
+            return Redirect::back()->with('not-found', $exit_code);
         }
         if ($user->enterances->where('exit', null)->count() == 0) {
             return Redirect::back()->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
-        } // TODO: rename this exit code
+        }
 
-        return redirect()->route('let-out-2', $user->exit_code);
+        $enterance = Enterance::all()->where('user_id', $user->id)->where('exit', null)->first();
+
+        if ($enterance->gym_id != Gym::find(session('gym'))->id) {
+            return Redirect::back()->with('not-this-gym', ['code' => $exit_code]);
+        }
+
+        return redirect()->route('receptionist.let-out.page', $user->exit_code);
     }
 
     public function let_out_page($code)
@@ -159,7 +177,9 @@ class ReceptionistController extends Controller
             return Redirect::to('let-out')->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
         } // TODO: rename this exit code from 'error'
 
-        return view('receptionist.let-out-2', ['user' => $user, 'enterance' => $enterance]);
+        $gym = Gym::all()->where('id', $enterance->gym_id)->first();
+
+        return view('receptionist.let-out-2', ['user' => $user, 'enterance' => $enterance, 'gym' => $gym]);
     }
 
     public function let_out(Request $request, $code)
@@ -191,5 +211,17 @@ class ReceptionistController extends Controller
         $enterance->save();
 
         return Redirect::to('let-out')->with('success', $user->name);
+    }
+
+    public function entered_users()
+    {
+        if (!Auth::user()->is_receptionist()) {
+            abort(403);
+        }
+
+        $gym = Gym::find(session('gym'));
+        $enterances = Enterance::all()->where('gym_id', $gym->id)->where('exit', null);
+
+        return view('receptionist.entered-users', ['gym_name' => $gym->name, 'enterances' => $enterances]);
     }
 }

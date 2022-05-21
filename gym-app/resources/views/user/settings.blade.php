@@ -1,8 +1,15 @@
 @extends('layouts.user')
 @section('title', 'Beállítások')
 
-
 @section('content')
+  @if (Session::has('success'))
+    <p>
+    <div class="alert alert-success" role="alert">
+      Sikeresen szerkesztetted a beállításaid!
+    </div>
+    </p>
+  @endif
+
   <h2>Beállítások</h2>
   <p>Ezen az oldalon tudod a beállításaidat módosítani.</p>
   <div class="card">
@@ -11,18 +18,12 @@
     </div>
     <div class="card-body">
       <div class="card-text">
-        <form>
-          {{-- <div class="mb-3">
-            <label for="theme" class="form-label">Oldal témája</label>
-            <select class="form-select" id="theme" name="theme">
-              <option value="light" selected="selected">Világos</option>
-              <option value="dark">Sötét</option>
-              <option value="drawn">Rajzolt</option>
-            </select>
-          </div> --}}
+        <form action="{{ route('guest.settings') }}" method="POST">
+          @csrf
+          @method('patch')
           <div class="mb-3">
-            <label for="theme" class="form-label">Kiválasztott edzőterem</label>
-            <select class="form-select" id="theme" name="theme">
+            <label for="current" class="form-label">Kiválasztott edzőterem</label>
+            <select class="form-select" id="current" name="current">
               @foreach ($gyms as $gym)
                 <option value={{ $gym->id }} {{ $current_gym == $gym->id ? 'selected' : '' }}>
                   {{ $gym->name }}
@@ -31,11 +32,12 @@
             </select>
           </div>
           <div class="mb-3">
-            <label for="theme" class="form-label">Alapértelmezett edzőterem</label>
-            <select class="form-select" id="theme" name="theme">
-              <option value="none" {{ $selected_gym_id == null ? 'selected' : '' }}>Nincs</option>
+            <label for="prefered" class="form-label">Alapértelmezett edzőterem</label>
+            <select class="form-select" id="prefered" name="prefered">
+              <option value="none" {{ Auth::user()->prefered_gym == null ? 'selected' : '' }}>Nincs</option>
               @foreach ($gyms as $gym)
-                <option value={{ $gym->id }} {{ $selected_gym_id == $gym->id ? 'selected' : '' }}>
+                <option value={{ $gym->id }}
+                  {{ $selected_gym_id == Auth::user()->prefered_gym ? 'selected' : '' }}>
                   {{ $gym->name }}
                 </option>
               @endforeach

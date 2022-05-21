@@ -12,7 +12,7 @@
         <div class="alert alert-warning text-center" role="alert">
           <h3 class="mb-3">A {{ $ticket_type }} vásárlása 1 hónapra vonatkozik!</h2>
         </div>
-        <form action="{{ route('guest.buy-ticket.create') }}" method="POST">
+        <form action="{{ route('guest.buy-ticket.create', $ticket->id) }}" method="POST">
           @csrf
           <h2 class="mb-3">{{ $ticket_type }} adatai</h2>
           <div class="row g-3 align-items-center mb-3">

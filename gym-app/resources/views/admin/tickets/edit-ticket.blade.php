@@ -2,14 +2,7 @@
 @section('title', 'Vásárolt jegy szerkesztése')
 
 @section('content')
-  @if (Session::has('success'))
-    <p>
-    <div class="alert alert-success" role="alert">
-      Sikeresen szerkesztetted <strong>{{ Session::get('success') }}</strong> jegyet!
-    </div>
-    </p>
-  @endif
-
+  {{-- TODO: error --}}
   <h2 class="mb-3">Jegy szerkesztése</h2>
   <div class="card">
     <div class="card-header">
@@ -18,7 +11,7 @@
     </div>
     <div class="card-body">
       <div class="card-text">
-        <form action="{{ route('edit-purchased-ticket', $ticket->id) }}" method="POST">
+        <form action="{{ route('ticket.edit', $ticket->id) }}" method="POST">
           @csrf
           @method('patch')
           <div class="mb-3">

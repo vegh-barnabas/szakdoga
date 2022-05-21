@@ -33,18 +33,20 @@ Auth::routes();
 Route::get('/categories/{id}/delete', [CategoryController::class, 'delete'])->name('categories.delete')->middleware('auth');
 Route::resource('categories', CategoryController::class)->middleware('auth');
 
-Route::get('/buyable-tickets/{id}/hide', [BuyableTicketController::class, 'hide_form'])->name('buyable-tickets.hide')->middleware('auth');
+Route::get('/buyable-tickets/{id}/hide', [BuyableTicketController::class, 'hide_form'])->name('buyable-tickets.hide.index')->middleware('auth');
 Route::patch('/buyable-tickets/{id}/hide', [BuyableTicketController::class, 'hide'])->name('buyable-tickets.hide')->middleware('auth');
 Route::resource('buyable-tickets', BuyableTicketController::class)->middleware('auth');
 
 Route::get('/gyms/{id}/delete', [GymController::class, 'delete'])->name('gyms.delete')->middleware('auth');
 Route::resource('gyms', GymController::class)->middleware('auth');
 
+Route::get('/tickets/{id}/delete', [TicketController::class, 'delete'])->name('ticket.delete')->middleware('auth');
+// Route::delete('/tickets/{id}/delete', [TicketController::class, 'destroy'])->name('ticket.destroy')->middleware('auth');
+Route::get('/tickets/edit-ticket/{id}', [TicketController::class, 'edit_ticket'])->name('ticket.edit.index')->middleware('auth');
+Route::patch('/tickets/edit-ticket/{id}', [TicketController::class, 'update_ticket'])->name('ticket.edit')->middleware('auth');
+Route::get('/tickets/edit-monthly/{id}', [TicketController::class, 'edit_monthly'])->name('monthly-ticket.edit.index')->middleware('auth');
+Route::patch('/tickets/edit-monthly/{id}', [TicketController::class, 'update_monthly'])->name('monthly-ticket.edit')->middleware('auth');
 Route::resource('tickets', TicketController::class)->middleware('auth');
-Route::get('tickets/edit-ticket/{id}', [TicketController::class, 'edit_ticket'])->name('tickets.edit')->middleware('auth');
-Route::patch('tickets/edit-ticket/{id}', [TicketController::class, 'update_ticket'])->name('tickets.edit')->middleware('auth');
-Route::get('tickets/edit-monthly/{id}', [TicketController::class, 'edit_monthly'])->name('monthly-tickets.edit')->middleware('auth');
-Route::patch('tickets/edit-monthly/{id}', [TicketController::class, 'update_monthly'])->name('monthly-tickets.edit')->middleware('auth');
 
 Route::resource('users', UserController::class)->middleware('auth');
 
@@ -62,7 +64,11 @@ Route::patch('/extend-ticket/{id}', [GuestController::class, 'extend_ticket'])->
 
 Route::get('/statistics', [GuestController::class, 'statistics'])->name('guest.statistics')->middleware('auth');
 
+Route::patch('/settings', [GuestController::class, 'settings'])->name('guest.settings')->middleware('auth');
+
 /* Receptionist routes */
+Route::get('/entered-users', [ReceptionistController::class, 'entered_users'])->name('receptionist.entered-users')->middleware('auth');
+
 Route::get('/let-in', [ReceptionistController::class, 'let_in_index_page'])->name('receptionist.let-in.index-page')->middleware('auth');
 Route::post('/let-in', [ReceptionistController::class, 'let_in_index'])->name('receptionist.let-in.index')->middleware('auth');
 Route::get('/let-in/{id}', [ReceptionistController::class, 'let_in_page'])->name('receptionist.let-in.page')->middleware('auth');
@@ -70,7 +76,7 @@ Route::post('/let-in/{id}', [ReceptionistController::class, 'let_in'])->name('re
 
 Route::get('/let-out', [ReceptionistController::class, 'let_out_index_page'])->name('receptionist.let-out.index-page')->middleware('auth');
 Route::post('/let-out', [ReceptionistController::class, 'let_out_index'])->name('receptionist.let-out.index')->middleware('auth');
-Route::get('/let-out/{id}', [ReceptionistController::class, 'lout_out_page'])->name('receptionist.let-out.page')->middleware('auth');
+Route::get('/let-out/{id}', [ReceptionistController::class, 'let_out_page'])->name('receptionist.let-out.page')->middleware('auth');
 Route::post('/let-out/{id}', [ReceptionistController::class, 'let_out'])->name('receptionist.let-out')->middleware('auth');
 
 /* Mutual Routes */
@@ -86,7 +92,7 @@ Route::get('/home', function () {
 
         $tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
             return !$ticket->isMonthly();
-        })->take(5);
+        })->sortByDesc('bought')->take(5); // TODO: fix this, not sorting for some reason
         $monthly_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
             return $ticket->isMonthly();
         })->sortByDesc('bought')->take(5);
@@ -94,7 +100,7 @@ Route::get('/home', function () {
         return view('receptionist.index', ['enterances' => $enterances, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'gym' => $gym]);
     } else if (Auth::user()->is_admin()) {
 
-        $gym_name = Gym::all()->pluck('name')->implode(',');
+        $gym_name = Gym::all()->pluck('name')->implode(', ');
 
         $tickets = Ticket::all()->filter(function ($ticket) {
             return !$ticket->isMonthly();
@@ -108,7 +114,9 @@ Route::get('/home', function () {
         });
 
         // TODO: receptionist login
-        $active_receptionists = User::all()->where('is_receptionist()');
+        $active_receptionists = User::all()->filter(function ($user) {
+            return $user->is_receptionist();
+        });
 
         return view('admin.index', ['gym_name' => $gym_name, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'active_enterances' => $active_enterances, 'active_receptionists' => $active_receptionists]);
     } else {
@@ -160,7 +168,7 @@ Route::get('/settings', function () {
         abort(403);
     } else {
         $gyms = Gym::all();
-        $selected_gym_id = Auth::user()->prefered_gym;
+        $selected_gym_id = Gym::find(session('gym'))->id;
         $current_gym = session('gym');
 
         return view('user.settings', ['gyms' => $gyms, 'selected_gym_id' => $selected_gym_id, 'current_gym' => $current_gym]);
@@ -178,13 +186,15 @@ Route::get('/purchased-monthly', function () {
 
         return view('receptionist.purchased-monthly', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
     } else if (Auth::user()->is_admin()) {
-        $gym_name = Gym::all()->pluck('name')->implode(',');
+        $gym_name = Gym::all()->pluck('name')->implode(', ');
 
         $purchased_tickets = Ticket::all()->filter(function ($ticket) {
             return $ticket->isMonthly();
-        })->values()->sortByDesc('expiration');
+        })->values()
+            ->sortByDesc('expiration')
+            ->sortByDesc([fn($a, $b) => $a->gym->name <=> $b->gym->name]);
 
-        return view('admin.purchased-monthly', ['tickets' => $purchased_tickets, 'gym_name' => $gym_name]);
+        return view('admin.tickets.index-monthly', ['tickets' => $purchased_tickets, 'gym_name' => $gym_name]);
     } else {
         abort(403);
     }
@@ -200,13 +210,13 @@ Route::get('/purchased-tickets', function () {
 
         return view('receptionist.purchased-tickets', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
     } else if (Auth::user()->is_admin()) {
-        $gym_name = Gym::all()->pluck('name')->implode(',');
+        $gym_name = Gym::all()->pluck('name')->implode(', ');
 
         $purchased_tickets = Ticket::all()->filter(function ($ticket) {
             return !$ticket->isMonthly();
         })->values()->sortByDesc('expiration');
 
-        return view('admin.purchased-tickets', ['tickets' => $purchased_tickets, 'gym_name' => $gym_name]);
+        return view('admin.tickets.index-ticket', ['tickets' => $purchased_tickets, 'gym_name' => $gym_name]);
     } else {
         abort(403);
     }

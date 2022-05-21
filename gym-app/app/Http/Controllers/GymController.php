@@ -23,7 +23,7 @@ class GymController extends Controller
 
         $gyms = Gym::all();
 
-        return view('admin.gym.gym-list', ['gyms' => $gyms]);
+        return view('admin.gyms.index', ['gyms' => $gyms]);
     }
 
     /**
@@ -39,7 +39,7 @@ class GymController extends Controller
 
         $categories = Category::all();
 
-        return view('admin.add-gym', ['categories' => $categories]);
+        return view('admin.gyms.create', ['categories' => $categories]);
     }
 
     /**
@@ -60,7 +60,7 @@ class GymController extends Controller
                 'address' => 'required|min:4|max:128',
                 'description' => 'required|min:6|max:128',
                 'categories' => 'nullable',
-                'categories.*' => 'integer|distinct|in:' . Category::all()->pluck('id'),
+                'categories.*' => 'integer|distinct|exists:categories,id',
             ],
         );
 
@@ -72,7 +72,7 @@ class GymController extends Controller
             $category->gyms()->attach($gym->id);
         }
 
-        return Redirect::back()->with('success', $validated['name']);
+        return redirect()->route('gyms.index')->with('create', $gym->name);
     }
 
     /**
@@ -95,8 +95,7 @@ class GymController extends Controller
 
         $categories = Category::all();
 
-        return view('admin.edit-gym', ['gym' => $gym, 'categories' => $categories]);
-
+        return view('admin.gyms.edit', ['gym' => $gym, 'categories' => $categories]);
     }
 
     /**
@@ -133,7 +132,7 @@ class GymController extends Controller
         $gym->categories()->detach();
         $gym->categories()->attach($request->categories);
 
-        return Redirect::back()->with('success', $gym->name);
+        return redirect()->route('gyms.index')->with('edit', $gym->name);
     }
 
     public function delete($id)
@@ -148,7 +147,7 @@ class GymController extends Controller
             abort(403);
         }
 
-        return view('admin.delete-gym', ['gym' => $gym]);
+        return view('admin.gyms.delete', ['gym' => $gym]);
     }
 
     /**
@@ -176,6 +175,6 @@ class GymController extends Controller
             return abort(500);
         }
 
-        return Redirect::to('gyms')->with('deleted', $gym_name);
+        return redirect()->route('gyms.index')->with('delete', $gym_name);
     }
 }

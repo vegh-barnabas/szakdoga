@@ -50,7 +50,7 @@ Route::get('/home', function () {
         return view('receptionist.index', ['enterances' => $enterances, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'gym' => $gym]);
     } else if (Auth::user()->is_admin()) {
 
-        $gym_name = Gym::all()->pluck('name')->implode(',');
+        $gym_name = Gym::all()->pluck('name')->implode(', ');
 
         $tickets = Ticket::all()->filter(function ($ticket) {
             return !$ticket->isMonthly();
@@ -548,7 +548,7 @@ Route::get('/buyable-tickets', function () {
 
         return view('receptionist.buyable-tickets', ['tickets' => $all_tickets, 'gym_name' => $gym->name]);
     } else if (Auth::user()->is_admin()) {
-        $gym_name = Gym::all()->pluck('name')->implode(',');
+        $gym_name = Gym::all()->pluck('name')->implode(', ');
 
         $monthly_tickets = BuyableTicket::all()->filter(function ($ticket) {
             return $ticket->isMonthly();
@@ -575,7 +575,7 @@ Route::get('/purchased-monthly', function () {
 
         return view('receptionist.purchased-monthly', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
     } else if (Auth::user()->is_admin()) {
-        $gym_name = Gym::all()->pluck('name')->implode(',');
+        $gym_name = Gym::all()->pluck('name')->implode(', ');
 
         $purchased_tickets = Ticket::all()->filter(function ($ticket) {
             return $ticket->isMonthly();
@@ -597,7 +597,7 @@ Route::get('/purchased-tickets', function () {
 
         return view('receptionist.purchased-tickets', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
     } else if (Auth::user()->is_admin()) {
-        $gym_name = Gym::all()->pluck('name')->implode(',');
+        $gym_name = Gym::all()->pluck('name')->implode(', ');
 
         $purchased_tickets = Ticket::all()->filter(function ($ticket) {
             return !$ticket->isMonthly();
@@ -615,7 +615,7 @@ Route::get('/users', function () {
         abort(403);
     }
 
-    $gym_name = Gym::all()->pluck('name')->implode(',');
+    $gym_name = Gym::all()->pluck('name')->implode(', ');
 
     $admins = User::all()->where('is_admin()')->sortBy('name');
 

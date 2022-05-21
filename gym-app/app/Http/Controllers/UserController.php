@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Gym;
 use App\Models\User;
-use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -22,14 +22,18 @@ class UserController extends Controller
             abort(403);
         }
 
-        $gym_name = Gym::all()->pluck('name')->implode(',');
+        $gym_name = Gym::all()->pluck('name')->implode(', ');
 
-        $admins = User::all()->where('is_admin()')->sortBy('name');
+        $admins = User::all()->filter(function ($user) {
+            return $user->is_admin();
+        })->sortBy('name');
 
-        $receptionists = User::all()->where('is_receptionist()')->sortBy('name');
+        $receptionists = User::all()->filter(function ($user) {
+            return $user->is_receptionist();
+        })->sortBy('name');
 
         $users = User::all()->filter(function ($user) {
-            return !$user->is_admin() && !$user->is_receptionist();
+            return $user->is_guest();
         })->values()->sortBy('name');
 
         $all_users = $admins->merge($receptionists);
@@ -37,7 +41,7 @@ class UserController extends Controller
 
         $gym_count = Gym::all()->count();
 
-        return view('admin.user-list', ['all_users' => $all_users, 'gym_name' => $gym_name, 'gym_count' => $gym_count]);
+        return view('admin.users.index', ['all_users' => $all_users, 'gym_name' => $gym_name, 'gym_count' => $gym_count]);
     }
 
     /**
@@ -96,7 +100,7 @@ class UserController extends Controller
 
         $gyms = Gym::all();
 
-        return view('admin.edit-user', ['user' => $user, 'gyms' => $gyms]);
+        return view('admin.users.edit', ['user' => $user, 'gyms' => $gyms]);
     }
 
     /**
@@ -124,27 +128,28 @@ class UserController extends Controller
 
         $validated = $request->validate(
             [
-                'name' => 'required|min:3|max:32',
-                'email' => 'required|email:rfc',
+                'name' => [
+                    'required',
+                    'min:3',
+                    'max:32',
+                    Rule::unique('users', 'name')->ignore($user->id),
+                ],
+                'email' => [
+                    'required',
+                    'email:rfc',
+                    Rule::unique('users', 'email')->ignore($user->id),
+                ],
                 'gender' => 'required|in:male,female',
-                'permission' => 'required|in:guest,receptionist',
+                'permission' => 'required|in:user,receptionist',
                 'credits' => 'required|integer',
                 'exitcode' => 'required|min:6|max:6',
                 'gym' => [Rule::requiredIf($user->is_receptionist()), Rule::in(Gym::all()->pluck('id')->implode(','))],
-                // 'newpw' => 'min:6|max:32',
-                // 'newpw2' => 'same:newpw',
             ],
         );
 
-        if ($validated['permission'] == 'guest') {
-            $validated['is_receptionist()'] = 0;
-        } else if ($validated['permission'] == 'receptionist') {
-            $validated['is_receptionist()'] = 1;
-        }
-
         $user->update($validated);
 
-        return Redirect::back()->with('success', $user->name);
+        return redirect()->route('users.index')->with('edit', $user->name);
     }
 
     /**
@@ -157,5 +162,4 @@ class UserController extends Controller
     {
         //
     }
-
 }
