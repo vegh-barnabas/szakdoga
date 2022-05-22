@@ -17,12 +17,14 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('gym_id');
             $table->enum('type', ['one-time', 'monthly']);
-            $table->string('name', 45)->unique(array('gym_id', 'name'));
+            $table->string('name', 45);
             $table->text('description');
             $table->integer('quantity');
             $table->integer('price');
             $table->boolean('hidden');
             $table->timestamps();
+
+            $table->unique(['gym_id', 'name']);
 
             $table->softDeletes();
         });

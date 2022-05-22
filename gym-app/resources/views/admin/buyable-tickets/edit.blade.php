@@ -83,8 +83,11 @@
                 <label for="quantity" class="col-form-label">Elérhető</label>
               </div>
               <div class="col-auto">
-                <input type="number" id="quantity" name="quantity" class="form-control"
+                <input type="number" id="quantity" name="quantity" class="form-control" aria-describedby="quantity_help"
                   value="{{ old('quantity') ?? $ticket->quantity }}" />
+              </div>
+              <div class="col-auto">
+                <span id="quantity_help" class="form-text">Végtelen mennyiséghez adj meg 999-et.</span>
               </div>
             </div>
           </div>

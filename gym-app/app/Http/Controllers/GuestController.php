@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 
@@ -57,7 +58,7 @@ class GuestController extends Controller
     public function tickets()
     {
         if (session('gym') == null) {
-            return redirect()->route('gyms');
+            return redirect()->route('guest.gyms.list');
         }
 
         if (Auth::user()->is_receptionist()) {
@@ -89,7 +90,7 @@ class GuestController extends Controller
     public function buy_ticket_show($buyable_ticket_id)
     {
         if (session('gym') == null) {
-            return redirect()->route('gyms');
+            return redirect()->route('guest.gyms.list');
         }
 
         if (Auth::user()->is_receptionist()) {
@@ -97,6 +98,14 @@ class GuestController extends Controller
         }
 
         $ticket = BuyableTicket::find($buyable_ticket_id);
+
+        if ($ticket->hidden) {
+            return redirect()->route('guest.buy-ticket');
+        }
+
+        if ($ticket->price > Auth::user()->credits) {
+            return redirect()->route('guest.buy-ticket')->with('error', 'error-not-enough-credits');
+        }
 
         $ticket_type = $ticket->isMonthly() ? "Bérlet" : "Jegy";
 
@@ -109,9 +118,16 @@ class GuestController extends Controller
     {
         $buyable_ticket = BuyableTicket::find($buyable_ticket_id);
 
-        $current_date = new DateTime();
-        $expiration = new DateTime();
-        $expiration->modify("+1 month");
+        if ($buyable_ticket->hidden) {
+            abort(403);
+        }
+
+        if ($buyable_ticket->price > Auth::user()->credits) {
+            abort(403);
+        }
+
+        $current_date = Carbon::now()->format('Y-m-d');
+        $expiration = Carbon::now()->add('1', 'month')->format('Y-m-d');
 
         Auth::user()->credits -= $buyable_ticket->price;
         Auth::user()->save();
@@ -141,7 +157,7 @@ class GuestController extends Controller
     public function extend_ticket_page(Ticket $ticket)
     {
         if (session('gym') == null) {
-            return redirect()->route('gyms');
+            return redirect()->route('guest.gyms.list');
         }
 
         if (Auth::user()->is_receptionist()) {
@@ -162,7 +178,7 @@ class GuestController extends Controller
     public function extend_ticket(Ticket $ticket)
     {
         if (session('gym') == null) {
-            return redirect()->route('gyms');
+            return redirect()->route('guest.gyms.list');
         }
 
         if (Auth::user()->is_receptionist()) {
@@ -229,8 +245,6 @@ class GuestController extends Controller
                 $mins = ($end->getTimestamp() - $start->getTimestamp()) / 60;
                 $min_sum += $mins;
 
-                error_log("mins: " . $mins . ", sum: " . $min_sum);
-
                 $count++;
             }
         }
@@ -250,23 +264,73 @@ class GuestController extends Controller
     public function settings(Request $request)
     {
         $user = User::all()->where('id', Auth::user()->id)->first();
+        // error_log(json_encode($user));
 
         $gyms = Gym::all();
 
         $validated = $request->validate(
             [
                 'current' => [
-                    Rule::in($gyms->pluck('name')),
+                    Rule::in($gyms->pluck('id')),
                 ],
                 'prefered' => [
-                    Rule::in($gyms->pluck('name')),
+                    Rule::in($gyms->pluck('id')->push('none')),
                 ],
             ]
         );
 
-        $user->update($validated);
+        session(['gym' => $validated['current']]);
+
+        if ($request['prefered'] !== 'none') {
+            $user->prefered_gym = $request['prefered'];
+        } else {
+            $user->prefered_gym = null;
+        }
+
+        $user->save();
 
         // TODO: success message not working
-        return Redirect::to('guest.settings')->with('success');
+        return redirect()->route('settings')->with('success', 'success');
+    }
+
+    public function sensitive_settings(Request $request)
+    {
+        if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
+            abort(403);
+        }
+
+        $user = User::all()->where('id', Auth::user()->id)->first();
+        error_log(json_encode($user));
+
+        $validated = $request->validate(
+            [
+                'email' => [
+                    'nullable',
+                    'email',
+                    Rule::unique('users', 'email')->ignore($user->id),
+                ],
+                'password' => [
+                    'nullable',
+                    'min:8',
+                    'max:32',
+                    'confirmed',
+                ],
+                'current_password' => [
+                    'required',
+                    'current_password',
+                ],
+            ]
+        );
+
+        if ($request['email'] != null) {
+            $user->email = $request['email'];
+        }
+        if ($request['password'] != null) {
+            $user->password = Hash::make($request['password']);
+        }
+
+        $user->save();
+
+        return redirect()->route('sensitive-settings')->with('success', 'success');
     }
 }

@@ -20,8 +20,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->unique(['category_id', 'gym_id']);
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
-            $table->foreign('gym_id')->references('id')->on('gyms')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('categories');
+            $table->foreign('gym_id')->references('id')->on('gyms');
         });
     }
 

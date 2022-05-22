@@ -47,11 +47,6 @@
               </div>
               <div class="col-auto">
                 <input type="text" id="exit_code" name="exit_code" class="form-control" />
-                @error('exit_code')
-                  <div class="invalid-feedback">
-                    {{ $message }}
-                  </div>
-                @enderror
               </div>
             </div>
           </div>

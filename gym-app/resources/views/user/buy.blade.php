@@ -2,6 +2,14 @@
 @section('title', 'Jegy/bérlet vásárlás')
 
 @section('content')
+  @if (Session::has('error'))
+    <p>
+    <div class="alert alert-danger" role="alert">
+      Nincs elég kredited a jegy megvásárlására!
+    </div>
+    </p>
+  @endif
+
   <h2>Jegy/bérlet vásárlás</h2>
   <p>Ezen az oldalon tudsz a kreditedből jegyeket és bérleteket vásárolni. Vigyázz, melyiket választod ki, mert a vásárlás
     után nem tudod már visszamondani a terméket.</p>

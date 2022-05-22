@@ -47,6 +47,10 @@
               <a class="nav-link {{ Route::is('receptionist.let-out.index-page') ? 'active' : '' }}"
                 href="{{ route('receptionist.let-out.index-page') }}">Kiléptetés</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link {{ Route::is('receptionist.let-out.index-page') ? 'active' : '' }}"
+                href="{{ route('receptionist.add-credits.index') }}">Kredit feltöltése</a>
+            </li>
             <li class="collapse navbar-collapse" id="navbarNavDarkDropdown">
               <ul class="navbar-nav">
                 <li class="nav-item dropend">
@@ -61,6 +65,9 @@
                         listája</a></li>
                     <li><a class="dropdown-item" href="{{ route('buyable-tickets.index') }}">Vásárolható
                         jegyek/bérletek listája</a></li>
+                    <li><a class="dropdown-item" href="{{ route('receptionist.entered-users') }}">Belépett
+                        vendégek</a>
+                    </li>
                   </ul>
                 </li>
               </ul>
@@ -72,7 +79,7 @@
                 aria-expanded="true">{{ Auth::user()->name }}</a>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDarkDropdownMenuLink">
                 <li>
-                  <a class="dropdown-item" href="{{ route('settings') }}">Beállítások</a>
+                  <a class="dropdown-item" href="{{ route('sensitive-settings') }}">Beállítások</a>
                 </li>
                 <li>
                   <a class="dropdown-item" href="{{ route('logout') }}"

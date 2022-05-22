@@ -21,7 +21,7 @@
               <div class="mb-4">
                 <p class="card-text">{{ $gym->description }}</p>
               </div>
-              <input type="hidden" id="gymId" name="gymId" value="{{ $loop->iteration }}">
+              <input type="hidden" id="gymId" name="gymId" value="{{ $gym->id }}">
               <button class="btn btn-success">Tovább</a>
             </div>
           </div>

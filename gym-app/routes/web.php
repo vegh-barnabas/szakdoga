@@ -65,6 +65,7 @@ Route::patch('/extend-ticket/{id}', [GuestController::class, 'extend_ticket'])->
 Route::get('/statistics', [GuestController::class, 'statistics'])->name('guest.statistics')->middleware('auth');
 
 Route::patch('/settings', [GuestController::class, 'settings'])->name('guest.settings')->middleware('auth');
+Route::patch('/settings/sensitive', [GuestController::class, 'sensitive_settings'])->name('guest.sensitive-settings')->middleware('auth');
 
 /* Receptionist routes */
 Route::get('/entered-users', [ReceptionistController::class, 'entered_users'])->name('receptionist.entered-users')->middleware('auth');
@@ -79,14 +80,20 @@ Route::post('/let-out', [ReceptionistController::class, 'let_out_index'])->name(
 Route::get('/let-out/{id}', [ReceptionistController::class, 'let_out_page'])->name('receptionist.let-out.page')->middleware('auth');
 Route::post('/let-out/{id}', [ReceptionistController::class, 'let_out'])->name('receptionist.let-out')->middleware('auth');
 
+Route::get('/add-credits', [ReceptionistController::class, 'add_credits_index'])->name('receptionist.add-credits.index')->middleware('auth');
+Route::post('/add-credits', [ReceptionistController::class, 'add_credits'])->name('receptionist.add-credits')->middleware('auth');
+
+Route::patch('/settings/sensitive', [ReceptionistController::class, 'sensitive_settings'])->name('receptionist.sensitive-settings')->middleware('auth');
+
 /* Mutual Routes */
 // Home - User & Receptionist
 Route::get('/home', function () {
-    if (session('gym') == null && !Auth::user()->is_admin()) {
-        return redirect()->route('gyms');
+    if (!Auth::user()->is_admin() && !Auth::user()->is_receptionist() && session('gym') == null) {
+        return redirect()->route('guest.gyms.list');
     }
 
     if (Auth::user()->is_receptionist()) {
+        session('gym', Auth::user()->prefered_gym);
         $gym = Gym::find(session('gym'));
         $enterances = Enterance::all()->where('gym_id', $gym->id)->where('exit', null);
 
@@ -163,7 +170,7 @@ Route::get('/home', function () {
 // TODO: put these in different controllers and redirect
 Route::get('/settings', function () {
     if (Auth::user()->is_receptionist()) {
-        return view('receptionist.settings');
+        abort(403);
     } else if (Auth::user()->is_admin()) {
         abort(403);
     } else {
@@ -175,6 +182,17 @@ Route::get('/settings', function () {
     }
 
 })->name('settings')->middleware('auth');
+
+Route::get('/settings/sensitive', function () {
+    if (Auth::user()->is_receptionist()) {
+        return view('receptionist.settings_sensitive');
+    } else if (Auth::user()->is_admin()) {
+        abort(403);
+    } else {
+        return view('user.settings_sensitive');
+    }
+
+})->name('sensitive-settings')->middleware('auth');
 
 // Purchased monthly tickets - Receptionist & Admin
 Route::get('/purchased-monthly', function () {

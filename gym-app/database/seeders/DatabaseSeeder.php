@@ -22,12 +22,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('tickets')->truncate();
-        DB::table('gyms')->truncate();
-        DB::table('users')->truncate();
-        DB::table('categories')->truncate();
+        // Remove previous data
         DB::table('enterances')->truncate();
+        DB::table('tickets')->truncate();
         DB::table('buyable_tickets')->truncate();
+        DB::table('category_gym')->truncate();
+        DB::table('gyms')->truncate();
+        DB::table('categories')->truncate();
+        DB::table('users')->truncate();
 
         /* Gyms */
         Gym::factory()->create([
@@ -73,11 +75,20 @@ class DatabaseSeeder extends Seeder
 
         // Users
         for ($i = 1; $i <= 10; $i++) {
-            User::factory()->create([
-                'name' => 'user' . $i,
-                'email' => 'user' . $i . '@br.hu',
-                'password' => Hash::make('password'),
-            ]);
+            if (rand(0, 1)) {
+                User::factory()->create([
+                    'name' => 'user' . $i,
+                    'email' => 'user' . $i . '@br.hu',
+                    'password' => Hash::make('password'),
+                    'prefered_gym' => Gym::all()->pluck('id')->random(),
+                ]);
+            } else {
+                User::factory()->create([
+                    'name' => 'user' . $i,
+                    'email' => 'user' . $i . '@br.hu',
+                    'password' => Hash::make('password'),
+                ]);
+            }
         }
 
         /* Categories */
@@ -146,16 +157,6 @@ class DatabaseSeeder extends Seeder
             'hidden' => 0,
         ]);
         BuyableTicket::factory()->create([
-            'gym_id' => 1,
-            'type' => 'one-time',
-            'name' => 'Szaunajegy',
-            'description' => 'Csak szaunára vonatkozik',
-            'quantity' => 999,
-            'price' => 1000,
-            'hidden' => 0,
-        ]);
-
-        BuyableTicket::factory()->create([
             'gym_id' => 2,
             'type' => 'monthly',
             'name' => 'Normál bérlet',
@@ -177,10 +178,10 @@ class DatabaseSeeder extends Seeder
         /* Tickets */
         $users = User::all()->where('permission', 'user');
         $buyable_tickets = BuyableTicket::all()->filter(function ($ticket) {
-            return $ticket->isMonthly();
+            return !$ticket->isMonthly();
         });
         $buyable_monthly_tickets = BuyableTicket::all()->filter(function ($ticket) {
-            return !$ticket->isMonthly();
+            return $ticket->isMonthly();
         });
         foreach ($users as $user) {
             // one-time tickets
@@ -210,15 +211,8 @@ class DatabaseSeeder extends Seeder
         }
 
         /* Enterances */
-        $tickets = Ticket::all()->filter(function ($ticket) {
-            return !$ticket->isMonthly();
-        });
-        $monthly_tickets = Ticket::all()->filter(function ($ticket) {
-            return $ticket->isMonthly();
-        });
-
+        $tickets = Ticket::all();
         $random_tickets = $tickets->random(rand(0, $tickets->count()));
-        $random_monthly_tickets = $monthly_tickets->random(rand(0, $monthly_tickets->count()));
 
         foreach ($random_tickets as $random_ticket) {
             $enterances = 1;

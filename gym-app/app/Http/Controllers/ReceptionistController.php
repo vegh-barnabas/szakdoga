@@ -6,10 +6,14 @@ use App\Models\Enterance;
 use App\Models\Gym;
 use App\Models\Ticket;
 use App\Models\User;
+use Carbon\Carbon;
+use Carbon\CarbonImmutable;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 
 class ReceptionistController extends Controller
 {
@@ -40,12 +44,17 @@ class ReceptionistController extends Controller
         );
         $code = $validated['enterance_code'];
 
-        error_log($code);
-
         $ticket = Ticket::all()->where('code', $code)->first();
 
         if ($ticket == null) {
             return Redirect::back()->with('not-found', ['code' => $code]);
+        }
+
+        if (!$ticket->isMonthly() && !$ticket->enterances->isEmpty()) {
+            $enterance_date = CarbonImmutable::create($ticket->enterances->first()->enter);
+
+            return Redirect::to('let-in')
+                ->with('used-ticket', ['ticket' => $code, 'used' => $enterance_date->format('Y. m. d. H:i')]);
         }
 
         $user = $ticket->user;
@@ -67,6 +76,10 @@ class ReceptionistController extends Controller
         }
 
         $ticket = Ticket::all()->where('code', $code)->first();
+
+        if (!$ticket->isMonthly() && !$ticket->enterances->isEmpty()) {
+            return view('receptionist.let-in');
+        }
 
         if ($ticket == null) {
             return view('receptionist.let-in');
@@ -92,9 +105,16 @@ class ReceptionistController extends Controller
         }
 
         $ticket = Ticket::all()->where('code', $code)->first();
-        $user = $ticket->user;
 
-        $validated = $request->validate(
+        if (!$ticket->isMonthly() && !$ticket->enterances->isEmpty()) {
+            abort(403);
+        }
+
+        if (!$ticket->exit != null) {
+            abort(403);
+        }
+
+        $request->validate(
             // Validation rules
             [
                 'keyGiven' => [
@@ -104,12 +124,13 @@ class ReceptionistController extends Controller
             ],
         );
 
-        $enter_time = new DateTime();
-        $new_enterance = Enterance::factory()->create([
+        $user = $ticket->user;
+
+        Enterance::factory()->create([
             'gym_id' => $ticket->gym_id,
             'user_id' => $user->id,
             'ticket_id' => $ticket->id,
-            'enter' => $enter_time,
+            'enter' => Carbon::create(),
             'exit' => null,
         ]);
 
@@ -188,8 +209,6 @@ class ReceptionistController extends Controller
             abort(403);
         }
 
-        error_log($code);
-
         $user = User::all()->where('exit_code', $code)->first();
         if ($user == null) {
             abort(403);
@@ -223,5 +242,83 @@ class ReceptionistController extends Controller
         $enterances = Enterance::all()->where('gym_id', $gym->id)->where('exit', null);
 
         return view('receptionist.entered-users', ['gym_name' => $gym->name, 'enterances' => $enterances]);
+    }
+
+    public function add_credits_index()
+    {
+        $gym = Gym::find(session('gym'));
+
+        return view('receptionist.add-credits', ['gym' => $gym]);
+    }
+
+    public function add_credits(Request $request)
+    {
+        if (!Auth::user()->is_receptionist()) {
+            abort(403);
+        }
+
+        $request->validate(
+            [
+                'name' => [
+                    'required',
+                    'in:' . User::all()->pluck('name'),
+                ],
+                'amount' => [
+                    'required',
+                    'integer',
+                    'min:1',
+                ],
+                'money_recieved' => [
+                    'required',
+                    'accepted',
+                ],
+            ],
+        );
+
+        $user = User::all()->where('name', $request['name'])->first();
+        $user->credits += $request['amount'];
+        $user->save();
+
+        return Redirect::to('add-credits')->with('success', ['name' => $user->name, 'amount' => $request['amount']]);
+    }
+
+    public function sensitive_settings(Request $request)
+    {
+        if (!Auth::user()->is_receptionist()) {
+            abort(403);
+        }
+
+        $user = User::all()->where('id', Auth::user()->id)->first();
+
+        $request->validate(
+            [
+                'email' => [
+                    'nullable',
+                    'email',
+                    Rule::unique('users', 'email')->ignore($user->id),
+                ],
+                'password' => [
+                    'nullable',
+                    'min:8',
+                    'max:32',
+                    'confirmed',
+                ],
+                'current_password' => [
+                    'required',
+                    'current_password',
+                ],
+            ]
+        );
+
+        if ($request['email'] != null) {
+            $user->email = $request['email'];
+        }
+        if ($request['password'] != null) {
+            $user->password = Hash::make($request['password']);
+        }
+
+        $user->save();
+
+        return redirect()->route('sensitive-settings')->with('success', 'success');
     }
 }

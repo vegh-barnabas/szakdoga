@@ -29,11 +29,6 @@
               </div>
               <div class="col-auto">
                 <input type="text" id="name" name="name" class="form-control" value="{{ $user->name }}" />
-                @error('name')
-                  <div class="invalid-feedback">
-                    {{ $message }}
-                  </div>
-                @enderror
               </div>
             </div>
           </div>
@@ -44,11 +39,6 @@
               </div>
               <div class="col-auto">
                 <input type="text" id="email" name="email" class="form-control" value="{{ $user->email }}" />
-                @error('email')
-                  <div class="invalid-feedback">
-                    {{ $message }}
-                  </div>
-                @enderror
               </div>
             </div>
           </div>
@@ -103,11 +93,6 @@
               </div>
               <div class="col-auto">
                 <input type="text" id="credits" name="credits" class="form-control" value="{{ $user->credits }}" />
-                @error('credits')
-                  <div class="invalid-feedback">
-                    {{ $message }}
-                  </div>
-                @enderror
               </div>
             </div>
           </div>
@@ -120,47 +105,11 @@
                 <div class="col-auto">
                   <input type="text" id="exitcode" name="exitcode" class="form-control"
                     value="{{ $user->exit_code }}" />
-                  @error('exitcode')
-                    <div class="invalid-feedback">
-                      {{ $message }}
-                    </div>
-                  @enderror
                 </div>
               </div>
             </div>
           @endif
       </div>
-
-      {{-- <div class="mb-3">
-        <div class="row g-3 align-items-center">
-          <div class="col-2">
-            <label for="newpw" class="col-form-label">Új jelszó</label>
-          </div>
-          <div class="col-auto">
-            <input type="text" id="newpw" name="newpw" class="form-control" />
-            @error('newpw')
-              <div class="invalid-feedback">
-                {{ $message }}
-              </div>
-            @enderror
-          </div>
-        </div>
-      </div>
-      <div class="mb-3">
-        <div class="row g-3 align-items-center">
-          <div class="col-2">
-            <label for="newpw2" class="col-form-label">Új jelszó mégegyszer</label>
-          </div>
-          <div class="col-auto">
-            <input type="text" id="newpw2" name="newpw2" class="form-control" />
-            @error('newpw2')
-              <div class="invalid-feedback">
-                {{ $message }}
-              </div>
-            @enderror
-          </div>
-        </div>
-      </div> --}}
 
       <button type="submit" class="btn btn-success">Szerkesztés</button>
       </form>

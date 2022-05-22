@@ -23,9 +23,9 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->timestamps();
 
-            $table->foreign('type_id')->references('id')->on('buyable_tickets')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('gym_id')->references('id')->on('gyms')->onDelete('cascade');
+            $table->foreign('type_id')->references('id')->on('buyable_tickets');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('gym_id')->references('id')->on('gyms');
 
             $table->softDeletes();
         });

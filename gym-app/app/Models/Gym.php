@@ -52,6 +52,8 @@ class Gym extends Model
                     }
                 }
             }
+
+            $gym->categories()->detach();
         });
     }
 }

@@ -27,6 +27,13 @@
       A(z) <strong>{{ Session::get('not-this-gym.code') }}</strong> kódú jeggyel nem ebbe az edzőterembe léptek be!
     </div>
     </p>
+  @elseif (Session::has('used-ticket'))
+    <p>
+    <div class="alert alert-danger" role="alert">
+      A(z) <strong>{{ Session::get('used-ticket.code') }}</strong> kódú jeggyet már felhasználták! Belépés dátuma:
+      <strong>{{ Session::get('used-ticket.used') }}</strong>
+    </div>
+    </p>
   @endif
 
   @if ($errors->any())
@@ -56,11 +63,6 @@
               </div>
               <div class="col-auto">
                 <input type="text" id="enterance_code" name="enterance_code" class="form-control" />
-                @error('enterance_code')
-                  <div class="invalid-feedback">
-                    {{ $message }}
-                  </div>
-                @enderror
               </div>
             </div>
           </div>
