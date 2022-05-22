@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Felhasználók listája')
+@section('title', 'Kategóriák listája')
 
 @section('content')
   @if (Session::has('create'))
@@ -28,31 +28,33 @@
   <div class="card">
     <div class="card-body">
       <div class="card-text">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Név</th>
-              <th>Stílus</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach ($categories as $category)
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
               <tr>
-                <td>{{ $category->name }}</td>
-                <td><span class="badge rounded-pill bg-{{ $category->style }}">{{ $category->style }}</span></td>
-                <td>
-                  <a href="{{ route('categories.edit', $category->id) }}" class="link-primary">
-                    <x-ri-edit-fill class="icon" style="height: 22px" />
-                  </a>
-                  <a href="{{ route('categories.delete', $category->id) }}" class="link-primary">
-                    <x-ri-delete-back-2-fill class="icon" style="height: 22px" />
-                  </a>
-                </td>
+                <th>Név</th>
+                <th>Stílus</th>
+                <th></th>
               </tr>
-            @endforeach
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @foreach ($categories as $category)
+                <tr>
+                  <td>{{ $category->name }}</td>
+                  <td><span class="badge rounded-pill bg-{{ $category->style }}">{{ $category->style }}</span></td>
+                  <td>
+                    <a href="{{ route('categories.edit', $category->id) }}" class="link-primary">
+                      <x-ri-edit-fill class="icon" style="height: 22px" />
+                    </a>
+                    <a href="{{ route('categories.delete', $category->id) }}" class="link-primary">
+                      <x-ri-delete-back-2-fill class="icon" style="height: 22px" />
+                    </a>
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <a href="{{ route('categories.create') }}" class="btn btn-primary">Új kategória</a>

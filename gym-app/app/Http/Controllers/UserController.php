@@ -141,9 +141,19 @@ class UserController extends Controller
                 ],
                 'gender' => 'required|in:male,female',
                 'permission' => 'required|in:user,receptionist',
-                'credits' => 'required|integer',
-                'exitcode' => 'required|min:6|max:6',
-                'gym' => [Rule::requiredIf($user->is_receptionist()), Rule::in(Gym::all()->pluck('id')->implode(','))],
+                'credits' => [
+                    Rule::requiredIf(!$user->is_receptionist()),
+                    'integer',
+                ],
+                'exit_code' => [
+                    Rule::requiredIf(!$user->is_receptionist()),
+                    'min:6',
+                    'max:6',
+                ],
+                'prefered_gym' => [
+                    Rule::requiredIf($user->is_receptionist()),
+                    'in:' . Gym::all()->pluck('id')->implode(','),
+                ],
             ],
         );
 

@@ -59,35 +59,36 @@ recepciós tud képet feltölteni userről
 
 
 -- TODO --
-- migrationokben helyes adattípusok
-- google maps képek edzőtermeknél
-- kilépés gomb
-- belépések modell, user N - M enterance
-- auth magyarra
-- bérlet jegy lejáratnál óra nem kell
-- bérletek, jegyek hozzáadása gomb, adatbázisban tárolni
-- nincs bérleted hibaüzi formázása user.index-ben
-- pagination user.index-ben
-- rendezve kiírás user.index-ben
-- típusnál a bérlet, jegy konstansba
-- buyableTicketsnél duration, jegynél nevet kivenni
-- minden datet carbonra
-- "beléptető rendszer" felirat valami menő színre meg menő betűtípusra
-- utolsó belépésnél ha nem egyezik a dátum akkor dátumot kiírni, ha egyezik akkor csak órát
-- edzőterem nyitvatartás tól-ig, kezdőképernyőn kijelezni h nyitva/zárva/hamarosan zár, seederben feltölteni sok mai belépéssel, statisztikánál jó adatokat átadni
-- navbar styleok
-- recepciós ne válasszon kondit
-- hibaüzenet ha rossz a recepciós let in id
-- ticket type: one_time, monthly
-- ikonok
-- locker enterancehoz
-- purchased-monthly és purchased-tickets lehetne 1 nézet is
-- valami stílus a recisnél a jegyek listázásánál a táblázatokhoz, adminhoz is, pl gradient háttérszín, színezés stb
-- recepciós kezdje el a munkát
+- editekhez patch
+- többi jegy/többi bérlet mutatása linkek
+- user.buy.blade.php átnézni a formot
+- let-in pagek jól redirectelnek-e vissza
+- deleted_at nem töltődik ki
+- állapottartó formok
 
-- admin jegy módosítás a jegyek listában a névre kattintva
-- admin bérlet listában hányszor volt használva a bérlet
+❌ user.statistics.blade.php logikát átrakni
+❌ recepciósnál többi belépett vendég megjelenítése
+❌ 5 belépett vendég és nem az összes
+✅ felhasználó szerkesztése még bugos
+❌ kondik a kártyákban nem egymagasak
+✅ táblázatok horizontálisan görgethetőek legyenek
+✅ táblázatoknál menő csíkozós effekt hovernél
+✅ regisztrációnál minden mezőt beállítani
+✅ auth magyarra
+✅ ha nincs edzőterem az usernek és akkor hiba
+✅ kódú jeggyel nem ebbe az edzőterembe léptek be!
+✅ jegyvásárlásnál bought, expiration rosszul rakódik adatbázisba
+✅ jegyvásárlásnál hosszabbításnál a névhez nem a jegy nevét írja hanem a típusát
+✅ jegyvásárlásnál a hosszabbítás gomb nem jó routera vezet
+✅ Ticket $ticket -> $id
+✅ updateknál jó mező nevek
+✅ titleöket átnézni
+✅ ctrl+f <!--
+✅ ctrl+f TODO
+- readme.md
 
-- admin, recis, user nem 2 boolba hanem 1 intbe vagy enumba jogosultság néven vagy ilyesmi
-
-- gombokat linkre pl. a jegy listában
+-- Bővítési ötletek --
+- policyk
+- pagination
+- több ikon
+- statisztikánál órák

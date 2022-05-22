@@ -99,7 +99,7 @@ Route::get('/home', function () {
 
         $tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
             return !$ticket->isMonthly();
-        })->sortByDesc('bought')->take(5); // TODO: fix this, not sorting for some reason
+        })->sortByDesc('bought')->take(5);
         $monthly_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
             return $ticket->isMonthly();
         })->sortByDesc('bought')->take(5);
@@ -120,12 +120,7 @@ Route::get('/home', function () {
             return !$enterance->exited();
         });
 
-        // TODO: receptionist login
-        $active_receptionists = User::all()->filter(function ($user) {
-            return $user->is_receptionist();
-        });
-
-        return view('admin.index', ['gym_name' => $gym_name, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'active_enterances' => $active_enterances, 'active_receptionists' => $active_receptionists]);
+        return view('admin.index', ['gym_name' => $gym_name, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'active_enterances' => $active_enterances]);
     } else {
         $gym = Gym::find(session('gym'));
 
@@ -167,7 +162,6 @@ Route::get('/home', function () {
 })->name('index')->middleware('auth');
 
 // Settings - User & Receptionist
-// TODO: put these in different controllers and redirect
 Route::get('/settings', function () {
     if (Auth::user()->is_receptionist()) {
         abort(403);

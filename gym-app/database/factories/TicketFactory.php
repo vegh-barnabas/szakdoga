@@ -18,7 +18,7 @@ class TicketFactory extends Factory
      */
     public function definition()
     {
-        $bought = $this->faker->dateTimeBetween('-2 month', '+1 month');
+        $bought = $this->faker->dateTimeBetween('-2 month');
         $expiration = Carbon::create($bought)->add(30, 'days');
 
         return [

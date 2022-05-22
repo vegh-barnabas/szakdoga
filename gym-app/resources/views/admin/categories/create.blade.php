@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Felhasználó szerkesztése')
+@section('title', 'Kategória létrehozása')
 
 @section('content')
   @if ($errors->any())

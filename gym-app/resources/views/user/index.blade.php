@@ -19,44 +19,46 @@
                 @if ($monthly_tickets->isEmpty())
                   <h5>Nincs felhasználható bérleted!</h5>
                 @else
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Név</th>
-                        <th scope="col">Lejárat</th>
-                        <th scope="col">Státusz</th>
-                        <th scope="col"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @foreach ($monthly_tickets as $ticket)
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
                         <tr>
-                          <td>{{ $ticket->type->name }}</td>
-                          <td>{{ $ticket->expiration() }}</td>
-                          @if ($ticket->expired())
-                            <td class="text-danger">Lejárt</td>
-                            <td><button type="button" class="btn btn-light">Hosszabbítás</button></td>
-                          @else
-                            <td class="text-success">Aktív</td>
-                            <td>
-                              <p>
-                                <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-                                  data-bs-target="{{ '#' . Str::slug($ticket->type->name . $ticket->id) }}"
-                                  aria-expanded="false" aria-controls="{{ $ticket->id }}">
-                                  Belépési kód
-                                </button>
-                              </p>
-                              <div class="collapse" id="{{ Str::slug($ticket->type->name . $ticket->id) }}">
-                                <div class="card card-body">
-                                  {{ $ticket->code }}
-                                </div>
-                              </div>
-                            </td>
-                          @endif
+                          <th scope="col">Név</th>
+                          <th scope="col">Lejárat</th>
+                          <th scope="col">Státusz</th>
+                          <th scope="col"></th>
                         </tr>
-                      @endforeach
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        @foreach ($monthly_tickets as $ticket)
+                          <tr>
+                            <td>{{ $ticket->type->name }}</td>
+                            <td>{{ $ticket->expiration() }}</td>
+                            @if ($ticket->expired())
+                              <td class="text-danger">Lejárt</td>
+                              <td><button type="button" class="btn btn-light">Hosszabbítás</button></td>
+                            @else
+                              <td class="text-success">Aktív</td>
+                              <td>
+                                <p>
+                                  <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="{{ '#' . Str::slug($ticket->type->name . $ticket->id) }}"
+                                    aria-expanded="false" aria-controls="{{ $ticket->id }}">
+                                    Belépési kód
+                                  </button>
+                                </p>
+                                <div class="collapse" id="{{ Str::slug($ticket->type->name . $ticket->id) }}">
+                                  <div class="card card-body">
+                                    {{ $ticket->code }}
+                                  </div>
+                                </div>
+                              </td>
+                            @endif
+                          </tr>
+                        @endforeach
+                      </tbody>
+                    </table>
+                  </div>
                 @endif
               </p>
             </div>
@@ -77,46 +79,48 @@
                 @if ($tickets->isEmpty())
                   <h5>Nincs felhasználható jegyed!</h5>
                 @else
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Név</th>
-                        <th scope="col">Lejárat</th>
-                        <th scope="col">Státusz</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      @foreach ($tickets as $ticket)
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
                         <tr>
-                          <td>{{ $ticket->type->name }}</td>
-                          <td>{{ $ticket->expiration() }}</td>
-                          @if ($ticket->used() == true)
-                            <td class="text-warning">Felhasznált</td>
-                            <td><button type="button" class="btn btn-light">Új vásárlása</button></td>
-                          @elseif ($ticket->expired())
-                            <td class="text-danger">Lejárt</td>
-                            <td><button type="button" class="btn btn-light">Új vásárlása</button></td>
-                          @else
-                            <td class="text-success">Felhasználható</td>
-                            <td>
-                              <p>
-                                <button class="btn btn-success" type="button" data-bs-toggle="collapse"
-                                  data-bs-target="{{ '#' . Str::slug($ticket->type->name . $ticket->id) }}"
-                                  aria-expanded="false" aria-controls="{{ $ticket->id }}">
-                                  Belépési kód
-                                </button>
-                              </p>
-                              <div class="collapse" id="{{ Str::slug($ticket->type->name . $ticket->id) }}">
-                                <div class="card card-body">
-                                  {{ $ticket->code }}
-                                </div>
-                              </div>
-                            </td>
-                          @endif
+                          <th scope="col">Név</th>
+                          <th scope="col">Lejárat</th>
+                          <th scope="col">Státusz</th>
                         </tr>
-                      @endforeach
-                    </tbody>
-                  </table>
+                      </thead>
+                      <tbody>
+                        @foreach ($tickets as $ticket)
+                          <tr>
+                            <td>{{ $ticket->type->name }}</td>
+                            <td>{{ $ticket->expiration() }}</td>
+                            @if ($ticket->used() == true)
+                              <td class="text-warning">Felhasznált</td>
+                              <td><button type="button" class="btn btn-light">Új vásárlása</button></td>
+                            @elseif ($ticket->expired())
+                              <td class="text-danger">Lejárt</td>
+                              <td><button type="button" class="btn btn-light">Új vásárlása</button></td>
+                            @else
+                              <td class="text-success">Felhasználható</td>
+                              <td>
+                                <p>
+                                  <button class="btn btn-success" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="{{ '#' . Str::slug($ticket->type->name . $ticket->id) }}"
+                                    aria-expanded="false" aria-controls="{{ $ticket->id }}">
+                                    Belépési kód
+                                  </button>
+                                </p>
+                                <div class="collapse" id="{{ Str::slug($ticket->type->name . $ticket->id) }}">
+                                  <div class="card card-body">
+                                    {{ $ticket->code }}
+                                  </div>
+                                </div>
+                              </td>
+                            @endif
+                          </tr>
+                        @endforeach
+                      </tbody>
+                    </table>
+                  </div>
                 @endempty
             </p>
           </div>
@@ -135,14 +139,12 @@
       <div class="card-body">
         @if ($last_enterance_data == null)
           <p class="card-text">
-            <!-- ikon -->
           <h1 class="text-danger">Kilépve</h1>
           <h4 class="text-muted">Utolsó belépés időtartama:</h4>
           <h5 class="text-muted">Nincs</h5>
           </p>
         @elseif ($last_enterance_data['last_enterance']->exited())
           <p class="card-text">
-            <!-- ikon -->
           <h1 class="text-danger">Kilépve</h1>
           <h4 class="text-muted">Utolsó belépés időtartama:</h4>
           <h5 class="text-muted">
@@ -152,7 +154,6 @@
           </p>
         @else
           <p class="card-text">
-            <!-- ikon -->
           <h1 class="text-success">Belépve</h1>
           <h3>{{ $last_enterance_data['last_enterance']->enter }}</h3>
           <button class="btn btn-danger" type="button" data-bs-toggle="collapse"

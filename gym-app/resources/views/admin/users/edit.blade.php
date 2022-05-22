@@ -72,10 +72,10 @@
             <div class="mb-3">
               <div class="row g-3 align-items-center">
                 <div class="col-2">
-                  <label for="gym" class="col-form-label">Recepcióshoz tartozó edzőterem</label>
+                  <label for="prefered_gym" class="col-form-label">Recepcióshoz tartozó edzőterem</label>
                 </div>
                 <div class="col-auto">
-                  <select id="gym" name="gym" class="form-select">
+                  <select id="prefered_gym" name="prefered_gym" class="form-select">
                     @foreach ($gyms as $gym)
                       <option value="{{ $gym->id }}" {{ $user->prefered_gym == $gym->id ? 'selected' : '' }}>
                         {{ $gym->name }}
@@ -86,24 +86,24 @@
               </div>
             </div>
           @endif
-          <div class="mb-3">
-            <div class="row g-3 align-items-center">
-              <div class="col-2">
-                <label for="credits" class="col-form-label">Kreditek</label>
-              </div>
-              <div class="col-auto">
-                <input type="text" id="credits" name="credits" class="form-control" value="{{ $user->credits }}" />
-              </div>
-            </div>
-          </div>
           @if (!$user->is_receptionist())
             <div class="mb-3">
               <div class="row g-3 align-items-center">
                 <div class="col-2">
-                  <label for="exitcode" class="col-form-label">Kilépési kód</label>
+                  <label for="credits" class="col-form-label">Kreditek</label>
                 </div>
                 <div class="col-auto">
-                  <input type="text" id="exitcode" name="exitcode" class="form-control"
+                  <input type="text" id="credits" name="credits" class="form-control" value="{{ $user->credits }}" />
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div class="row g-3 align-items-center">
+                <div class="col-2">
+                  <label for="exit_code" class="col-form-label">Kilépési kód</label>
+                </div>
+                <div class="col-auto">
+                  <input type="text" id="exit_code" name="exit_code" class="form-control"
                     value="{{ $user->exit_code }}" />
                 </div>
               </div>

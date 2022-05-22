@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\BuyableTicket;
-use App\Models\Enterance;
 use App\Models\Gym;
 use App\Models\Ticket;
 use App\Models\User;
@@ -41,7 +40,6 @@ class GuestController extends Controller
             return redirect()->route('index');
         }
 
-        // TODO: check if this validation redicect is working
         $validated = $request->validate([
             'gymId' => [
                 'required',
@@ -67,7 +65,6 @@ class GuestController extends Controller
 
         $gym = Gym::find(session('gym'));
 
-        // TODO: paginaion
         $tickets = Auth::user()->tickets
             ->where('gym_id', $gym->id)
             ->sortByDesc('expiration')
@@ -153,8 +150,7 @@ class GuestController extends Controller
         return redirect()->route('index');
     }
 
-    // TODO: get ID
-    public function extend_ticket_page(Ticket $ticket)
+    public function extend_ticket_page($id)
     {
         if (session('gym') == null) {
             return redirect()->route('guest.gyms.list');
@@ -164,18 +160,22 @@ class GuestController extends Controller
             return redirect()->route('index');
         }
 
-        if (Auth::user()->tickets->where('id', $ticket->id)->count() == 0) {
+        if (Auth::user()->tickets->where('id', $id)->count() == 0) {
             return redirect()->route('index');
         }
 
-        if ($ticket->expired()) {
-            return redirect()->route('tickets');
+        $ticket = Ticket::all()->where('id', $id)->first();
+
+        if (!$ticket->expired() || !$ticket->isMonthly()) {
+            return redirect()->route('index');
         }
 
-        return view('user.extend_ticket', ['ticket' => $ticket]);
+        $gym = Gym::all()->where('id', $ticket->gym->id)->first();
+
+        return view('user.extend_ticket', ['ticket' => $ticket, 'gym' => $gym]);
     }
 
-    public function extend_ticket(Ticket $ticket)
+    public function extend_ticket($id)
     {
         if (session('gym') == null) {
             return redirect()->route('guest.gyms.list');
@@ -185,27 +185,29 @@ class GuestController extends Controller
             return redirect()->route('index');
         }
 
-        if (Auth::user()->tickets->where('id', $ticket->id)->count() == 0) {
+        if (Auth::user()->tickets->where('id', $id)->count() == 0) {
             return redirect()->route('index');
         }
 
-        if ($ticket->usable()) {
+        $ticket = Ticket::all()->where('id', $id)->first();
+
+        if ($ticket->useable()) {
             return redirect()->route('tickets');
         }
 
         if (Auth::user()->credits < $ticket->type->price) {
             return redirect()->route('tickets');
         }
-        // TODO: error
 
-        $expiration = Carbon::create();
+        $expiration = Carbon::now();
         $expiration->add(1, 'month');
 
         $ticket->expiration = $expiration;
         $ticket->save();
 
-        $user = Auth::user();
+        $user = User::all()->where('id', Auth::user()->id)->first();
         $user->credits -= $ticket->type->price;
+        $user->save();
 
         return redirect()->route('index');
     }
@@ -214,23 +216,28 @@ class GuestController extends Controller
     {
         $gym = Gym::find(session('gym'));
 
-        // People
-        $enterances = Enterance::all();
-        $people_inside = [11 => 0, 12 => 0, 13 => 0, 14 => 0, 15 => 0, 16 => 0];
-        foreach ($enterances as $enterance) {
-            if ($enterance->gym_id == $gym->id) {
-                // TODO: if date is today
-                $enter_hour = intval(date_create($enterance->enter)->format('H'));
-                $exit_hour = intval(date_create($enterance->enter)->format('H'));
+        // $enterances = Enterance::all()->where('gym_id', $gym->id);
 
-                for ($i = $enter_hour; $i <= $exit_hour; $i++) {
-                    if ($i >= 11 && $i <= 16) {
-                        $people_inside[$i]++;
-                    }
+        // $enterance_counts = [];
+        // for ($i = 0; $i < 24; $i++) {
+        //     $enterance_counts[$i] = 0;
+        // }
 
-                }
-            }
-        }
+        // for ($i = 0; $i < 24; $i++) {
+        //     $date = Carbon::today()->add($i, 'hour');
+
+        //     foreach ($enterances as $enterance) {
+        //         $enter = Carbon::create($enterance->enter);
+        //         if ($enter->diffInHours($date) == 0) {
+        //             $enterance_counts[$i]++;
+        //         }
+
+        //         $exit = Carbon::create($enterance->exit);
+        //         if ($exit->diffInHours($date) == 0) {
+        //             $enterance_counts[$i]++;
+        //         }
+        //     }
+        // }
 
         // TODO: make this into a function in model
         // TODO: dont show table if the user was never in the gym
@@ -258,7 +265,8 @@ class GuestController extends Controller
         $hours = intdiv($min_avg, 60);
         $minutes = $min_avg % 60;
 
-        return view('user.statistics', ['gym' => $gym, 'hour_avg' => $hours, 'min_avg' => $minutes, 'people_inside' => $people_inside]);
+        return view('user.statistics',
+            ['gym' => $gym, 'hour_avg' => $hours, 'min_avg' => $minutes]);
     }
 
     public function settings(Request $request)
@@ -289,7 +297,6 @@ class GuestController extends Controller
 
         $user->save();
 
-        // TODO: success message not working
         return redirect()->route('settings')->with('success', 'success');
     }
 

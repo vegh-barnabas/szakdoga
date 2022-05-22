@@ -110,7 +110,6 @@ class DatabaseSeeder extends Seeder
         }
 
         /* Buyable Tickets */
-        // TODO: rethink what hidden should be used for
         BuyableTicket::factory()->create([
             'gym_id' => 1,
             'type' => 'monthly',

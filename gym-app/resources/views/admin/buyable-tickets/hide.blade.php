@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Vásárolt jegy szerkesztése')
+@section('title', 'Megvásárolható jegy elrejtése')
 
 @section('content')
   <h2 class="mb-3">Megvásárolható jegy elrejtése</h2>

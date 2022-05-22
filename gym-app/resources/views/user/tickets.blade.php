@@ -100,8 +100,8 @@
                     @foreach ($tickets as $ticket)
                       @if ($ticket->isMonthly() && !$ticket->useable())
                         <tr>
-                          <form action="{{ route('guest.extend-ticket.show', $ticket) }}" method="GET">
-                            <td>{{ $ticket->get_type() }}</td>
+                          <form action="{{ route('guest.extend-ticket.show', $ticket->id) }}" method="GET">
+                            <td>{{ $ticket->type->name }}</td>
                             @if ($ticket->isMonthly())
                               <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
                             @else

@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Felhasználó szerkesztése')
+@section('title', 'Kategória törlése')
 
 @section('content')
   <h2 class="mb-3">Kategória törlése</h2>

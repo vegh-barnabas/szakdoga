@@ -25,35 +25,37 @@
     </div>
     <div class="card-body">
       <div class="card-text">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Név</th>
-              <th>ID</th>
-              <th>Jogosultság</th>
-              <th>Edzőterem</th>
-              <th>Kreditek</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach ($all_users as $user)
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
               <tr>
-                @if (!$user->is_admin() && $gym_count > 0)
-                  <form>
-                    <td><a href="{{ route('users.edit', $user->id) }}" class="link-primary">{{ $user->name }}</a>
-                    </td>
-                  </form>
-                @else
-                  <td>{{ $user->name }}</td>
-                @endif
-                <td>{{ $user->id }}</td>
-                <td>{{ $user->getUserType() }}</td>
-                <td>{{ $user->getPreferedGymName() }}</td>
-                <td>{{ $user->getUserType() == 'Vendég' ? $user->credits : '' }}</td>
+                <th>Név</th>
+                <th>ID</th>
+                <th>Jogosultság</th>
+                <th>Edzőterem</th>
+                <th>Kreditek</th>
               </tr>
-            @endforeach
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @foreach ($all_users as $user)
+                <tr>
+                  @if (!$user->is_admin() && $gym_count > 0)
+                    <form>
+                      <td><a href="{{ route('users.edit', $user->id) }}" class="link-primary">{{ $user->name }}</a>
+                      </td>
+                    </form>
+                  @else
+                    <td>{{ $user->name }}</td>
+                  @endif
+                  <td>{{ $user->id }}</td>
+                  <td>{{ $user->getUserType() }}</td>
+                  <td>{{ $user->getPreferedGymName() }}</td>
+                  <td>{{ $user->getUserType() == 'Vendég' ? $user->credits : '' }}</td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   @endsection

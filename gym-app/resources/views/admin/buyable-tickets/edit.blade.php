@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Vásárolt jegy szerkesztése')
+@section('title', 'Megvásárolható jegy szerkesztése')
 
 @section('content')
   @if ($errors->any())

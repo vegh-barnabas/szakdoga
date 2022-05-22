@@ -24,51 +24,53 @@
     </div>
     <div class="card-body">
       <div class="card-text">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Edzőterem</th>
-              <th>Név</th>
-              <th>Típus</th>
-              <th>Leírás</th>
-              <th>Felhasználó</th>
-              <th>Státusz</th>
-              <th>Kód</th>
-              <th>Megvásárolva</th>
-              <th>Lejárat</th>
-              <th>Opciók</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach ($tickets as $ticket)
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
               <tr>
-                <td>{{ $ticket->gym->name }}</td>
-                <td>{{ $ticket->type->name }}</td>
-                <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
-                <td>{{ $ticket->type->description }}</td>
-                <td>{{ $ticket->user->name }} (ID {{ $ticket->user->id }})</td>
-                @if ($ticket->useable())
-                  <td>Felhasználható</td>
-                @elseif($ticket->used())
-                  <td>Felhasznált</td>
-                @else
-                  <td>Lejárt</td>
-                @endif
-                <td>{{ $ticket->code }}</td>
-                <td>{{ $ticket->bought() }}</td>
-                <td>{{ $ticket->expiration() }}</td>
-                <td>
-                  <a href="{{ route('monthly-ticket.edit', $ticket->id) }}" class="link-primary">
-                    <x-ri-edit-fill class="icon" style="height: 22px" />
-                  </a>
-                  <a href="{{ route('ticket.delete', $ticket->id) }}" class="link-primary">
-                    <x-ri-delete-back-2-fill class="icon" style="height: 22px" />
-                  </a>
-                </td>
+                <th>Edzőterem</th>
+                <th>Név</th>
+                <th>Típus</th>
+                <th>Leírás</th>
+                <th>Felhasználó</th>
+                <th>Státusz</th>
+                <th>Kód</th>
+                <th>Megvásárolva</th>
+                <th>Lejárat</th>
+                <th>Opciók</th>
               </tr>
-            @endforeach
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @foreach ($tickets as $ticket)
+                <tr>
+                  <td>{{ $ticket->gym->name }}</td>
+                  <td>{{ $ticket->type->name }}</td>
+                  <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
+                  <td>{{ $ticket->type->description }}</td>
+                  <td>{{ $ticket->user->name }} (ID {{ $ticket->user->id }})</td>
+                  @if ($ticket->useable())
+                    <td>Felhasználható</td>
+                  @elseif($ticket->used())
+                    <td>Felhasznált</td>
+                  @else
+                    <td>Lejárt</td>
+                  @endif
+                  <td>{{ $ticket->code }}</td>
+                  <td>{{ $ticket->bought() }}</td>
+                  <td>{{ $ticket->expiration() }}</td>
+                  <td>
+                    <a href="{{ route('monthly-ticket.edit', $ticket->id) }}" class="link-primary">
+                      <x-ri-edit-fill class="icon" style="height: 22px" />
+                    </a>
+                    <a href="{{ route('ticket.delete', $ticket->id) }}" class="link-primary">
+                      <x-ri-delete-back-2-fill class="icon" style="height: 22px" />
+                    </a>
+                  </td>
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   @endsection

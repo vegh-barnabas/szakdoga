@@ -99,7 +99,6 @@ class TicketController extends Controller
 
         $ticket->update($validated);
 
-        // TODO: not working
         return redirect()->route('purchased-monthly')->with('edit', $ticket->name);
     }
 

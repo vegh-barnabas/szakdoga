@@ -4,7 +4,7 @@
 @section('content')
   <h1 class="mb-4">Válassz edzőtermet</h1>
   <div class="row justify-content-center">
-    @foreach ($gyms as $gym)
+    @forelse ($gyms as $gym)
       <div class="col">
         <form method="POST">
           @csrf
@@ -27,5 +27,7 @@
           </div>
         </form>
       </div>
-    @endforeach
+    @empty
+      <h1>Nincs elérhető edzőterem!</h1>
+    @endforelse
   @endsection

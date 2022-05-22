@@ -36,7 +36,6 @@ class ReceptionistController extends Controller
 
         $validated = $request->validate(
             [
-                // TODO: receptionist can only let in people in in the same gym
                 'enterance_code' => [
                     'required',
                 ],
@@ -84,11 +83,9 @@ class ReceptionistController extends Controller
         if ($ticket == null) {
             return view('receptionist.let-in');
         }
-        // TODO: error message
         if ($ticket->exit !== null) {
             return view('receptionist.let-in');
         }
-        // TODO: error message
 
         $user = $ticket->user;
 
@@ -130,7 +127,7 @@ class ReceptionistController extends Controller
             'gym_id' => $ticket->gym_id,
             'user_id' => $user->id,
             'ticket_id' => $ticket->id,
-            'enter' => Carbon::create(),
+            'enter' => Carbon::now(),
             'exit' => null,
         ]);
 
@@ -156,7 +153,6 @@ class ReceptionistController extends Controller
 
         $validated = $request->validate(
             [
-                // TODO: receptionist can only let in people out in the same gym
                 'exit_code' => [
                     'required',
                 ],
@@ -188,7 +184,7 @@ class ReceptionistController extends Controller
             abort(403);
         }
 
-        $user = User::all()->where('exit_code', $code)->first(); // TODO: is $code safe to use?
+        $user = User::all()->where('exit_code', $code)->first();
         if ($user == null) {
             return Redirect::to('let-out')->with('error-not-found', $code);
         }
@@ -196,7 +192,7 @@ class ReceptionistController extends Controller
         $enterance = $user->enterances->where('exit', null)->first();
         if ($enterance == null) {
             return Redirect::to('let-out')->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
-        } // TODO: rename this exit code from 'error'
+        }
 
         $gym = Gym::all()->where('id', $enterance->gym_id)->first();
 

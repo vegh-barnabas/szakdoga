@@ -1,8 +1,17 @@
 @extends('layouts.admin')
-@section('title', 'Vásárolt jegy szerkesztése')
+@section('title', 'Jegy szerkesztése')
 
 @section('content')
-  {{-- TODO: error --}}
+  @if ($errors->any())
+    <div class="alert alert-danger">
+      <ul>
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
+
   <h2 class="mb-3">Jegy szerkesztése</h2>
   <div class="card">
     <div class="card-header">

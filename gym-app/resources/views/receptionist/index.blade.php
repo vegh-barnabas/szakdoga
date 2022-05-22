@@ -16,30 +16,32 @@
             </div>
             <div class="card-body">
               <p class="card-text">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Tulajdonos</th>
-                    <th scope="col">Név</th>
-                    <th scope="col">Lejárat</th>
-                    <th scope="col">Státusz</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach ($monthly_tickets as $ticket)
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
                     <tr>
-                      <td><b>{{ $ticket->user->name }}</b></td>
-                      <td>{{ $ticket->type->name }}</td>
-                      <td>{{ $ticket->expiration() }}</td>
-                      @if ($ticket->expired())
-                        <td class="text-danger">Lejárt</td>
-                      @elseif ($ticket->useable())
-                        <td class="text-success">Érvényes</td>
-                      @endif
+                      <th scope="col">Tulajdonos</th>
+                      <th scope="col">Név</th>
+                      <th scope="col">Lejárat</th>
+                      <th scope="col">Státusz</th>
                     </tr>
-                  @endforeach
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    @foreach ($monthly_tickets as $ticket)
+                      <tr>
+                        <td><b>{{ $ticket->user->name }}</b></td>
+                        <td>{{ $ticket->type->name }}</td>
+                        <td>{{ $ticket->expiration() }}</td>
+                        @if ($ticket->expired())
+                          <td class="text-danger">Lejárt</td>
+                        @elseif ($ticket->useable())
+                          <td class="text-success">Érvényes</td>
+                        @endif
+                      </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
               </p>
               <a href={{ route('purchased-monthly') }} class="card-link">többi bérlet megjelenítése</a>
             </div>
@@ -57,33 +59,35 @@
             </div>
             <div class="card-body">
               <p class="card-text">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">Tulajdonos</th>
-                    <th scope="col">Név</th>
-                    <th scope="col">Lejárat</th>
-                    <th scope="col">Státusz</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @foreach ($tickets as $ticket)
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
                     <tr>
-                      <td><b>{{ $ticket->user->name }}</b></td>
-                      <td>{{ $ticket->type->name }}</td>
-                      <td>{{ $ticket->expiration() }}</td>
-                      @if ($ticket->expired())
-                        <td class="text-danger">Lejárt</td>
-                      @elseif ($ticket->used())
-                        <td class="text-warning">Felhasznált</td>
-                      @elseif ($ticket->useable())
-                        <td class="text-success">Érvényes</td>
-                      @endif
+                      <th scope="col">Tulajdonos</th>
+                      <th scope="col">Név</th>
+                      <th scope="col">Lejárat</th>
+                      <th scope="col">Státusz</th>
                     </tr>
-                  @endforeach
-              </table>
-              </p>
-              <a href={{ route('purchased-tickets') }} class="card-link">többi jegy megjelenítése</a>
+                  </thead>
+                  <tbody>
+                    @foreach ($tickets as $ticket)
+                      <tr>
+                        <td><b>{{ $ticket->user->name }}</b></td>
+                        <td>{{ $ticket->type->name }}</td>
+                        <td>{{ $ticket->expiration() }}</td>
+                        @if ($ticket->expired())
+                          <td class="text-danger">Lejárt</td>
+                        @elseif ($ticket->used())
+                          <td class="text-warning">Felhasznált</td>
+                        @elseif ($ticket->useable())
+                          <td class="text-success">Érvényes</td>
+                        @endif
+                      </tr>
+                    @endforeach
+                </table>
+                </p>
+                <a href={{ route('purchased-tickets') }} class="card-link">többi jegy megjelenítése</a>
+              </div>
             </div>
           </div>
         </div>
@@ -99,32 +103,33 @@
         </div>
         <div class="card-body">
           <p class="card-text">
-            <!-- ikon -->
           <h1>Belépett vendégek: <b class="text-success">{{ $enterances->count() }}</b></h1>
           <p class="card-text">
-          <table class="table">
-            <thead>
-              <tr>
-                <th scope="col">Vendég neve</th>
-                <th scope="col">Felhasznált bérlet/jegy</th>
-                <th scope="col">Belépés időpontja</th>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach ($enterances as $enterance)
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
                 <tr>
-                  <td><b>{{ $enterance->user->name }}</b></td>
-                  <td>{{ $enterance->ticket->type->name }}</td>
-                  <td>{{ $enterance->enter() }}</td>
+                  <th scope="col">Vendég neve</th>
+                  <th scope="col">Felhasznált bérlet/jegy</th>
+                  <th scope="col">Belépés időpontja</th>
                 </tr>
-              @endforeach
-            </tbody>
-          </table>
-          </p>
-          <a href="{{ route('receptionist.entered-users') }}" class="card-link">
-            többi belépett vendég megjelenítése
-          </a>
-          </p>
+              </thead>
+              <tbody>
+                @foreach ($enterances as $enterance)
+                  <tr>
+                    <td><b>{{ $enterance->user->name }}</b></td>
+                    <td>{{ $enterance->ticket->type->name }}</td>
+                    <td>{{ $enterance->enter() }}</td>
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+            </p>
+            <a href="{{ route('receptionist.entered-users') }}" class="card-link">
+              többi belépett vendég megjelenítése
+            </a>
+            </p>
+          </div>
         </div>
       </div>
     </div>

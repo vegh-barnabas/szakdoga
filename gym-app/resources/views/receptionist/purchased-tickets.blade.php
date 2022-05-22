@@ -9,46 +9,48 @@
     </div>
     <div class="card-body">
       <div class="card-text">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Név</th>
-              <th>Típus</th>
-              <th>Leírás</th>
-              <th>Felhasználó</th>
-              <th>Státusz</th>
-              <th>Kód</th>
-              <th>Megvásárolva</th>
-              <th>Lejárat</th>
-              <th>Felhasználva</th>
-            </tr>
-          </thead>
-          <tbody>
-            @foreach ($tickets as $ticket)
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
               <tr>
-                <td>{{ $ticket->type->name }}</td>
-                <td class="text-success"><b>{{ $ticket->get_type() }}</b></td>
-                <td>{{ $ticket->type->description }}</td>
-                <td>{{ $ticket->user->name }} (ID {{ $ticket->user->id }})</td>
-                @if ($ticket->useable())
-                  <td class="text-success">Felhasználható</td>
-                @elseif($ticket->used())
-                  <td class="text-danger">Felhasznált</td>
-                @else
-                  <td class="text-warning">Lejárt</td>
-                @endif
-                <td>{{ $ticket->code }}</td>
-                <td>{{ $ticket->bought() }}</td>
-                <td>{{ $ticket->expiration() }}</td>
-                @if ($ticket->used())
-                  <td>{{ $ticket->use_date() }}</td>
-                @else
-                  <td></td>
-                @endif
+                <th>Név</th>
+                <th>Típus</th>
+                <th>Leírás</th>
+                <th>Felhasználó</th>
+                <th>Státusz</th>
+                <th>Kód</th>
+                <th>Megvásárolva</th>
+                <th>Lejárat</th>
+                <th>Felhasználva</th>
               </tr>
-            @endforeach
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              @foreach ($tickets as $ticket)
+                <tr>
+                  <td>{{ $ticket->type->name }}</td>
+                  <td class="text-success"><b>{{ $ticket->get_type() }}</b></td>
+                  <td>{{ $ticket->type->description }}</td>
+                  <td>{{ $ticket->user->name }} (ID {{ $ticket->user->id }})</td>
+                  @if ($ticket->useable())
+                    <td class="text-success">Felhasználható</td>
+                  @elseif($ticket->used())
+                    <td class="text-danger">Felhasznált</td>
+                  @else
+                    <td class="text-warning">Lejárt</td>
+                  @endif
+                  <td>{{ $ticket->code }}</td>
+                  <td>{{ $ticket->bought() }}</td>
+                  <td>{{ $ticket->expiration() }}</td>
+                  @if ($ticket->used())
+                    <td>{{ $ticket->use_date() }}</td>
+                  @else
+                    <td></td>
+                  @endif
+                </tr>
+              @endforeach
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   @endsection
