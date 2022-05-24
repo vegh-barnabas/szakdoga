@@ -65,6 +65,10 @@
               <a class="nav-link {{ Route::is('gyms.index') ? 'active' : '' }}"
                 href="{{ route('gyms.index') }}">Edzőtermek</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link {{ Route::is('lockers.index') ? 'active' : '' }}"
+                href="{{ route('lockers.index') }}">Szekrények</a>
+            </li>
           </ul>
           <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">

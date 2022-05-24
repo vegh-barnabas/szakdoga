@@ -67,7 +67,7 @@ class Ticket extends Model
 
     public function expired()
     {
-        return (!$this->useable() || $this->used());
+        return ($this->expiration < date('Y-m-d'));
     }
 
     public function bought()

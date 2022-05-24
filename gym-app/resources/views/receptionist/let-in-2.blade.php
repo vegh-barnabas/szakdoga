@@ -49,6 +49,18 @@
                 value="{{ $ticket->type->name }} ({{ $ticket->id }})" disabled />
             </div>
           </div>
+          <div class="row g-3 align-items-center mb-3">
+            <div class="col-2">
+              <label for="locker" class="form-label">Kiadott szekrény</label>
+            </div>
+            <div class="col-auto">
+              <select id="locker" name="locker" class="form-select">
+                @foreach ($lockers as $locker)
+                  <option value="{{ $locker->id }}">{{ $locker->number }}</option>
+                @endforeach
+              </select>
+            </div>
+          </div>
           <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="keyGiven" name="keyGiven" />
             <label class="form-check-label" for="keyGiven"><b class="text-danger">A lakatot és a kulcsot

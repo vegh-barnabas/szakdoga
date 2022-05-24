@@ -19,8 +19,12 @@ class GuestController extends Controller
 {
     public function choose_gym_page()
     {
-        if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
-            abort(403);
+        if (Auth::user()->is_admin()) {
+            return redirect()->route('index');
+        }
+
+        if (Auth::user()->is_receptionist()) {
+            session(['gym' => Auth::user()->prefered_gym]);
         }
 
         if (session('gym') != null) {
@@ -38,7 +42,7 @@ class GuestController extends Controller
     public function choose_gym(Request $request)
     {
         if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
-            abort(403);
+            return redirect()->route('index');
         }
 
         if (session('gym') != null) {
@@ -61,7 +65,7 @@ class GuestController extends Controller
     public function tickets()
     {
         if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
-            abort(403);
+            return redirect()->route('index');
         }
 
         if (session('gym') == null) {
@@ -83,7 +87,7 @@ class GuestController extends Controller
     public function buy_ticket_list()
     {
         if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
-            abort(403);
+            return redirect()->route('index');
         }
 
         $gym = Gym::find(session('gym'));
@@ -96,7 +100,7 @@ class GuestController extends Controller
     public function buy_ticket_show($buyable_ticket_id)
     {
         if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
-            abort(403);
+            return redirect()->route('index');
         }
 
         if (session('gym') == null) {
@@ -170,7 +174,7 @@ class GuestController extends Controller
     public function extend_ticket_page($id)
     {
         if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
-            abort(403);
+            return redirect()->route('index');
         }
 
         if (session('gym') == null) {
@@ -236,7 +240,7 @@ class GuestController extends Controller
     public function statistics()
     {
         if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
-            abort(403);
+            return redirect()->route('index');
         }
 
         $gym = Gym::find(session('gym'));

@@ -29,7 +29,12 @@ class Gym extends Model
 
     public function buyable_tickets()
     {
-        return $this->hasMany(buyableTicket::class);
+        return $this->hasMany(BuyableTicket::class);
+    }
+
+    public function lockers()
+    {
+        return $this->hasMany(Locker::class);
     }
 
     public static function boot()

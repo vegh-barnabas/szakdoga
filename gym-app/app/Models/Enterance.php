@@ -33,6 +33,16 @@ class Enterance extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function locker()
+    {
+        return $this->hasOne(Locker::class);
+    }
+
+    public function get_locker()
+    {
+        return $this->locker->first();
+    }
+
     public function exited()
     {
         return $this->exit != null;
@@ -45,8 +55,7 @@ class Enterance extends Model
         return $expiration->format('Y. m. d. H:i');
     }
 
-    public function exit()
-    {
+    function exit() {
         $expiration = CarbonImmutable::Create($this->exit);
 
         return $expiration->format('Y. m. d. H:i');

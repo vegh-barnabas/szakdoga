@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         DB::table('tickets')->truncate();
         DB::table('buyable_tickets')->truncate();
         DB::table('category_gym')->truncate();
+        DB::table('lockers')->truncate();
         DB::table('gyms')->truncate();
         DB::table('categories')->truncate();
         DB::table('users')->truncate();
@@ -46,13 +47,13 @@ class DatabaseSeeder extends Seeder
         $gyms = Gym::all();
 
         /* Lockers */
-        for ($i = 0; $i < rand(0, 15); $i++) {
+        for ($i = 1; $i < rand(15, 30); $i++) {
             Locker::factory()->create([
                 'gym_id' => 1,
                 'number' => $i,
             ]);
         }
-        for ($i = 0; $i < rand(0, 15); $i++) {
+        for ($i = 1; $i < rand(15, 30); $i++) {
             Locker::factory()->create([
                 'gym_id' => 2,
                 'number' => $i,
@@ -240,13 +241,19 @@ class DatabaseSeeder extends Seeder
 
                 $random_exit_date = CarbonImmutable::Create($random_enterance_date)->add(rand(1, 4), 'hour')->add(rand(11, 55), 'minute');
 
-                Enterance::factory()->create([
+                $unused_lockers = Locker::all()->where('gym_id', $random_ticket->gym->id)->filter(function ($locker) {
+                    return $locker->get_user() == null;
+                })->values();
+
+                $enterance = Enterance::factory()->create([
                     'gym_id' => $random_ticket->gym->id,
                     'user_id' => $random_ticket->user->id,
                     'ticket_id' => $random_ticket->id,
                     'enter' => $random_enterance_date,
                     'exit' => $random_exit_date,
                 ]);
+
+                $enterance->locker()->associate($unused_lockers->random());
             }
         }
     }

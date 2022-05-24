@@ -56,6 +56,16 @@
               <input type="text" id="usedTicket" class="form-control" value="{{ $enterance->enter() }}" disabled />
             </div>
           </div>
+          <div class="row g-3 align-items-center mb-3">
+            <div class="col-2">
+              <label for="locker" class="col-form-label">Szekrény</label>
+            </div>
+            <div class="col-auto">
+              <input type="text" id="locker" name="locker" class="form-control"
+                value="{{ $enterance->get_locker()->number }} ({{ $enterance->get_locker()->gender == 'male' ? 'férfi' : 'nő' }})"
+                disabled />
+            </div>
+          </div>
           <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="keyGiven" name="keyGiven" />
             <label class="form-check-label" for="keyGiven"><b class="text-danger">A lakatot és a kulcsot

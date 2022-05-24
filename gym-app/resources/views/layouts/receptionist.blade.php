@@ -48,7 +48,7 @@
                 href="{{ route('receptionist.let-out.index-page') }}">Kiléptetés</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {{ Route::is('receptionist.let-out.index-page') ? 'active' : '' }}"
+              <a class="nav-link {{ Route::is('receptionist.add-credits.index') ? 'active' : '' }}"
                 href="{{ route('receptionist.add-credits.index') }}">Kredit feltöltése</a>
             </li>
             <li class="collapse navbar-collapse" id="navbarNavDarkDropdown">

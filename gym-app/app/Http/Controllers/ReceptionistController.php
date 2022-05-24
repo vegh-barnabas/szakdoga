@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Enterance;
 use App\Models\Gym;
+use App\Models\Locker;
 use App\Models\Ticket;
 use App\Models\User;
 use Carbon\Carbon;
@@ -22,6 +23,8 @@ class ReceptionistController extends Controller
         if (!Auth::user()->is_receptionist()) {
             abort(403);
         }
+
+        error_log(json_encode(session('gym')));
 
         $gym = Gym::find(session('gym'));
 
@@ -84,7 +87,11 @@ class ReceptionistController extends Controller
             return view('receptionist.let-in');
         }
 
-        if ($ticket->exit !== null) {
+        $still_entered_enterances = Enterance::all()->where('ticket_id', $ticket->id)->filter(function ($enterance) {
+            return $this->exit != null;
+        })->values();
+
+        if (!$still_entered_enterances->isEmpty()) {
             return view('receptionist.let-in');
         }
 
@@ -92,7 +99,11 @@ class ReceptionistController extends Controller
 
         $gym = Gym::all()->where('id', $ticket->type->gym_id)->first();
 
-        return view('receptionist.let-in-2', ['user' => $user, 'ticket' => $ticket, 'code' => $code, 'gym' => $gym]);
+        $lockers = Locker::all()->where('gym_id', $gym->id)->filter(function ($locker) {
+            return !$locker->is_used();
+        })->values();
+
+        return view('receptionist.let-in-2', ['user' => $user, 'ticket' => $ticket, 'code' => $code, 'gym' => $gym, 'lockers' => $lockers]);
 
     }
 
@@ -108,13 +119,29 @@ class ReceptionistController extends Controller
             abort(403);
         }
 
-        if (!$ticket->exit != null) {
+        $still_entered_enterances = Enterance::all()->where('ticket_id', $ticket->id)->filter(function ($enterance) {
+            return $this->exit != null;
+        })->values();
+
+        if (!$still_entered_enterances->isEmpty()) {
             abort(403);
         }
+
+        $free_lockers = Locker::all()
+            ->where('gym_id', $ticket->gym->id)
+            ->where('gender', $ticket->user->gender)
+            ->filter(function ($locker) {
+                return !$locker->is_used();
+            })
+            ->pluck('id')->implode(',');
 
         $request->validate(
             // Validation rules
             [
+                'locker' => [
+                    'required',
+                    'in:' . $free_lockers,
+                ],
                 'keyGiven' => [
                     'required',
                     'accepted',
@@ -124,13 +151,14 @@ class ReceptionistController extends Controller
 
         $user = $ticket->user;
 
-        Enterance::factory()->create([
+        $enterance = Enterance::factory()->create([
             'gym_id' => $ticket->type->gym_id,
             'user_id' => $user->id,
             'ticket_id' => $ticket->id,
             'enter' => Carbon::now(),
             'exit' => null,
         ]);
+        $enterance->locker()->attach($request['locker']);
 
         return Redirect::to('let-in')->with('success', $user->name);
     }

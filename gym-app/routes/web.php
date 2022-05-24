@@ -4,6 +4,7 @@ use App\Http\Controllers\BuyableTicketController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\GymController;
+use App\Http\Controllers\LockerController;
 use App\Http\Controllers\ReceptionistController;
 use App\Http\Controllers\TicketController;
 use App\Http\Controllers\UserController;
@@ -50,6 +51,9 @@ Route::resource('tickets', TicketController::class)->middleware('auth');
 
 Route::resource('users', UserController::class)->middleware('auth');
 
+Route::get('/lockers/{id}/delete', [LockerController::class, 'delete'])->name('lockers.delete')->middleware('auth');
+Route::resource('lockers', LockerController::class)->middleware('auth');
+
 /* Guest routes */
 Route::get('/', [GuestController::class, 'choose_gym_page'])->name('guest.gyms.list')->middleware('auth');
 Route::post('/', [GuestController::class, 'choose_gym'])->name('guest.gyms.choose')->middleware('auth');
@@ -91,9 +95,11 @@ Route::get('/home', function () {
     if (!Auth::user()->is_admin() && !Auth::user()->is_receptionist() && session('gym') == null) {
         return redirect()->route('guest.gyms.list');
     }
-
     if (Auth::user()->is_receptionist()) {
-        session('gym', Auth::user()->prefered_gym);
+        if (session('gym') == null) {
+            session(['gym' => Auth::user()->prefered_gym]);
+        }
+
         $gym = Gym::find(session('gym'));
         $enterances = Enterance::all()->where('gym_id', $gym->id)->where('exit', null);
 
@@ -106,7 +112,6 @@ Route::get('/home', function () {
 
         return view('receptionist.index', ['enterances' => $enterances, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'gym' => $gym]);
     } else if (Auth::user()->is_admin()) {
-
         $gym_name = Gym::all()->pluck('name')->implode(', ');
 
         $tickets = Ticket::all()->filter(function ($ticket) {

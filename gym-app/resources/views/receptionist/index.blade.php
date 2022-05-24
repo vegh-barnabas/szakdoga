@@ -22,6 +22,7 @@
                     <tr>
                       <th scope="col">Tulajdonos</th>
                       <th scope="col">Név</th>
+                      <th scope="col">Vásárlás dátuma</th>
                       <th scope="col">Lejárat</th>
                       <th scope="col">Státusz</th>
                     </tr>
@@ -31,6 +32,7 @@
                       <tr>
                         <td><b>{{ $ticket->user->name }}</b></td>
                         <td>{{ $ticket->type->name }}</td>
+                        <td>{{ $ticket->bought() }}</td>
                         <td>{{ $ticket->expiration() }}</td>
                         @if ($ticket->expired())
                           <td class="text-danger">Lejárt</td>
@@ -65,6 +67,7 @@
                     <tr>
                       <th scope="col">Tulajdonos</th>
                       <th scope="col">Név</th>
+                      <th scope="col">Vásárlás dátuma</th>
                       <th scope="col">Lejárat</th>
                       <th scope="col">Státusz</th>
                     </tr>
@@ -74,6 +77,7 @@
                       <tr>
                         <td><b>{{ $ticket->user->name }}</b></td>
                         <td>{{ $ticket->type->name }}</td>
+                        <td>{{ $ticket->bought() }}</td>
                         <td>{{ $ticket->expiration() }}</td>
                         @if ($ticket->expired())
                           <td class="text-danger">Lejárt</td>
