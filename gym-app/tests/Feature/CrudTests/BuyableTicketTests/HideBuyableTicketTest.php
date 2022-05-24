@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase as TestingRefreshDatabase;
 use Tests\TestCase;
 
-class DeleteBuyableTicketTest extends TestCase
+class HideBuyableTicketTest extends TestCase
 {
     use TestingRefreshDatabase;
 
@@ -33,7 +33,7 @@ class DeleteBuyableTicketTest extends TestCase
         // error_log(json_encode($buyable_ticket_id));
 
         // Send request
-        $response = $this->actingAs($admin)->patch('/buyable/hide/' . $buyable_ticket_id);
+        $response = $this->actingAs($admin)->patch('/buyable-tickets/' . $buyable_ticket_id . '/hide');
 
         // Check if response gives back redirect so the response is successful
         $response->assertStatus(302);
@@ -64,7 +64,7 @@ class DeleteBuyableTicketTest extends TestCase
         // error_log(json_encode($buyable_ticket_id));
 
         // Send request
-        $response = $this->actingAs($admin)->patch('/buyable/hide/' . $buyable_ticket_id);
+        $response = $this->actingAs($admin)->patch('/buyable-tickets/' . $buyable_ticket_id . '/hide');
 
         // Check if response gives back redirect so the response is successful
         $response->assertStatus(302);
@@ -93,7 +93,7 @@ class DeleteBuyableTicketTest extends TestCase
         // error_log(json_encode($buyable_ticket_id));
 
         // Send request
-        $response = $this->actingAs($user)->patch('/buyable/hide/' . $buyable_ticket_id);
+        $response = $this->actingAs($user)->patch('/buyable-tickets/' . $buyable_ticket_id . '/hide');
 
         // Check if response gives back redirect so the response is successful
         $response->assertStatus(403);
@@ -122,7 +122,7 @@ class DeleteBuyableTicketTest extends TestCase
         // error_log(json_encode($buyable_ticket_id));
 
         // Send request
-        $response = $this->actingAs($user)->patch('/buyable/hide/' . $buyable_ticket_id);
+        $response = $this->actingAs($user)->patch('/buyable-tickets/' . $buyable_ticket_id . '/hide');
 
         // Check if response gives back redirect so the response is successful
         $response->assertStatus(403);

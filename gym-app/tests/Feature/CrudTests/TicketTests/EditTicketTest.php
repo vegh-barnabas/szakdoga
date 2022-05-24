@@ -50,8 +50,8 @@ class EditTicketTest extends TestCase
         );
 
         // Send request
-        $response = $this->actingAs($admin)->patch('/monthly-ticket/edit/' . $ticket->id, [
-            'expiration' => '2011.11.11',
+        $response = $this->actingAs($admin)->patch('/tickets/edit-ticket/' . $ticket->id, [
+            'expiration' => '2011-11-11',
         ]);
 
         // Check if response gives back redirect so the response is successful
@@ -100,9 +100,9 @@ class EditTicketTest extends TestCase
         );
 
         // Send request
-        $response = $this->actingAs($admin)->patch('/monthly-ticket/edit/' . $ticket->id, [
-            'bought' => '2011.11.11',
-            'expiration' => '2011.11.11',
+        $response = $this->actingAs($admin)->patch('/tickets/edit-monthly/' . $ticket->id, [
+            'bought' => '2011-11-11',
+            'expiration' => '2011-11-11',
         ]);
 
         // Check if response gives back redirect so the response is successful
@@ -151,7 +151,7 @@ class EditTicketTest extends TestCase
         $ticket = Ticket::all()->first();
 
         // Send request
-        $response = $this->actingAs($admin)->patch('/ticket/edit/' . $ticket->id, [
+        $response = $this->actingAs($admin)->patch('/tickets/edit-ticket/' . $ticket->id, [
             'expiration' => '2011.11.11',
         ]);
 
@@ -200,7 +200,7 @@ class EditTicketTest extends TestCase
         $ticket = Ticket::all()->first();
 
         // Send request
-        $response = $this->actingAs($admin)->patch('/monthly-ticket/edit/' . $ticket->id, [
+        $response = $this->actingAs($admin)->patch('/tickets/edit-monthly/' . $ticket->id, [
             'bought' => '2011.11.11',
             'expiration' => '2011.11.11',
         ]);
@@ -253,7 +253,7 @@ class EditTicketTest extends TestCase
         $ticket = Ticket::all()->first();
 
         // Send request
-        $response = $this->actingAs($admin)->patch('/ticket/edit/' . $ticket->id, [
+        $response = $this->actingAs($admin)->patch('/tickets/edit-ticket/' . $ticket->id, [
             'expiration' => null,
         ]);
 
@@ -304,7 +304,7 @@ class EditTicketTest extends TestCase
         $ticket = Ticket::all()->first();
 
         // Send request
-        $response = $this->actingAs($admin)->patch('/monthly-ticket/edit/' . $ticket->id, [
+        $response = $this->actingAs($admin)->patch('/tickets/edit-monthly/' . $ticket->id, [
             'bought' => null,
             'expiration' => null,
         ]);

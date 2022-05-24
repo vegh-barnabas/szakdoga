@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase as TestingRefreshDatabase;
 use Tests\TestCase;
 
-class AddBuyableTicketTest extends TestCase
+class CreateBuyableTicketTest extends TestCase
 {
     use TestingRefreshDatabase;
 
@@ -23,7 +23,7 @@ class AddBuyableTicketTest extends TestCase
         ]);
 
         // Send request
-        $response = $this->actingAs($admin)->post('/buyable/add', [
+        $response = $this->actingAs($admin)->post('/buyable-tickets', [
             'gym_id' => $gym->id,
             'name' => 'Test Ticket',
             'type' => 'one-time',
@@ -52,7 +52,7 @@ class AddBuyableTicketTest extends TestCase
         ]);
 
         // Send request
-        $response = $this->actingAs($admin)->post('/buyable/add', [
+        $response = $this->actingAs($admin)->post('/buyable-tickets', [
             'gym_id' => $gym->id + 1,
             'name' => '',
             'type' => 'invalid',
@@ -80,7 +80,7 @@ class AddBuyableTicketTest extends TestCase
         $user = User::factory()->create([]);
 
         // Send request
-        $response_1 = $this->actingAs($receptionist)->post('/buyable/add', [
+        $response_1 = $this->actingAs($receptionist)->post('/buyable-tickets', [
             'gym_id' => $gym->id,
             'name' => 'Test Ticket',
             'type' => 'one-time',
@@ -93,7 +93,7 @@ class AddBuyableTicketTest extends TestCase
         $response_1->assertStatus(403);
 
         // Send request
-        $response_2 = $this->actingAs($user)->post('/buyable/add', [
+        $response_2 = $this->actingAs($user)->post('/buyable-tickets', [
             'gym_id' => $gym->id,
             'name' => 'Test Ticket',
             'type' => 'one-time',

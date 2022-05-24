@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase as TestingRefreshDatabase;
 use Tests\TestCase;
 
-class EditBuyableTicketTest extends TestCase
+class UpdateBuyableTicketTest extends TestCase
 {
     use TestingRefreshDatabase;
 
@@ -27,12 +27,9 @@ class EditBuyableTicketTest extends TestCase
             'gym_id' => $gym->id,
             'quantity' => 64,
         ]);
-        // Get the ID
-        $buyable_ticket_id = BuyableTicket::all()->first()->id;
-        // error_log(json_encode($buyable_ticket_id));
 
         // Send request
-        $response = $this->actingAs($admin)->patch('/buyable/edit/' . $buyable_ticket_id, [
+        $response = $this->actingAs($admin)->patch('buyable-tickets/' . $buyable_ticket->id, [
             'quantity' => 32,
             'description' => 'Something Something Test Ticket description',
         ]);
@@ -41,10 +38,10 @@ class EditBuyableTicketTest extends TestCase
         $response->assertStatus(302);
 
         // Check if the buyable ticket is modified
-        $modified_ticket = BuyableTicket::all()->where('id', $buyable_ticket_id)->first();
-        // error_log(json_encode($modified_ticket));
-        $this->assertEquals($modified_ticket->description, 'Something Something Test Ticket description');
-        $this->assertEquals($modified_ticket->quantity, 32);
+        $modified_ticket = BuyableTicket::all()->where('id', $buyable_ticket->id)->first();
+
+        $this->assertNotEquals($buyable_ticket->quantity, $modified_ticket->quantity);
+        $this->assertNotEquals($buyable_ticket->description, $modified_ticket->description);
     }
 
     public function test_admin_cant_edit_buyable_ticket_with_invalid_data()
@@ -67,7 +64,7 @@ class EditBuyableTicketTest extends TestCase
         // error_log(json_encode($buyable_ticket_id));
 
         // Send request
-        $this->actingAs($admin)->patch('/buyable/edit/' . $buyable_ticket_id, [
+        $this->actingAs($admin)->patch('/buyable-tickets/' . $buyable_ticket_id, [
             'quantity' => -1,
         ]);
 
@@ -95,7 +92,7 @@ class EditBuyableTicketTest extends TestCase
         // error_log(json_encode($buyable_ticket_id));
 
         // Send request
-        $response = $this->actingAs($user)->patch('/buyable/edit/' . $buyable_ticket_id, [
+        $response = $this->actingAs($user)->patch('/buyable-tickets/' . $buyable_ticket_id, [
             'quantity' => 32,
             'description' => 'Totally valid description',
         ]);

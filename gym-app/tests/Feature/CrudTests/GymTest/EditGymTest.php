@@ -39,7 +39,7 @@ class EditGymTest extends TestCase
         ]);
 
         // Send request
-        $response = $this->actingAs($admin)->patch('/gym/edit/' . $gym->id, [
+        $response = $this->actingAs($admin)->patch('/gyms/' . $gym->id, [
             'name' => 'Valid Gym',
             'address' => 'Valid street 5.',
             'description' => 'Totally valid description for the gym',
@@ -84,7 +84,7 @@ class EditGymTest extends TestCase
         ]);
 
         // Send request
-        $response = $this->actingAs($admin)->patch('/gym/edit/' . $gym->id, [
+        $response = $this->actingAs($admin)->patch('/gyms/' . $gym->id, [
             'name' => null,
             'address' => null,
             'description' => null,
@@ -125,7 +125,7 @@ class EditGymTest extends TestCase
         $user = User::factory()->create();
 
         // Send request
-        $response = $this->actingAs($user)->patch('/gym/edit/' . $gym->id, [
+        $response = $this->actingAs($user)->patch('/gyms/' . $gym->id, [
             'name' => 'Valid Gym',
             'address' => 'Valid street 5.',
             'description' => 'Totally valid description for the gym',

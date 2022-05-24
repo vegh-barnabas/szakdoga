@@ -5,7 +5,7 @@
   <h2>Statisztika</h2>
   <p>Ezen az oldalon tudsz az edzéseidről és az edzőteremről statisztikákat nézni.</p>
   <div class="row">
-    <div class="col-12">
+    <div class="col-6">
       <div class="card">
         <div class="card-header">
           <h5 class="card-title">{{ $gym->name }}</h5>
@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    {{-- <div class="col-6">
+    <div class="col-6">
       <div class="card">
         <div class="card-header">
           <h5 class="card-title">{{ $gym->name }}</h5>
@@ -56,28 +56,11 @@
         </div>
         <div class="card-body">
           <div class="card-text">
-            <h5>Edzőterem mai látogatottsága</h5>
-
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th>Időpont</th>
-                  <th>Bent tartózkodók száma</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach ($people_inside as $hour => $people)
-                  <tr>
-                    <td>{{ $hour }} óra</td>
-                    <td>{{ $people }} fő</td>
-                  </tr>
-                @endforeach
-              </tbody>
-            </table>
+            <h4>Ma <b>{{ $enterance_count }}</b> vendég lépett be az edzőterembe.</h4>
           </div>
         </div>
-      </div> --}}
-  </div>
+      </div>
+    </div>
 
   </div>
 @endsection

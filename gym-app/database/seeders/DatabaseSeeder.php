@@ -6,6 +6,7 @@ use App\Models\BuyableTicket;
 use App\Models\Category;
 use App\Models\Enterance;
 use App\Models\Gym;
+use App\Models\Locker;
 use App\Models\Ticket;
 use App\Models\User;
 use Carbon\CarbonImmutable;
@@ -44,8 +45,21 @@ class DatabaseSeeder extends Seeder
         ]);
         $gyms = Gym::all();
 
-        /* Users */
+        /* Lockers */
+        for ($i = 0; $i < rand(0, 15); $i++) {
+            Locker::factory()->create([
+                'gym_id' => 1,
+                'number' => $i,
+            ]);
+        }
+        for ($i = 0; $i < rand(0, 15); $i++) {
+            Locker::factory()->create([
+                'gym_id' => 2,
+                'number' => $i,
+            ]);
+        }
 
+        /* Users */
         // Test User
         User::factory()->create([
             'name' => 'test',
@@ -94,7 +108,7 @@ class DatabaseSeeder extends Seeder
         /* Categories */
         $categories = ['szauna', '0-24', 'WC', 'súlyok', 'gépek', 'medence'];
 
-        for ($i = 0; $i < 6; $i++) {
+        for ($i = 0; $i < count($categories); $i++) {
             $category = Category::factory()->create([
                 'name' => $categories[$i],
             ]);

@@ -61,7 +61,7 @@ class ReceptionistController extends Controller
             return Redirect::back()->with('error', ['code' => $code, 'user' => $user->name]);
         }
 
-        if ($ticket->gym_id != Gym::find(session('gym'))->id) {
+        if ($ticket->type->gym_id != Gym::find(session('gym'))->id) {
             return Redirect::back()->with('not-this-gym', ['code' => $code]);
         }
 
@@ -76,20 +76,21 @@ class ReceptionistController extends Controller
 
         $ticket = Ticket::all()->where('code', $code)->first();
 
+        if ($ticket == null) {
+            return view('receptionist.let-in');
+        }
+
         if (!$ticket->isMonthly() && !$ticket->enterances->isEmpty()) {
             return view('receptionist.let-in');
         }
 
-        if ($ticket == null) {
-            return view('receptionist.let-in');
-        }
         if ($ticket->exit !== null) {
             return view('receptionist.let-in');
         }
 
         $user = $ticket->user;
 
-        $gym = Gym::all()->where('id', $ticket->gym_id)->first();
+        $gym = Gym::all()->where('id', $ticket->type->gym_id)->first();
 
         return view('receptionist.let-in-2', ['user' => $user, 'ticket' => $ticket, 'code' => $code, 'gym' => $gym]);
 
@@ -124,7 +125,7 @@ class ReceptionistController extends Controller
         $user = $ticket->user;
 
         Enterance::factory()->create([
-            'gym_id' => $ticket->gym_id,
+            'gym_id' => $ticket->type->gym_id,
             'user_id' => $user->id,
             'ticket_id' => $ticket->id,
             'enter' => Carbon::now(),

@@ -27,7 +27,7 @@ class CreateCategoryTest extends TestCase
         $styles = Category::styles;
 
         // Send request
-        $response = $this->actingAs($admin)->post('/category/add', [
+        $response = $this->actingAs($admin)->post('/categories', [
             'name' => 'Test Category',
             'style' => Arr::random($styles),
         ]);
@@ -56,7 +56,7 @@ class CreateCategoryTest extends TestCase
         $styles = Category::styles;
 
         // Send request
-        $response = $this->actingAs($admin)->post('/category/add', [
+        $response = $this->actingAs($admin)->post('/categories', [
             'style' => 'invalid',
         ]);
 
@@ -79,7 +79,7 @@ class CreateCategoryTest extends TestCase
         $styles = Category::styles;
 
         // Send request
-        $response = $this->actingAs($user)->post('/category/add', [
+        $response = $this->actingAs($user)->post('/categories', [
             'name' => 'Test Category',
             'style' => Arr::random($styles),
         ]);

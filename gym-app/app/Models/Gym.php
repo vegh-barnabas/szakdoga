@@ -27,7 +27,7 @@ class Gym extends Model
         return $this->hasMany(Ticket::class);
     }
 
-    public function buyableTickets()
+    public function buyable_tickets()
     {
         return $this->hasMany(buyableTicket::class);
     }
@@ -37,7 +37,7 @@ class Gym extends Model
         parent::boot();
 
         static::deleting(function ($gym) {
-            $gym->buyableTickets()->delete();
+            $gym->buyable_tickets()->delete();
             $gym->tickets()->delete();
 
             $users = User::all();

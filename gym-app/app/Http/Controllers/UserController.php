@@ -129,18 +129,16 @@ class UserController extends Controller
         $validated = $request->validate(
             [
                 'name' => [
-                    'required',
                     'min:3',
                     'max:32',
                     Rule::unique('users', 'name')->ignore($user->id),
                 ],
                 'email' => [
-                    'required',
                     'email:rfc',
                     Rule::unique('users', 'email')->ignore($user->id),
                 ],
-                'gender' => 'required|in:male,female',
-                'permission' => 'required|in:user,receptionist',
+                'gender' => 'in:male,female',
+                'permission' => 'in:user,receptionist',
                 'credits' => [
                     Rule::requiredIf(!$user->is_receptionist()),
                     'integer',

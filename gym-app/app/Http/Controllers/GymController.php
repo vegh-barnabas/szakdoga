@@ -119,9 +119,9 @@ class GymController extends Controller
 
         $validated = $request->validate(
             [
-                'name' => 'required|min:3|max:120',
-                'address' => 'required|min:3|max:120',
-                'description' => 'nullable|max:220',
+                'name' => 'min:3|max:120',
+                'address' => 'min:3|max:120',
+                'description' => 'max:220',
                 'categories' => 'nullable',
                 'categories.*' => 'integer|distinct|exists:categories,id',
             ],

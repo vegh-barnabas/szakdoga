@@ -13,23 +13,18 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('enterances', function (Blueprint $table) {
+        Schema::create('lockers', function (Blueprint $table) {
             $table->id();
-
-            $table->unsignedBigInteger('ticket_id');
-            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('gym_id');
-            $table->unsignedBigInteger('locker_id');
-
-            $table->date('enter');
-            $table->date('exit')->nullable();
-
+            $table->integer('number');
+            $table->enum('gender', ['male', 'female']);
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('ticket_id')->references('id')->on('tickets');
+            $table->unique(['gym_id', 'number']);
+
             $table->foreign('gym_id')->references('id')->on('gyms');
-            $table->foreign('locker_id')->references('id')->on('lockers');
+
+            $table->softDeletes();
         });
     }
 
@@ -40,6 +35,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('enterances');
+        Schema::dropIfExists('lockers');
     }
 };

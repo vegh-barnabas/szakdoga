@@ -111,8 +111,8 @@ class CategoryController extends Controller
 
         $validated = $request->validate(
             [
-                'name' => 'required|min:2|max:32',
-                'style' => 'required|in:' . implode(',', Category::styles),
+                'name' => 'min:2|max:32',
+                'style' => 'in:' . implode(',', Category::styles),
             ],
         );
 

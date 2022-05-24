@@ -19,7 +19,7 @@ class BuyableTicketController extends Controller
     public function index()
     {
         if (Auth::user()->is_receptionist()) {
-            $gym = Gym::find(session('gym'));
+            $gym = Gym::all()->where('id', Auth::user()->prefered_gym)->first();
             $monthly_tickets = BuyableTicket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
                 return $ticket->isMonthly();
             })->values();
@@ -149,14 +149,13 @@ class BuyableTicketController extends Controller
             [
                 'gym_id' => 'in:' . Gym::all()->pluck('id')->implode(','),
                 'name' => [
-                    'required',
                     'min:3',
                     'max:32',
                     Rule::unique('buyable_tickets')->where(function ($query) use ($request) {
                         return $query->where('gym_id', $request->gym_id);
                     })->ignore($ticket->id),
                 ],
-                'type' => 'required|in:monthly,one-time',
+                'type' => 'in:monthly,one-time',
                 'description' => 'min:6|max:128',
                 'quantity' => 'integer|min:1',
                 'price' => 'integer|min:0',

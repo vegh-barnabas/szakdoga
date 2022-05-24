@@ -33,7 +33,7 @@ class DeleteCategoryTest extends TestCase
         ]);
 
         // Send request
-        $response = $this->actingAs($admin)->delete('/category/delete/' . $category->id);
+        $response = $this->actingAs($admin)->delete('/categories/' . $category->id);
 
         // Check if response gives back redirect so the response is successful
         $response->assertStatus(302);
@@ -62,7 +62,7 @@ class DeleteCategoryTest extends TestCase
         ]);
 
         // Send request
-        $response = $this->actingAs($user)->delete('/category/delete/' . $category->id);
+        $response = $this->actingAs($user)->delete('/categories/' . $category->id);
 
         // Check if response gives back redirect so the response is successful
         $response->assertStatus(403);

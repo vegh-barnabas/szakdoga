@@ -22,7 +22,7 @@ class AddGymTest extends TestCase
         $categories = Category::factory(5)->create();
 
         // Send request
-        $response = $this->actingAs($admin)->post('/gym/add', [
+        $response = $this->actingAs($admin)->post('/gyms', [
             'name' => 'Valid Gym',
             'address' => 'Valid street 5.',
             'description' => 'Totally valid description for the gym',
@@ -48,7 +48,7 @@ class AddGymTest extends TestCase
         $categories = Category::factory(5)->create();
 
         // Send request
-        $response = $this->actingAs($admin)->post('/gym/add', [
+        $response = $this->actingAs($admin)->post('/gyms', [
             'name' => 'Valid Gym',
             'address' => 'Valid street 5.',
             'description' => 'Totally valid description for the gym',
@@ -72,7 +72,7 @@ class AddGymTest extends TestCase
         $categories = Category::factory(5)->create();
 
         // Send request
-        $response = $this->actingAs($user)->post('/gym/add', [
+        $response = $this->actingAs($user)->post('/gyms', [
             'name' => 'Valid Gym',
             'address' => 'Valid street 5.',
             'description' => 'Totally valid description for the gym',
@@ -98,7 +98,7 @@ class AddGymTest extends TestCase
         $categories = Category::factory(5)->create();
 
         // Send request
-        $response = $this->actingAs($admin)->post('/gym/add', [
+        $response = $this->actingAs($admin)->post('/gyms', [
             'name' => 'Valid Gym',
             'address' => 'Valid street 5.',
             'description' => 'Totally valid description for the gym',
@@ -116,7 +116,7 @@ class AddGymTest extends TestCase
         $this->assertNotNull($gym);
 
         // Send request
-        $response = $this->actingAs($admin)->post('/gym/add', [
+        $response = $this->actingAs($admin)->post('/gyms', [
             'name' => 'Valid Gym',
             'address' => 'Valid street 5.',
             'description' => 'Totally valid description for the gym',

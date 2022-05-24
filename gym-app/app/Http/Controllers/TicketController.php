@@ -63,7 +63,7 @@ class TicketController extends Controller
 
         $validated = $request->validate(
             [
-                'expiration' => 'required|date',
+                'expiration' => 'date_format:Y-m-d',
             ],
         );
 
@@ -86,8 +86,8 @@ class TicketController extends Controller
 
         $validated = $request->validate(
             [
-                'bought' => 'required|date',
-                'expiration' => 'required|date',
+                'bought' => 'date_format:Y-m-d',
+                'expiration' => 'date_format:Y-m-d',
             ],
         );
 

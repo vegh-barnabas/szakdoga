@@ -39,7 +39,7 @@ class DeleteGymTest extends TestCase
         ]);
 
         // Send request
-        $response = $this->actingAs($admin)->delete('/gym/delete/' . $gym->id);
+        $response = $this->actingAs($admin)->delete('/gyms/' . $gym->id);
 
         // Check if response gives back redirect so the response is successful
         $response->assertStatus(302);
@@ -74,7 +74,7 @@ class DeleteGymTest extends TestCase
         $user = User::factory()->create();
 
         // Send request
-        $response = $this->actingAs($user)->delete('/gym/delete/' . $gym->id);
+        $response = $this->actingAs($user)->delete('/gyms/' . $gym->id);
 
         // Check if response gives back redirect so the response is successful
         $response->assertStatus(403);

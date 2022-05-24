@@ -26,6 +26,8 @@ return new class extends Migration
 
             $table->unique(['gym_id', 'name']);
 
+            $table->foreign('gym_id')->references('id')->on('gyms');
+
             $table->softDeletes();
         });
     }
