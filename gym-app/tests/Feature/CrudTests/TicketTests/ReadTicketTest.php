@@ -39,7 +39,8 @@ class ReadTicketTest extends TestCase
         $ticket = Ticket::factory()->create([
             'user_id' => $guest->id,
             'gym_id' => $gym->id,
-            'type_id' => $buyable_ticket->id,
+            'buyable_ticket_id' => $buyable_ticket->id,
+            'type' => $buyable_ticket->type,
         ]);
 
         $response = $this->actingAs($admin)->get('tickets/edit-monthly/' . $ticket->id);

@@ -4,15 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Locker extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
-    protected $fillabe = [
+    protected $fillable = [
         'gym_id',
+        'enterance_id',
         'number',
         'gender',
     ];
@@ -22,28 +21,28 @@ class Locker extends Model
         return $this->belongsTo(Gym::class);
     }
 
-    public function enterances()
+    public function enterance()
     {
-        return $this->belongsToMany(Enterance::class);
+        return $this->belongsTo(Enterance::class);
     }
 
     public function is_used()
     {
-        foreach ($this->enterances as $enterance) {
-            if ($enterance->exit != null) {
-                return true;
-            }
+        if ($this->enterance == null) {
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     public function get_user()
     {
-        foreach ($this->enterances as $enterance) {
-            if ($enterance->exit != null) {
-                return $enterance->user();
-            }
+        if ($this->enterance == null) {
+            return false;
+        }
+
+        if ($this->enterance->exit != null) {
+            return $this->enterance->user();
         }
 
         return null;

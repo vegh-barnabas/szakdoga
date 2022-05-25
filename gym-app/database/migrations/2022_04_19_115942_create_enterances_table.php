@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
 
             $table->unsignedBigInteger('ticket_id');
+            $table->unsignedBigInteger('locker_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('gym_id');
 
@@ -28,6 +29,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('ticket_id')->references('id')->on('tickets');
             $table->foreign('gym_id')->references('id')->on('gyms');
+            $table->foreign('locker_id')->references('id')->on('lockers');
         });
     }
 

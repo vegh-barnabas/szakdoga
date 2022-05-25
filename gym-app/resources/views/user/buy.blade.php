@@ -37,7 +37,7 @@
             <tbody>
               @foreach ($buyable_tickets as $ticket)
                 {{-- existing bérlet --}}
-                @if (Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->isMonthly())
+                @if (Auth::user()->tickets->where('buyable_ticket_id', $ticket->id)->count() > 0 && $ticket->isMonthly())
                   <form action="{{ route('guest.extend-ticket.show', $ticket->id) }}" method="GET">
                     <tr>
                       <td>{{ $ticket->name }}</td>
@@ -54,7 +54,7 @@
                         <td>{{ $ticket->price }}</td>
                       @endif
                       <td>
-                        @if (Auth::user()->tickets->where('type_id', $ticket->id)->first()->expired())
+                        @if (Auth::user()->tickets->where('buyable_ticket_id', $ticket->id)->first()->expired())
                           <button class="btn btn-primary">Hosszabbítás</button>
                         @endif
                       </td>
@@ -64,7 +64,7 @@
               @endforeach
               @foreach ($buyable_tickets as $ticket)
                 {{-- existing ticket --}}
-                @if (Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && !$ticket->isMonthly())
+                @if (Auth::user()->tickets->where('buyable_ticket_id', $ticket->id)->count() > 0 && !$ticket->isMonthly())
                   <form action="{{ route('guest.buy-ticket.show', $ticket->id) }}" method="GET">
                     <tr>
                       <td>{{ $ticket->name }}</td>
@@ -89,7 +89,7 @@
               @endforeach
               @foreach ($buyable_tickets as $ticket)
                 {{-- non-existing bérlet --}}
-                @if (!Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && $ticket->isMonthly())
+                @if (!Auth::user()->tickets->where('buyable_ticket_id', $ticket->id)->count() > 0 && $ticket->isMonthly())
                   <form action="{{ route('guest.buy-ticket.show', $ticket->id) }}" method="GET">
                     <tr>
                       <td>{{ $ticket->name }}</td>
@@ -114,7 +114,7 @@
               @endforeach
               @foreach ($buyable_tickets as $ticket)
                 {{-- non-existing ticket --}}
-                @if (!Auth::user()->tickets->where('type_id', $ticket->id)->count() > 0 && !$ticket->isMonthly())
+                @if (!Auth::user()->tickets->where('buyable_ticket_id', $ticket->id)->count() > 0 && !$ticket->isMonthly())
                   <form action="{{ route('guest.buy-ticket.show', $ticket->id) }}" method="GET">
                     <tr>
                       <td>{{ $ticket->name }}</td>

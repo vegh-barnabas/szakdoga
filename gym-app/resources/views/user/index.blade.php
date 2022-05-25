@@ -32,7 +32,7 @@
                       <tbody>
                         @foreach ($monthly_tickets as $ticket)
                           <tr>
-                            <td>{{ $ticket->type->name }}</td>
+                            <td>{{ $ticket->buyable_ticket->name }}</td>
                             <td>{{ $ticket->expiration() }}</td>
                             @if ($ticket->expired())
                               <td class="text-danger">Lejárt</td>
@@ -42,12 +42,13 @@
                               <td>
                                 <p>
                                   <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="{{ '#' . Str::slug($ticket->type->name . $ticket->id) }}"
+                                    data-bs-target="{{ '#' . Str::slug($ticket->buyable_ticket->name . $ticket->id) }}"
                                     aria-expanded="false" aria-controls="{{ $ticket->id }}">
                                     Belépési kód
                                   </button>
                                 </p>
-                                <div class="collapse" id="{{ Str::slug($ticket->type->name . $ticket->id) }}">
+                                <div class="collapse"
+                                  id="{{ Str::slug($ticket->buyable_ticket->name . $ticket->id) }}">
                                   <div class="card card-body">
                                     {{ $ticket->code }}
                                   </div>
@@ -91,7 +92,7 @@
                       <tbody>
                         @foreach ($tickets as $ticket)
                           <tr>
-                            <td>{{ $ticket->type->name }}</td>
+                            <td>{{ $ticket->buyable_ticket->name }}</td>
                             <td>{{ $ticket->expiration() }}</td>
                             @if ($ticket->used() == true)
                               <td class="text-warning">Felhasznált</td>
@@ -104,12 +105,13 @@
                               <td>
                                 <p>
                                   <button class="btn btn-success" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="{{ '#' . Str::slug($ticket->type->name . $ticket->id) }}"
+                                    data-bs-target="{{ '#' . Str::slug($ticket->buyable_ticket->name . $ticket->id) }}"
                                     aria-expanded="false" aria-controls="{{ $ticket->id }}">
                                     Belépési kód
                                   </button>
                                 </p>
-                                <div class="collapse" id="{{ Str::slug($ticket->type->name . $ticket->id) }}">
+                                <div class="collapse"
+                                  id="{{ Str::slug($ticket->buyable_ticket->name . $ticket->id) }}">
                                   <div class="card card-body">
                                     {{ $ticket->code }}
                                   </div>

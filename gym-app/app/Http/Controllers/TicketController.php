@@ -127,7 +127,7 @@ class TicketController extends Controller
 
         $ticket = Ticket::all()->where('id', $id)->first();
 
-        $ticket_name = $ticket->type->name;
+        $ticket_name = $ticket->buyable_ticket->name;
         $ticket_is_monthly = $ticket->isMonthly();
 
         if ($ticket == null) {

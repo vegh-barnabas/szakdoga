@@ -197,19 +197,22 @@ Route::get('/settings/sensitive', function () {
 Route::get('/purchased-monthly', function () {
     if (Auth::user()->is_receptionist()) {
         $gym = Gym::find(session('gym'));
-        $purchased_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
-            return $ticket->isMonthly();
-        })->values()->sortByDesc('expiration');
+        // $purchased_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
+        //     return $ticket->isMonthly();
+        // })->values()->sortByDesc('expiration');
+
+        $purchased_tickets = Ticket::where('gym_id', $gym->id)
+            ->where('type', 'monthly')
+            ->orderBy('expiration', 'desc')
+            ->simplePaginate(8);
 
         return view('receptionist.purchased-monthly', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
     } else if (Auth::user()->is_admin()) {
         $gym_name = Gym::all()->pluck('name')->implode(', ');
 
-        $purchased_tickets = Ticket::all()->filter(function ($ticket) {
-            return $ticket->isMonthly();
-        })->values()
-            ->sortByDesc('expiration')
-            ->sortByDesc([fn($a, $b) => $a->gym->name <=> $b->gym->name]);
+        $purchased_tickets = Ticket::where('type', 'monthly')
+            ->orderBy('bought', 'desc')
+            ->simplePaginate(8);
 
         return view('admin.tickets.index-monthly', ['tickets' => $purchased_tickets, 'gym_name' => $gym_name]);
     } else {
@@ -221,17 +224,18 @@ Route::get('/purchased-monthly', function () {
 Route::get('/purchased-tickets', function () {
     if (Auth::user()->is_receptionist()) {
         $gym = Gym::find(session('gym'));
-        $purchased_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
-            return !$ticket->isMonthly();
-        })->values()->sortByDesc('expiration');
+
+        $purchased_tickets = Ticket::where('type', 'monthly')
+            ->orderBy('bought', 'desc')
+            ->simplePaginate(8);
 
         return view('receptionist.purchased-tickets', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
     } else if (Auth::user()->is_admin()) {
         $gym_name = Gym::all()->pluck('name')->implode(', ');
 
-        $purchased_tickets = Ticket::all()->filter(function ($ticket) {
-            return !$ticket->isMonthly();
-        })->values()->sortByDesc('expiration');
+        $purchased_tickets = Ticket::where('type', 'one-time')
+            ->orderBy('bought', 'desc')
+            ->simplePaginate(8);
 
         return view('admin.tickets.index-ticket', ['tickets' => $purchased_tickets, 'gym_name' => $gym_name]);
     } else {

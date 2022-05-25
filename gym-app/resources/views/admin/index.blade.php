@@ -31,8 +31,8 @@
                     @foreach ($monthly_tickets as $ticket)
                       <tr>
                         <td><b>{{ $ticket->user->name }}</b></td>
-                        <td>{{ $ticket->type->gym->name }}</td>
-                        <td>{{ $ticket->type->name }}</td>
+                        <td>{{ $ticket->buyable_ticket->gym->name }}</td>
+                        <td>{{ $ticket->buyable_ticket->name }}</td>
                         <td>{{ $ticket->expiration() }}</td>
                         @if ($ticket->useable())
                           <td>Felhasználható</td>
@@ -75,8 +75,8 @@
                     @foreach ($tickets as $ticket)
                       <tr>
                         <td><b>{{ $ticket->user->name }}</b></td>
-                        <td>{{ $ticket->type->gym->name }}</td>
-                        <td>{{ $ticket->type->name }}</td>
+                        <td>{{ $ticket->buyable_ticket->gym->name }}</td>
+                        <td>{{ $ticket->buyable_ticket->name }}</td>
                         <td>{{ $ticket->expiration() }}</td>
                         @if ($ticket->useable())
                           <td>Felhasználható</td>
@@ -123,7 +123,7 @@
                     <tr>
                       <td><b>{{ $enterance->user->name }}</b></td>
                       <td><b>{{ $enterance->gym->name }}</b></td>
-                      <td><b>{{ $enterance->ticket->type->name }}</b></td>
+                      <td><b>{{ $enterance->ticket->buyable_ticket->name }}</b></td>
                       <td><b>{{ $enterance->enter() }}</b></td>
                     </tr>
                   @endforeach

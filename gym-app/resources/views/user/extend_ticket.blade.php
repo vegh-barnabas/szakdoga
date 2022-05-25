@@ -31,7 +31,7 @@
             </div>
             <div class="col-auto">
               <input type="text" id="ticketName" name="ticketName" class="form-control"
-                value="{{ $ticket->type->name }}" readonly />
+                value="{{ $ticket->buyable_ticket->name }}" readonly />
             </div>
           </div>
           <div class="row g-3 align-items-center mb-3">
@@ -40,7 +40,7 @@
             </div>
             <div class="col-5">
               <input type="text" id="ticketDesc" name="ticketDesc" class="form-control"
-                value="{{ $ticket->type->description }}" readonly />
+                value="{{ $ticket->buyable_ticket->description }}" readonly />
             </div>
           </div>
           <div class="row g-3 align-items-center mb-3">
@@ -49,7 +49,7 @@
             </div>
             <div class="col-auto">
               <input type="text" id="ticketPrice" name="ticketPrice" class="form-control"
-                value="{{ $ticket->type->price }} kredit" readonly />
+                value="{{ $ticket->buyable_ticket->price }} kredit" readonly />
             </div>
           </div>
           <button type="submit" class="btn btn-success">

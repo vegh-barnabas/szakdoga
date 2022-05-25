@@ -46,8 +46,9 @@ class ReceptionistTests extends TestCase
 
         $ticket = Ticket::factory()->create([
             'gym_id' => $gym->id,
-            'type_id' => $buyable_ticket->id,
+            'buyable_ticket_id' => $buyable_ticket->id,
             'user_id' => $guest->id,
+            'type' => $buyable_ticket->type,
         ]);
 
         $response = $this->actingAs($receptionist)->withSession(['gym' => $gym->id])->get('let-in/' . $ticket->id);

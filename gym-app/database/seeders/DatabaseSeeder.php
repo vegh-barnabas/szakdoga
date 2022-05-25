@@ -205,7 +205,8 @@ class DatabaseSeeder extends Seeder
                 Ticket::factory()->create([
                     'user_id' => $user,
                     'gym_id' => $random_gym_id,
-                    'type_id' => $gym_buyable_ticket->id,
+                    'buyable_ticket_id' => $gym_buyable_ticket->id,
+                    'type' => $gym_buyable_ticket->type,
                 ]);
             }
 
@@ -219,7 +220,8 @@ class DatabaseSeeder extends Seeder
                 Ticket::factory()->create([
                     'user_id' => $user,
                     'gym_id' => $random_gym_id,
-                    'type_id' => $gym_random_buyable_monthly_ticket->id,
+                    'buyable_ticket_id' => $gym_random_buyable_monthly_ticket->id,
+                    'type' => $gym_random_buyable_monthly_ticket->type,
                 ]);
             }
         }
@@ -252,8 +254,6 @@ class DatabaseSeeder extends Seeder
                     'enter' => $random_enterance_date,
                     'exit' => $random_exit_date,
                 ]);
-
-                $enterance->locker()->associate($unused_lockers->random());
             }
         }
     }

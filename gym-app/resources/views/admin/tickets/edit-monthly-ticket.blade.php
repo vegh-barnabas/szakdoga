@@ -15,7 +15,7 @@
   <h2 class="mb-3">Bérlet szerkesztése</h2>
   <div class="card">
     <div class="card-header">
-      <h5 class="card-title">{{ $ticket->type->name }} ({{ $ticket->id }}) - {{ $ticket->user->name }}
+      <h5 class="card-title">{{ $ticket->buyable_ticket->name }} ({{ $ticket->id }}) - {{ $ticket->user->name }}
         ({{ $ticket->user->id }})</h5>
     </div>
     <div class="card-body">

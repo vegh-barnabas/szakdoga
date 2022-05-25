@@ -45,7 +45,8 @@ class EditTicketTest extends TestCase
             [
                 'user_id' => $user->id,
                 'gym_id' => $gym->id,
-                'type_id' => $buyable_ticket->id,
+                'buyable_ticket_id' => $buyable_ticket->id,
+                'type' => $buyable_ticket->type,
             ]
         );
 
@@ -95,7 +96,8 @@ class EditTicketTest extends TestCase
             [
                 'user_id' => $user->id,
                 'gym_id' => $gym->id,
-                'type_id' => $buyable_ticket->id,
+                'buyable_ticket_id' => $buyable_ticket->id,
+                'type' => $buyable_ticket->type,
             ]
         );
 
@@ -145,7 +147,8 @@ class EditTicketTest extends TestCase
             [
                 'user_id' => $user->id,
                 'gym_id' => $gym->id,
-                'type_id' => $buyable_ticket->id,
+                'buyable_ticket_id' => $buyable_ticket->id,
+                'type' => $buyable_ticket->type,
             ]
         );
         $ticket = Ticket::all()->first();
@@ -194,7 +197,8 @@ class EditTicketTest extends TestCase
             [
                 'user_id' => $user->id,
                 'gym_id' => $gym->id,
-                'type_id' => $buyable_ticket->id,
+                'buyable_ticket_id' => $buyable_ticket->id,
+                'type' => $buyable_ticket->type,
             ]
         );
         $ticket = Ticket::all()->first();
@@ -247,7 +251,8 @@ class EditTicketTest extends TestCase
             [
                 'user_id' => $user->id,
                 'gym_id' => $gym->id,
-                'type_id' => $buyable_ticket->id,
+                'buyable_ticket_id' => $buyable_ticket->id,
+                'type' => $buyable_ticket->type,
             ]
         );
         $ticket = Ticket::all()->first();
@@ -298,7 +303,8 @@ class EditTicketTest extends TestCase
             [
                 'user_id' => $user->id,
                 'gym_id' => $gym->id,
-                'type_id' => $buyable_ticket->id,
+                'buyable_ticket_id' => $buyable_ticket->id,
+                'type' => $buyable_ticket->type,
             ]
         );
         $ticket = Ticket::all()->first();

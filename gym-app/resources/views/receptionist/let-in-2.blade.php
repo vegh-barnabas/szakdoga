@@ -46,7 +46,7 @@
             </div>
             <div class="col-auto">
               <input type="text" id="usedTicket" name="usedTicket" class="form-control"
-                value="{{ $ticket->type->name }} ({{ $ticket->id }})" disabled />
+                value="{{ $ticket->buyable_ticket->name }} ({{ $ticket->id }})" disabled />
             </div>
           </div>
           <div class="row g-3 align-items-center mb-3">

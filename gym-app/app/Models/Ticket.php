@@ -15,7 +15,8 @@ class Ticket extends Model
     protected $fillable = [
         'user_id',
         'gym_id',
-        'type_id',
+        'buyable_ticket_id',
+        'type', // For easier Eloquents methods
         'bought',
         'expiration',
         'code',
@@ -36,19 +37,19 @@ class Ticket extends Model
         return $this->hasMany(Enterance::class);
     }
 
-    public function type()
+    public function buyable_ticket()
     {
         return $this->belongsTo(BuyableTicket::class);
     }
 
     public function isMonthly()
     {
-        return $this->type->isMonthly();
+        return $this->buyable_ticket->isMonthly();
     }
 
     public function get_type()
     {
-        return $this->type->isMonthly() ? 'bérlet' : 'jegy';
+        return $this->buyable_ticket->isMonthly() ? 'bérlet' : 'jegy';
     }
 
     public function used()

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('lockers', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('gym_id');
+            $table->unsignedBigInteger('enterance_id')->nullable();
             $table->integer('number');
             $table->enum('gender', ['male', 'female']);
             $table->timestamps();
@@ -23,8 +24,7 @@ return new class extends Migration
             $table->unique(['gym_id', 'number']);
 
             $table->foreign('gym_id')->references('id')->on('gyms');
-
-            $table->softDeletes();
+            $table->foreign('enterance_id')->references('id')->on('enterances');
         });
     }
 

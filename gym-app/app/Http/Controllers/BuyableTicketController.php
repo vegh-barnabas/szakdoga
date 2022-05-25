@@ -6,6 +6,7 @@ use App\Models\BuyableTicket;
 use App\Models\Gym;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 
@@ -20,29 +21,14 @@ class BuyableTicketController extends Controller
     {
         if (Auth::user()->is_receptionist()) {
             $gym = Gym::all()->where('id', Auth::user()->prefered_gym)->first();
-            $monthly_tickets = BuyableTicket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
-                return $ticket->isMonthly();
-            })->values();
 
-            $tickets = BuyableTicket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
-                return !$ticket->isMonthly();
-            })->values();
-
-            $all_tickets = $monthly_tickets->merge($tickets);
+            $all_tickets = BuyableTicket::where('gym_id', $gym->id)->orderBy('type')->simplePaginate(8);
 
             return view('receptionist.buyable-tickets', ['tickets' => $all_tickets, 'gym_name' => $gym->name]);
-        } else if (Auth::user()->is_admin()) {
+        } else if (Gate::allows('admin-action')) {
             $gym_name = Gym::all()->pluck('name')->implode(', ');
 
-            $monthly_tickets = BuyableTicket::all()->filter(function ($ticket) {
-                return $ticket->isMonthly();
-            })->values();
-
-            $tickets = BuyableTicket::all()->filter(function ($ticket) {
-                return !$ticket->isMonthly();
-            })->values();
-
-            $all_tickets = $monthly_tickets->merge($tickets);
+            $all_tickets = BuyableTicket::orderBy('type')->simplePaginate(8);
 
             return view('admin.buyable-tickets.index', ['tickets' => $all_tickets, 'gym_name' => $gym_name]);
         } else {

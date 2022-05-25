@@ -46,19 +46,20 @@
                               <p>
                                 @if ($ticket->isMonthly())
                                   <button class="btn btn-primary" type="submit" data-bs-toggle="collapse"
-                                    data-bs-target="{{ '#' . Str::slug($ticket->type->name . $ticket->id) }}"
+                                    data-bs-target="{{ '#' . Str::slug($ticket->buyable_ticket->name . $ticket->id) }}"
                                     aria-expanded="false" aria-controls="{{ $ticket->id }}">
                                     Belépési kód
                                   </button>
                                 @else
                                   <button class="btn btn-success" type="submit" data-bs-toggle="collapse"
-                                    data-bs-target="{{ '#' . Str::slug($ticket->type->name . $ticket->id) }}"
+                                    data-bs-target="{{ '#' . Str::slug($ticket->buyable_ticket->name . $ticket->id) }}"
                                     aria-expanded="false" aria-controls="{{ $ticket->id }}">
                                     Belépési kód
                                   </button>
                                 @endif
                               </p>
-                              <div class="collapse" id="{{ Str::slug($ticket->type->name . $ticket->id) }}">
+                              <div class="collapse"
+                                id="{{ Str::slug($ticket->buyable_ticket->name . $ticket->id) }}">
                                 <div class="card card-body">
                                   {{ $ticket->code }}
                                 </div>
@@ -101,7 +102,7 @@
                       @if ($ticket->isMonthly() && !$ticket->useable())
                         <tr>
                           <form action="{{ route('guest.extend-ticket.show', $ticket->id) }}" method="GET">
-                            <td>{{ $ticket->type->name }}</td>
+                            <td>{{ $ticket->buyable_ticket->name }}</td>
                             @if ($ticket->isMonthly())
                               <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
                             @else
@@ -116,12 +117,13 @@
                               <td>
                                 <p>
                                   <button class="btn btn-success" type="submit" data-bs-toggle="collapse"
-                                    data-bs-target="{{ '#' . Str::slug($ticket->type->name . $ticket->id) }}"
+                                    data-bs-target="{{ '#' . Str::slug($ticket->buyable_ticket->name . $ticket->id) }}"
                                     aria-expanded="false" aria-controls="{{ $ticket->id }}">
                                     Belépési kód
                                   </button>
                                 </p>
-                                <div class="collapse" id="{{ Str::slug($ticket->type->name . $ticket->id) }}">
+                                <div class="collapse"
+                                  id="{{ Str::slug($ticket->buyable_ticket->name . $ticket->id) }}">
                                   <div class="card card-body">
                                     {{ $ticket->code }}
                                   </div>

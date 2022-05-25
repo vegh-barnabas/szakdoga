@@ -74,12 +74,25 @@ class GuestController extends Controller
 
         $gym = Gym::find(session('gym'));
 
+        // $tickets = Auth::user()->tickets()
+        //     ->join('buyable_tickets', 'buyable_tickets.id', '=', 'tickets.type_id')
+        //     ->orderBy('type_str')
+        //     ->orderBy('tickets.expiration', 'DESC')
+        //     ->paginate(1);
+
         $tickets = Auth::user()->tickets
             ->where('gym_id', $gym->id)
             ->sortByDesc('expiration')
             ->sortBy(function ($ticket) {
                 return $ticket->get_type();
             });
+
+        // $tickets = Ticket::with('type')
+        //     ->where('gym_id', $gym->id)
+        //     ->whereIn('id', Auth::user()->tickets)
+        //     ->orderBy('expiration', 'desc')
+        //     ->orderBy('type')
+        //     ->paginate(2);
 
         return view('user.tickets', ['gym' => $gym, 'tickets' => $tickets, 'showPagination' => is_null(request('all'))]);
     }
@@ -153,7 +166,8 @@ class GuestController extends Controller
         Ticket::factory()->create([
             'user_id' => Auth::user()->id,
             'gym_id' => $buyable_ticket->gym_id,
-            'type_id' => $buyable_ticket->id,
+            'buyable_ticket_id' => $buyable_ticket->id,
+            'type' => $buyable_ticket->type,
             'bought' => $current_date,
             'expiration' => $expiration,
         ]);
@@ -220,7 +234,7 @@ class GuestController extends Controller
             return redirect()->route('tickets');
         }
 
-        if (Auth::user()->credits < $ticket->type->price) {
+        if (Auth::user()->credits < $ticket->buyable_ticket->price) {
             return redirect()->route('tickets');
         }
 
@@ -231,7 +245,7 @@ class GuestController extends Controller
         $ticket->save();
 
         $user = User::all()->where('id', Auth::user()->id)->first();
-        $user->credits -= $ticket->type->price;
+        $user->credits -= $ticket->buyable_ticket->price;
         $user->save();
 
         return redirect()->route('index');

@@ -28,8 +28,7 @@
                 <label for="number" class="col-form-label">Szám</label>
               </div>
               <div class="col-auto">
-                <input type="number" id="number" name="number" class="form-control" value="{{ $locker->number }}"
-                  disabled />
+                <input type="number" id="number" name="number" class="form-control" value="{{ $locker->number }}" />
               </div>
             </div>
           </div>
@@ -40,8 +39,10 @@
                 <label for="gender" class="col-form-label">Nem</label>
               </div>
               <div class="col-auto">
-                <input type="text" id="gender" name="gender" class="form-control"
-                  value="{{ old('gender') ?? $locker->gender == 'male' ? 'férfi' : 'nő' }}" />
+                <select id="gender" name="gender" class="form-select">
+                  <option value="male">férfi</option>
+                  <option value="female">nő</option>
+                </select>
               </div>
             </div>
           </div>

@@ -14,6 +14,7 @@ class Enterance extends Model
         'gym_id',
         'user_id',
         'ticket_id',
+        'locker_id',
         'enter',
         'exit',
     ];

@@ -105,7 +105,8 @@ class DatabaseSeeder extends Seeder
             $ticket = Ticket::factory()->create([
                 'user_id' => $random_user,
                 'gym_id' => $random_gym,
-                'type_id' => $random_buyable_ticket,
+                'buyable_ticket_id' => $random_buyable_ticket,
+                'type' => $random_buyable_ticket->type,
             ]);
         }
 
@@ -117,7 +118,8 @@ class DatabaseSeeder extends Seeder
             $ticket = Ticket::factory()->create([
                 'user_id' => 1,
                 'gym_id' => $random_gym,
-                'type_id' => $random_buyable_ticket,
+                'buyable_ticket_id' => $random_buyable_ticket,
+                'type' => $random_buyable_ticket->type,
             ]);
         }
 

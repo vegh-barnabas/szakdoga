@@ -20,7 +20,7 @@ class CategoryController extends Controller
             abort(403);
         }
 
-        $categories = Category::all();
+        $categories = Category::simplePaginate(8);
 
         $styles = Category::styles;
 

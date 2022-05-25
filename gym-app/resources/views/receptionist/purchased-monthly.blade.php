@@ -26,9 +26,9 @@
             <tbody>
               @foreach ($tickets as $ticket)
                 <tr>
-                  <td>{{ $ticket->type->name }}</td>
+                  <td>{{ $ticket->buyable_ticket->name }}</td>
                   <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
-                  <td>{{ $ticket->type->description }}</td>
+                  <td>{{ $ticket->buyable_ticket->description }}</td>
                   <td>{{ $ticket->user->name }} (ID {{ $ticket->user->id }})</td>
                   @if ($ticket->useable())
                     <td class="text-success">Felhasználható</td>

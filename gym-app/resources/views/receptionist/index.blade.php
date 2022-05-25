@@ -31,7 +31,7 @@
                     @foreach ($monthly_tickets as $ticket)
                       <tr>
                         <td><b>{{ $ticket->user->name }}</b></td>
-                        <td>{{ $ticket->type->name }}</td>
+                        <td>{{ $ticket->buyable_ticket->name }}</td>
                         <td>{{ $ticket->bought() }}</td>
                         <td>{{ $ticket->expiration() }}</td>
                         @if ($ticket->expired())
@@ -76,7 +76,7 @@
                     @foreach ($tickets as $ticket)
                       <tr>
                         <td><b>{{ $ticket->user->name }}</b></td>
-                        <td>{{ $ticket->type->name }}</td>
+                        <td>{{ $ticket->buyable_ticket->name }}</td>
                         <td>{{ $ticket->bought() }}</td>
                         <td>{{ $ticket->expiration() }}</td>
                         @if ($ticket->expired())
@@ -122,7 +122,7 @@
                 @foreach ($enterances as $enterance)
                   <tr>
                     <td><b>{{ $enterance->user->name }}</b></td>
-                    <td>{{ $enterance->ticket->type->name }}</td>
+                    <td>{{ $enterance->ticket->buyable_ticket->name }}</td>
                     <td>{{ $enterance->enter() }}</td>
                   </tr>
                 @endforeach

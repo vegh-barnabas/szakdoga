@@ -21,7 +21,7 @@ class GymController extends Controller
             abort(403);
         }
 
-        $gyms = Gym::all();
+        $gyms = Gym::simplePaginate(8);
 
         return view('admin.gyms.index', ['gyms' => $gyms]);
     }

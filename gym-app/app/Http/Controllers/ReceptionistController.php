@@ -64,7 +64,7 @@ class ReceptionistController extends Controller
             return Redirect::back()->with('error', ['code' => $code, 'user' => $user->name]);
         }
 
-        if ($ticket->type->gym_id != Gym::find(session('gym'))->id) {
+        if ($ticket->buyable_ticket->gym_id != Gym::find(session('gym'))->id) {
             return Redirect::back()->with('not-this-gym', ['code' => $code]);
         }
 
@@ -88,7 +88,7 @@ class ReceptionistController extends Controller
         }
 
         $still_entered_enterances = Enterance::all()->where('ticket_id', $ticket->id)->filter(function ($enterance) {
-            return $this->exit != null;
+            return $enterance->exit != null;
         })->values();
 
         if (!$still_entered_enterances->isEmpty()) {
@@ -97,11 +97,11 @@ class ReceptionistController extends Controller
 
         $user = $ticket->user;
 
-        $gym = Gym::all()->where('id', $ticket->type->gym_id)->first();
+        $gym = Gym::all()->where('id', $ticket->buyable_ticket->gym_id)->first();
 
         $lockers = Locker::all()->where('gym_id', $gym->id)->filter(function ($locker) {
             return !$locker->is_used();
-        })->values();
+        });
 
         return view('receptionist.let-in-2', ['user' => $user, 'ticket' => $ticket, 'code' => $code, 'gym' => $gym, 'lockers' => $lockers]);
 
@@ -120,7 +120,7 @@ class ReceptionistController extends Controller
         }
 
         $still_entered_enterances = Enterance::all()->where('ticket_id', $ticket->id)->filter(function ($enterance) {
-            return $this->exit != null;
+            return $enterance->exit != null;
         })->values();
 
         if (!$still_entered_enterances->isEmpty()) {
@@ -151,14 +151,21 @@ class ReceptionistController extends Controller
 
         $user = $ticket->user;
 
+        $locker = Locker::all()->where('id', $request['locker'])->first();
+
         $enterance = Enterance::factory()->create([
-            'gym_id' => $ticket->type->gym_id,
+            'gym_id' => $ticket->buyable_ticket->gym_id,
             'user_id' => $user->id,
             'ticket_id' => $ticket->id,
             'enter' => Carbon::now(),
             'exit' => null,
         ]);
-        $enterance->locker()->attach($request['locker']);
+
+        $locker->enterance_id = $enterance->id;
+        $locker->save();
+
+        $enterance->locker_id = $locker->id;
+        $enterance->save();
 
         return Redirect::to('let-in')->with('success', $user->name);
     }
@@ -252,6 +259,12 @@ class ReceptionistController extends Controller
 
         $date_now = new DateTime();
         $enterance->exit = $date_now;
+        $enterance->save();
+
+        $enterance->locker->enterance_id = null;
+        $enterance->locker->save();
+
+        $enterance->locker_id = null;
         $enterance->save();
 
         return Redirect::to('let-out')->with('success', $user->name);

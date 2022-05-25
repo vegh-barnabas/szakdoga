@@ -27,7 +27,7 @@
                   <td class="text-{{ $enterance->ticket->isMonthly() ? 'primary' : 'success' }}">
                     {{ $enterance->ticket->get_type() }}
                   </td>
-                  <td>{{ $enterance->ticket->type->name }}</td>
+                  <td>{{ $enterance->ticket->buyable_ticket->name }}</td>
                   <td>{{ $enterance->ticket->code }}</td>
                   <td>{{ $enterance->enter() }}</td>
                 </tr>
