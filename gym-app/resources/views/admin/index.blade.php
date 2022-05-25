@@ -96,7 +96,7 @@
         </div>
       </div>
     </div>
-    <div class="col p-3 align-self-center">
+    <div class="col p-3">
       <div class="card">
         <div class="card-header">
           <h5 class="card-title">Státusz</h5>

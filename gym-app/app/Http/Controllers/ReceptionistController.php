@@ -12,6 +12,7 @@ use Carbon\CarbonImmutable;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
@@ -99,7 +100,7 @@ class ReceptionistController extends Controller
 
         $gym = Gym::all()->where('id', $ticket->buyable_ticket->gym_id)->first();
 
-        $lockers = Locker::all()->where('gym_id', $gym->id)->filter(function ($locker) {
+        $lockers = Locker::all()->where('gym_id', $gym->id)->where('gender', $ticket->user->gender)->filter(function ($locker) {
             return !$locker->is_used();
         });
 
