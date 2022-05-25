@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Gym;
 use App\Models\Locker;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class LockerController extends Controller
@@ -17,7 +16,7 @@ class LockerController extends Controller
      */
     public function index()
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -33,7 +32,7 @@ class LockerController extends Controller
      */
     public function create()
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -50,7 +49,7 @@ class LockerController extends Controller
      */
     public function store(Request $request)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -82,7 +81,7 @@ class LockerController extends Controller
      */
     public function edit($id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -110,7 +109,7 @@ class LockerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -144,7 +143,7 @@ class LockerController extends Controller
 
     public function delete($id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -165,7 +164,7 @@ class LockerController extends Controller
      */
     public function destroy($id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 

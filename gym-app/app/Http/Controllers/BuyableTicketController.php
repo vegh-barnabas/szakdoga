@@ -19,7 +19,7 @@ class BuyableTicketController extends Controller
      */
     public function index()
     {
-        if (Auth::user()->is_receptionist()) {
+        if (Gate::allows('receptionist-action')) {
             $gym = Gym::all()->where('id', Auth::user()->prefered_gym)->first();
 
             $all_tickets = BuyableTicket::where('gym_id', $gym->id)->orderBy('type')->simplePaginate(8);
@@ -43,7 +43,7 @@ class BuyableTicketController extends Controller
      */
     public function create()
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -60,7 +60,7 @@ class BuyableTicketController extends Controller
      */
     public function store(Request $request)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -97,7 +97,7 @@ class BuyableTicketController extends Controller
      */
     public function edit($id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -121,7 +121,7 @@ class BuyableTicketController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -156,7 +156,7 @@ class BuyableTicketController extends Controller
 
     public function hide_form($id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -173,7 +173,7 @@ class BuyableTicketController extends Controller
 
     public function hide($id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 

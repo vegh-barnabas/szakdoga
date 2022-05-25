@@ -20,7 +20,7 @@ class ReceptionistController extends Controller
 {
     public function let_in_index_page()
     {
-        if (!Auth::user()->is_receptionist()) {
+        if (!Gate::allows('receptionist-action')) {
             abort(403);
         }
 
@@ -33,7 +33,7 @@ class ReceptionistController extends Controller
 
     public function let_in_index(Request $request)
     {
-        if (!Auth::user()->is_receptionist()) {
+        if (!Gate::allows('receptionist-action')) {
             abort(403);
         }
 
@@ -73,7 +73,7 @@ class ReceptionistController extends Controller
 
     public function let_in_page($code)
     {
-        if (!Auth::user()->is_receptionist()) {
+        if (!Gate::allows('receptionist-action')) {
             abort(403);
         }
 
@@ -109,7 +109,7 @@ class ReceptionistController extends Controller
 
     public function let_in(Request $request, $code)
     {
-        if (!Auth::user()->is_receptionist()) {
+        if (!Gate::allows('receptionist-action')) {
             abort(403);
         }
 
@@ -172,7 +172,7 @@ class ReceptionistController extends Controller
 
     public function let_out_index_page()
     {
-        if (!Auth::user()->is_receptionist()) {
+        if (!Gate::allows('receptionist-action')) {
             abort(403);
         }
 
@@ -183,7 +183,7 @@ class ReceptionistController extends Controller
 
     public function let_out_index(Request $request)
     {
-        if (!Auth::user()->is_receptionist()) {
+        if (!Gate::allows('receptionist-action')) {
             abort(403);
         }
 
@@ -216,7 +216,7 @@ class ReceptionistController extends Controller
 
     public function let_out_page($code)
     {
-        if (!Auth::user()->is_receptionist()) {
+        if (!Gate::allows('receptionist-action')) {
             abort(403);
         }
 
@@ -237,7 +237,7 @@ class ReceptionistController extends Controller
 
     public function let_out(Request $request, $code)
     {
-        if (!Auth::user()->is_receptionist()) {
+        if (!Gate::allows('receptionist-action')) {
             abort(403);
         }
 
@@ -272,7 +272,7 @@ class ReceptionistController extends Controller
 
     public function entered_users()
     {
-        if (!Auth::user()->is_receptionist()) {
+        if (!Gate::allows('receptionist-action')) {
             abort(403);
         }
 
@@ -291,7 +291,7 @@ class ReceptionistController extends Controller
 
     public function add_credits(Request $request)
     {
-        if (!Auth::user()->is_receptionist()) {
+        if (!Gate::allows('receptionist-action')) {
             abort(403);
         }
 
@@ -322,7 +322,7 @@ class ReceptionistController extends Controller
 
     public function sensitive_settings(Request $request)
     {
-        if (!Auth::user()->is_receptionist()) {
+        if (!Gate::allows('receptionist-action')) {
             abort(403);
         }
 

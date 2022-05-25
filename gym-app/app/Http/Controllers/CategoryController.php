@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class CategoryController extends Controller
@@ -16,7 +15,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -34,7 +33,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -51,7 +50,7 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -75,7 +74,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -99,7 +98,7 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -123,7 +122,7 @@ class CategoryController extends Controller
 
     public function delete($id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -146,7 +145,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 

@@ -19,11 +19,11 @@ class GuestController extends Controller
 {
     public function choose_gym_page()
     {
-        if (Auth::user()->is_admin()) {
+        if (Gate::allows('admin-action')) {
             return redirect()->route('index');
         }
 
-        if (Auth::user()->is_receptionist()) {
+        if (Gate::allows('receptionist-action')) {
             session(['gym' => Auth::user()->prefered_gym]);
         }
 
@@ -41,7 +41,7 @@ class GuestController extends Controller
 
     public function choose_gym(Request $request)
     {
-        if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
+        if (Gate::allows('admin-action') || Gate::allows('receptionist-action')) {
             return redirect()->route('index');
         }
 
@@ -64,7 +64,7 @@ class GuestController extends Controller
 
     public function tickets()
     {
-        if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
+        if (Gate::allows('admin-action') || Gate::allows('receptionist-action')) {
             return redirect()->route('index');
         }
 
@@ -99,7 +99,7 @@ class GuestController extends Controller
 
     public function buy_ticket_list()
     {
-        if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
+        if (Gate::allows('admin-action') || Gate::allows('receptionist-action')) {
             return redirect()->route('index');
         }
 
@@ -112,7 +112,7 @@ class GuestController extends Controller
 
     public function buy_ticket_show($buyable_ticket_id)
     {
-        if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
+        if (Gate::allows('admin-action') || Gate::allows('receptionist-action')) {
             return redirect()->route('index');
         }
 
@@ -143,7 +143,7 @@ class GuestController extends Controller
 
     public function buy_ticket_create($buyable_ticket_id)
     {
-        if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
+        if (Gate::allows('admin-action') || Gate::allows('receptionist-action')) {
             abort(403);
         }
 
@@ -187,7 +187,7 @@ class GuestController extends Controller
 
     public function extend_ticket_page($id)
     {
-        if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
+        if (Gate::allows('admin-action') || Gate::allows('receptionist-action')) {
             return redirect()->route('index');
         }
 
@@ -216,7 +216,7 @@ class GuestController extends Controller
 
     public function extend_ticket($id)
     {
-        if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
+        if (Gate::allows('admin-action') || Gate::allows('receptionist-action')) {
             abort(403);
         }
 
@@ -253,7 +253,7 @@ class GuestController extends Controller
 
     public function statistics()
     {
-        if (Auth::user()->is_admin() || Auth::user()->is_receptionist()) {
+        if (Gate::allows('admin-action') || Gate::allows('receptionist-action')) {
             return redirect()->route('index');
         }
 
@@ -357,7 +357,7 @@ class GuestController extends Controller
 
     public function sensitive_settings(Request $request)
     {
-        if (Auth::user()->is_admin()() || Auth::user()->is_receptionist()()) {
+        if (Gate::allows('admin-action')() || Gate::allows('receptionist-action')()) {
             abort(403);
         }
 

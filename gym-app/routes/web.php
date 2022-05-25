@@ -92,10 +92,10 @@ Route::patch('/settings/sensitive', [ReceptionistController::class, 'sensitive_s
 /* Mutual Routes */
 // Home - User & Receptionist
 Route::get('/home', function () {
-    if (!Auth::user()->is_admin() && !Auth::user()->is_receptionist() && session('gym') == null) {
+    if (!Gate::allows('admin-action') && !Gate::allows('receptionist-action') && session('gym') == null) {
         return redirect()->route('guest.gyms.list');
     }
-    if (Auth::user()->is_receptionist()) {
+    if (Gate::allows('receptionist-action')) {
         if (session('gym') == null) {
             session(['gym' => Auth::user()->prefered_gym]);
         }
@@ -111,7 +111,7 @@ Route::get('/home', function () {
         })->sortByDesc('bought')->take(5);
 
         return view('receptionist.index', ['enterances' => $enterances, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'gym' => $gym]);
-    } else if (Auth::user()->is_admin()) {
+    } else if (Gate::allows('admin-action')) {
         $gym_name = Gym::all()->pluck('name')->implode(', ');
 
         $tickets = Ticket::all()->filter(function ($ticket) {
@@ -168,9 +168,9 @@ Route::get('/home', function () {
 
 // Settings - User & Receptionist
 Route::get('/settings', function () {
-    if (Auth::user()->is_receptionist()) {
+    if (Gate::allows('receptionist-action')) {
         abort(403);
-    } else if (Auth::user()->is_admin()) {
+    } else if (Gate::allows('admin-action')) {
         abort(403);
     } else {
         $gyms = Gym::all();
@@ -183,9 +183,9 @@ Route::get('/settings', function () {
 })->name('settings')->middleware('auth');
 
 Route::get('/settings/sensitive', function () {
-    if (Auth::user()->is_receptionist()) {
+    if (Gate::allows('receptionist-action')) {
         return view('receptionist.settings_sensitive');
-    } else if (Auth::user()->is_admin()) {
+    } else if (Gate::allows('admin-action')) {
         abort(403);
     } else {
         return view('user.settings_sensitive');
@@ -195,7 +195,7 @@ Route::get('/settings/sensitive', function () {
 
 // Purchased monthly tickets - Receptionist & Admin
 Route::get('/purchased-monthly', function () {
-    if (Auth::user()->is_receptionist()) {
+    if (Gate::allows('receptionist-action')) {
         $gym = Gym::find(session('gym'));
         // $purchased_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
         //     return $ticket->isMonthly();
@@ -207,7 +207,7 @@ Route::get('/purchased-monthly', function () {
             ->simplePaginate(8);
 
         return view('receptionist.purchased-monthly', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
-    } else if (Auth::user()->is_admin()) {
+    } else if (Gate::allows('admin-action')) {
         $gym_name = Gym::all()->pluck('name')->implode(', ');
 
         $purchased_tickets = Ticket::where('type', 'monthly')
@@ -222,7 +222,7 @@ Route::get('/purchased-monthly', function () {
 
 // Purchased tickets - Receptionist & Admin
 Route::get('/purchased-tickets', function () {
-    if (Auth::user()->is_receptionist()) {
+    if (Gate::allows('receptionist-action')) {
         $gym = Gym::find(session('gym'));
 
         $purchased_tickets = Ticket::where('type', 'monthly')
@@ -230,7 +230,7 @@ Route::get('/purchased-tickets', function () {
             ->simplePaginate(8);
 
         return view('receptionist.purchased-tickets', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
-    } else if (Auth::user()->is_admin()) {
+    } else if (Gate::allows('admin-action')) {
         $gym_name = Gym::all()->pluck('name')->implode(', ');
 
         $purchased_tickets = Ticket::where('type', 'one-time')

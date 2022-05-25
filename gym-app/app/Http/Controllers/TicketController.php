@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
 class TicketController extends Controller
 {
     public function edit_ticket($id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -31,7 +30,7 @@ class TicketController extends Controller
 
     public function edit_monthly($id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -57,7 +56,7 @@ class TicketController extends Controller
      */
     public function update_ticket(Request $request, $id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -80,7 +79,7 @@ class TicketController extends Controller
 
     public function update_monthly(Request $request, $id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -104,7 +103,7 @@ class TicketController extends Controller
 
     public function delete($id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -121,7 +120,7 @@ class TicketController extends Controller
      */
     public function destroy($id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 

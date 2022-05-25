@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Gym;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 
@@ -18,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -93,7 +92,7 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
@@ -121,7 +120,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (!Auth::user()->is_admin()) {
+        if (!Gate::allows('admin-action')) {
             abort(403);
         }
 
