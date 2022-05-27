@@ -19,7 +19,8 @@
   @if (Session::has('hide'))
     <p>
     <div class="alert alert-danger" role="alert">
-      Sikeresen elrejtetted a(z) <strong>{{ Session::get('hide') }}</strong> megvásárolható jegyet!
+      Sikeresen {{ Session::get('hide.status') }} a(z) <strong>{{ Session::get('hide.name') }}</strong> megvásárolható
+      jegyet!
     </div>
     </p>
   @endif

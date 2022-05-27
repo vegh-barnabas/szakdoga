@@ -15,6 +15,13 @@
       Nem létezik <strong>{{ Session::get('not-found.code') }}</strong> kódú jegy!
     </div>
     </p>
+  @elseif (Session::has('still-in'))
+    <p>
+    <div class="alert alert-danger" role="alert">
+      A(z) <strong>{{ Session::get('not-found.code') }}</strong> kódú jeggyel éppen valaki bent tartózkodik az
+      edzőteremben!
+    </div>
+    </p>
   @elseif (Session::has('success'))
     <p>
     <div class="alert alert-success" role="alert">

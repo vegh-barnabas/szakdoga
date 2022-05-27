@@ -51,23 +51,72 @@ class ReceptionistTests extends TestCase
             'type' => $buyable_ticket->type,
         ]);
 
-        $response = $this->actingAs($receptionist)->withSession(['gym' => $gym->id])->get('let-in/' . $ticket->id);
-        $response->assertStatus(200);
+        $ticket->buyable_ticket()->associate($buyable_ticket);
 
-        $response = $this->actingAs($receptionist)->withSession(['gym' => $gym->id])->get('let-out/' . $guest->id);
-        $response->assertStatus(200);
+        error_log($ticket->id);
 
-        $response = $this->actingAs($receptionist)->withSession(['gym' => $gym->id])->get('extend-ticket/' . $ticket->id);
-        $response->assertStatus(200);
+        // $response = $this->actingAs($receptionist)->withSession(['gym' => $gym->id])->get('let-in/' . $ticket->id);
+        // $response->assertStatus(200);
+
+        // $response = $this->actingAs($receptionist)->withSession(['gym' => $gym->id])->get('let-out/' . $guest->id);
+        // $response->assertStatus(200);
     }
 
     public function test_guest_cant_access_receptionist_routes()
     {
+        // Create gym
+        $gym = Gym::factory()->create();
 
+        // Create Receptionist
+        $user = User::factory()->create([
+            'permission' => 'user',
+        ]);
+
+        $response = $this->actingAs($user)->withSession(['gym' => $gym->id])->get('add-credits/');
+        $response->assertStatus(403);
+
+        $response = $this->actingAs($user)->withSession(['gym' => $gym->id])->get('let-in/');
+        $response->assertStatus(403);
+
+        $response = $this->actingAs($user)->withSession(['gym' => $gym->id])->get('let-out/');
+        $response->assertStatus(403);
+
+        $response = $this->actingAs($user)->withSession(['gym' => $gym->id])->get('entered-users/');
+        $response->assertStatus(403);
+
+        $response = $this->actingAs($user)->withSession(['gym' => $gym->id])->get('let-in/' . rand(0, 10));
+        $response->assertStatus(403);
+
+        $response = $this->actingAs($user)->withSession(['gym' => $gym->id])->get('let-out/' . rand(0, 10));
+        $response->assertStatus(403);
     }
 
     public function test_admin_cant_access_receptionist_routes()
     {
+        // Create gym
+        $gym = Gym::factory()->create();
 
+        // Create Receptionist
+        $admin = User::factory()->create([
+            'permission' => 'admin',
+        ]);
+
+        $response = $this->actingAs($admin)->get('add-credits/');
+        $response->assertStatus(403);
+
+        $response = $this->actingAs($admin)->get('let-in/');
+        $response->assertStatus(403);
+
+        $response = $this->actingAs($admin)->get('let-out/');
+        $response->assertStatus(403);
+
+        $response = $this->actingAs($admin)->get('entered-users/');
+        $response->assertStatus(403);
+
+        $response = $this->actingAs($admin)->get('let-in/' . rand(0, 10));
+        $response->assertStatus(403);
+
+        $response = $this->actingAs($admin)->get('let-out/' . rand(0, 10));
+        $response->assertStatus(403);
     }
 }

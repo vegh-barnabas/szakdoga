@@ -5,14 +5,14 @@
   @if (Session::has('create'))
     <p>
     <div class="alert alert-success" role="alert">
-      Sikeresen törölted a(z) <strong>{{ Session::get('create') }}</strong> edzőtermet!
+      Sikeresen létrehoztad a(z) <strong>{{ Session::get('create') }}</strong> edzőtermet!
     </div>
     </p>
   @endif
   @if (Session::has('edit'))
     <p>
     <div class="alert alert-success" role="alert">
-      Sikeresen szerkesztetted <strong>{{ Session::get('edit') }}</strong> edzőtermet!
+      Sikeresen szerkesztetted a(z) <strong>{{ Session::get('edit') }}</strong> edzőtermet!
     </div>
     </p>
   @endif
@@ -20,7 +20,7 @@
   @if (Session::has('delete'))
     <p>
     <div class="alert alert-danger" role="alert">
-      Sikeresen törölted <strong>{{ Session::get('delete') }}</strong> edzőtermet!
+      Sikeresen törölted a(z) <strong>{{ Session::get('delete') }}</strong> edzőtermet!
     </div>
     </p>
   @endif

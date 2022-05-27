@@ -17,6 +17,7 @@ class GuestTest extends TestCase
         // Create Guest
         $guest = User::factory()->create([
             'permission' => 'user',
+            'credits' => 99999,
         ]);
 
         // Create gym for session
@@ -38,6 +39,7 @@ class GuestTest extends TestCase
         // Create buyable ticket
         $buyable_ticket = BuyableTicket::factory()->create([
             'gym_id' => $gym->id,
+            'hidden' => false,
         ]);
 
         $response = $this->actingAs($guest)->withSession(['gym' => $gym->id])->get('buy-ticket/' . $buyable_ticket->id);
@@ -97,7 +99,7 @@ class GuestTest extends TestCase
 
         // Should fail because there is no buyable ticket
         $response = $this->actingAs($admin)->get('buy-ticket/' . rand(0, 10));
-        $response->assertStatus(403);
+        $response->assertStatus(403); // There isn't a gym in session
 
         // Create buyable ticket
         $buyable_ticket = BuyableTicket::factory()->create([

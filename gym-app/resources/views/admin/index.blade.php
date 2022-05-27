@@ -107,6 +107,7 @@
         <div class="card-body">
           <p class="card-text">
           <h1>Belépett vendégek: <b class="text-success">{{ $active_enterances->count() }}</b></h1>
+          <h2>Legutóbb belépett 5 vendég:</h2>
           @if ($active_enterances->count() > 0)
             <div class="table-responsive">
               <table class="table table-hover">

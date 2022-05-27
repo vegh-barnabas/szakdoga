@@ -17,7 +17,7 @@
           <h2 class="mb-3">{{ $ticket_type }} adatai</h2>
           <div class="row g-3 align-items-center mb-3">
             <div class="col-2">
-              <label for="ticketId" class="col-form-label">{{ $ticket_type }} azonosítója</label>
+              <label for="ticketId" class="col-form-label">{{ $ticket_type }} ID</label>
             </div>
             <div class="col-auto">
               <input type="text" id="ticketId" name="ticketId" class="form-control" value="{{ $ticket->id }}"
@@ -38,8 +38,8 @@
               <label for="ticketDesc" class="col-form-label">{{ $ticket_type }} leírása</label>
             </div>
             <div class="col-5">
-              <input type="text" id="ticketDesc" name="ticketDesc" class="form-control"
-                value="{{ $ticket->description }}" disabled />
+              <textarea type="text" id="ticketDesc" name="ticketDesc" class="form-control" rows="4" cols="50"
+                disabled>{{ $ticket->description }}</textarea>
             </div>
           </div>
           <div class="row g-3 align-items-center mb-3">

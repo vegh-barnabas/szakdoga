@@ -27,8 +27,6 @@ return new class extends Migration
             $table->foreign('buyable_ticket_id')->references('id')->on('buyable_tickets');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('gym_id')->references('id')->on('gyms');
-
-            $table->softDeletes();
         });
     }
 

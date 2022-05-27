@@ -51,24 +51,20 @@
               <a class="nav-link {{ Route::is('receptionist.add-credits.index') ? 'active' : '' }}"
                 href="{{ route('receptionist.add-credits.index') }}">Kredit feltöltése</a>
             </li>
-            <li class="collapse navbar-collapse" id="navbarNavDarkDropdown">
-              <ul class="navbar-nav">
-                <li class="nav-item dropend">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Statisztika
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
-                    <li><a class="dropdown-item" href="{{ route('purchased-monthly') }}">Megvásárolt bérletek
-                        listája</a></li>
-                    <li><a class="dropdown-item" href="{{ route('purchased-tickets') }}">Megvásárolt jegyek
-                        listája</a></li>
-                    <li><a class="dropdown-item" href="{{ route('buyable-tickets.index') }}">Vásárolható
-                        jegyek/bérletek listája</a></li>
-                    <li><a class="dropdown-item" href="{{ route('receptionist.entered-users') }}">Belépett
-                        vendégek</a>
-                    </li>
-                  </ul>
+            <li class="nav-item dropend">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                Statisztika
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                <li><a class="dropdown-item" href="{{ route('purchased-monthly') }}">Megvásárolt bérletek
+                    listája</a></li>
+                <li><a class="dropdown-item" href="{{ route('purchased-tickets') }}">Megvásárolt jegyek
+                    listája</a></li>
+                <li><a class="dropdown-item" href="{{ route('buyable-tickets.index') }}">Vásárolható
+                    jegyek/bérletek listája</a></li>
+                <li><a class="dropdown-item" href="{{ route('receptionist.entered-users') }}">Belépett
+                    vendégek</a>
                 </li>
               </ul>
             </li>

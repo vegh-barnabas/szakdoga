@@ -13,7 +13,6 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 
@@ -25,9 +24,7 @@ class ReceptionistController extends Controller
             abort(403);
         }
 
-        error_log(json_encode(session('gym')));
-
-        $gym = Gym::find(session('gym'));
+        $gym = Gym::find(Auth::user()->prefered_gym);
 
         return view('receptionist.let-in', ['gym' => $gym]);
     }
@@ -50,23 +47,31 @@ class ReceptionistController extends Controller
         $ticket = Ticket::all()->where('code', $code)->first();
 
         if ($ticket == null) {
-            return Redirect::back()->with('not-found', ['code' => $code]);
+            return redirect()->route('receptionist.let-in.index-page')->with('not-found', ['code' => $code]);
         }
 
         if (!$ticket->isMonthly() && !$ticket->enterances->isEmpty()) {
             $enterance_date = CarbonImmutable::create($ticket->enterances->first()->enter);
 
-            return Redirect::to('let-in')
+            return redirect()->route('receptionist.let-in.index-page')
                 ->with('used-ticket', ['ticket' => $code, 'used' => $enterance_date->format('Y. m. d. H:i')]);
         }
 
         $user = $ticket->user;
         if ($user->enterances->where('exit', null)->count() > 0) {
-            return Redirect::back()->with('error', ['code' => $code, 'user' => $user->name]);
+            return redirect()->route('receptionist.let-in.index-page')->with('error', ['code' => $code, 'user' => $user->name]);
         }
 
         if ($ticket->buyable_ticket->gym_id != Gym::find(session('gym'))->id) {
-            return Redirect::back()->with('not-this-gym', ['code' => $code]);
+            return redirect()->route('receptionist.let-in.index-page')->with('not-this-gym', ['code' => $code]);
+        }
+
+        $still_entered_enterances = Enterance::all()->where('ticket_id', $ticket->id)->filter(function ($enterance) {
+            return $enterance->exit == null;
+        })->values();
+
+        if (!$still_entered_enterances->isEmpty()) {
+            return redirect()->route('receptionist.let-in.index-page')->with('still-in', ['code' => $code]);
         }
 
         return redirect()->route('receptionist.let-in.page', $code);
@@ -81,24 +86,27 @@ class ReceptionistController extends Controller
         $ticket = Ticket::all()->where('code', $code)->first();
 
         if ($ticket == null) {
-            return view('receptionist.let-in');
+            return redirect()->route('receptionist.let-in.index-page');
         }
 
         if (!$ticket->isMonthly() && !$ticket->enterances->isEmpty()) {
-            return view('receptionist.let-in');
+            return redirect()->route('receptionist.let-in.index-page');
         }
 
         $still_entered_enterances = Enterance::all()->where('ticket_id', $ticket->id)->filter(function ($enterance) {
-            return $enterance->exit != null;
+            return $enterance->exit == null;
         })->values();
 
         if (!$still_entered_enterances->isEmpty()) {
-            return view('receptionist.let-in');
+            return redirect()->route('receptionist.let-in.index-page')->with('still-in', ['code' => $code]);
         }
 
         $user = $ticket->user;
 
-        $gym = Gym::all()->where('id', $ticket->buyable_ticket->gym_id)->first();
+        $gym = Gym::find($ticket->buyable_ticket->gym_id);
+
+        error_log(json_encode($ticket->buyable_ticket));
+        error_log($gym);
 
         $lockers = Locker::all()->where('gym_id', $gym->id)->where('gender', $ticket->user->gender)->filter(function ($locker) {
             return !$locker->is_used();
@@ -121,7 +129,7 @@ class ReceptionistController extends Controller
         }
 
         $still_entered_enterances = Enterance::all()->where('ticket_id', $ticket->id)->filter(function ($enterance) {
-            return $enterance->exit != null;
+            return $enterance->exit == null;
         })->values();
 
         if (!$still_entered_enterances->isEmpty()) {
@@ -285,6 +293,10 @@ class ReceptionistController extends Controller
 
     public function add_credits_index()
     {
+        if (!Gate::allows('receptionist-action')) {
+            abort(403);
+        }
+
         $gym = Gym::find(session('gym'));
 
         return view('receptionist.add-credits', ['gym' => $gym]);
@@ -296,11 +308,13 @@ class ReceptionistController extends Controller
             abort(403);
         }
 
+        // error_log(json_encode(User::where('permission', 'user')->pluck('name')));
+
         $request->validate(
             [
                 'name' => [
                     'required',
-                    'in:' . User::all()->pluck('name'),
+                    Rule::in(User::where('permission', 'user')->pluck('name')),
                 ],
                 'amount' => [
                     'required',
@@ -319,45 +333,5 @@ class ReceptionistController extends Controller
         $user->save();
 
         return Redirect::to('add-credits')->with('success', ['name' => $user->name, 'amount' => $request['amount']]);
-    }
-
-    public function sensitive_settings(Request $request)
-    {
-        if (!Gate::allows('receptionist-action')) {
-            abort(403);
-        }
-
-        $user = User::all()->where('id', Auth::user()->id)->first();
-
-        $request->validate(
-            [
-                'email' => [
-                    'nullable',
-                    'email',
-                    Rule::unique('users', 'email')->ignore($user->id),
-                ],
-                'password' => [
-                    'nullable',
-                    'min:8',
-                    'max:32',
-                    'confirmed',
-                ],
-                'current_password' => [
-                    'required',
-                    'current_password',
-                ],
-            ]
-        );
-
-        if ($request['email'] != null) {
-            $user->email = $request['email'];
-        }
-        if ($request['password'] != null) {
-            $user->password = Hash::make($request['password']);
-        }
-
-        $user->save();
-
-        return redirect()->route('sensitive-settings')->with('success', 'success');
     }
 }

@@ -9,7 +9,6 @@
         <form method="POST">
           @csrf
           <div class="card">
-            <img src="img/gmaps.png" class="card-img-top" alt="" />
             <div class="card-body">
               <h5 class="card-title mb-2">{{ $gym->name }}</h5>
               <h6 class="card-subtitle mb-2 text-muted">{{ $gym->address }}</h6>

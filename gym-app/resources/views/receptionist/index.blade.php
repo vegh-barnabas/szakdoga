@@ -108,7 +108,7 @@
         <div class="card-body">
           <p class="card-text">
           <h1>Belépett vendégek: <b class="text-success">{{ $enterances->count() }}</b></h1>
-          <p class="card-text">
+          <h2>Legutóbb belépett 5 vendég:</h2>
           <div class="table-responsive">
             <table class="table table-hover">
               <thead>

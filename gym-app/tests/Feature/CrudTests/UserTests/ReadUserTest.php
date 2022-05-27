@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Gym;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase as TestingRefreshDatabase;
 use Tests\TestCase;
@@ -10,12 +11,15 @@ class ReadUserTest extends TestCase
 {
     use TestingRefreshDatabase;
 
-    public function test_admin_can_access_user_routes()
+    public function test_admin_cant_access_user_routes()
     {
         // Create Admin
         $admin = User::factory()->create([
             'permission' => 'admin',
         ]);
+
+        // Create Gym
+        Gym::factory()->create();
 
         $response = $this->actingAs($admin)->get('users/');
         $response->assertStatus(200);
@@ -30,7 +34,7 @@ class ReadUserTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_receptionist_can_access_user_routes()
+    public function test_receptionist_cant_access_user_routes()
     {
         // Create Admin
         $receptionist = User::factory()->create([

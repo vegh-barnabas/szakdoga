@@ -19,8 +19,6 @@ return new class extends Migration
             $table->string('name', 22)->unique();
             $table->enum('style', Category::styles);
             $table->timestamps();
-
-            $table->softDeletes();
         });
     }
 

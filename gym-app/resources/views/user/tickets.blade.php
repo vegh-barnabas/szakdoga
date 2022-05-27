@@ -2,6 +2,15 @@
 @section('title', 'Jegyek és bérletek listája')
 
 @section('content')
+  @if (Session::has('error-not-enough-credits'))
+    <p>
+    <div class="alert alert-danger" role="alert">
+      Nincs elég kredited a(z) <strong>{{ Session::get('error-not-enough-credits.ticket-name') }}</strong> nevű bérleted
+      meghosszabbításához!
+    </div>
+    </p>
+  @endif
+
   <h2>Jegyek, bérletek</h2>
   <p>Ezen az oldalon tudod megnézni az összes jegyed és bérleted.</p>
   <div class="row">

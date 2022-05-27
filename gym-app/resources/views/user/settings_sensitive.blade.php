@@ -28,7 +28,7 @@
     </div>
     <div class="card-body">
       <div class="card-text">
-        <form action={{ route('guest.sensitive-settings') }} method="POST">
+        <form action={{ route('sensitive-settings') }} method="POST">
           @csrf
           @method('patch')
           <div class="mb-3">
@@ -58,7 +58,7 @@
           <div class="mb-3">
             <div class="row g-3 align-items-center">
               <div class="col-2">
-                <label for="password_confirmation" class="col-form-label">Új jelszó mégegyszer</label>
+                <label for="password_confirmation" class="col-form-label">Új jelszó újra</label>
               </div>
               <div class="col-auto">
                 <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" />

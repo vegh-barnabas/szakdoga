@@ -5,14 +5,14 @@
   @if (Session::has('delete'))
     <p>
     <div class="alert alert-danger" role="alert">
-      Sikeresen törölted a(z) <strong>{{ Session::get('delete') }}</strong> jegyet!
+      Sikeresen törölted a(z) <strong>{{ Session::get('delete') }}</strong> bérletet!
     </div>
     </p>
   @endif
   @if (Session::has('edit'))
     <p>
     <div class="alert alert-success" role="alert">
-      Sikeresen szerkesztetted a(z) <strong>{{ Session::get('edit') }}</strong> jegyet!
+      Sikeresen szerkesztetted a(z) <strong>{{ Session::get('edit') }}</strong> bérletet!
     </div>
     </p>
   @endif

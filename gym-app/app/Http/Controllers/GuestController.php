@@ -12,7 +12,6 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 
@@ -66,7 +65,7 @@ class GuestController extends Controller
     public function tickets()
     {
         if (Gate::allows('admin-action') || Gate::allows('receptionist-action')) {
-            return redirect()->route('index');
+            abort(403);
         }
 
         if (session('gym') == null) {
@@ -100,8 +99,12 @@ class GuestController extends Controller
 
     public function buy_ticket_list()
     {
-        if (Gate::allows('admin-action') || Gate::allows('receptionist-action')) {
-            return redirect()->route('index');
+        if (Gate::allows('admin-action')) {
+            abort(403);
+        }
+
+        if (Gate::allows('receptionist-action')) {
+            abort(403);
         }
 
         $gym = Gym::find(session('gym'));
@@ -114,7 +117,7 @@ class GuestController extends Controller
     public function buy_ticket_show($buyable_ticket_id)
     {
         if (Gate::allows('admin-action') || Gate::allows('receptionist-action')) {
-            return redirect()->route('index');
+            abort(403);
         }
 
         if (session('gym') == null) {
@@ -210,6 +213,10 @@ class GuestController extends Controller
             return redirect()->route('index');
         }
 
+        if (Auth::user()->credits < $ticket->buyable_ticket->price) {
+            return redirect()->route('guest.tickets')->with('error-not-enough-credits', ['ticket-name' => $ticket->buyable_ticket->name]);
+        }
+
         $gym = Gym::all()->where('id', $ticket->gym->id)->first();
 
         return view('user.extend_ticket', ['ticket' => $ticket, 'gym' => $gym]);
@@ -236,7 +243,7 @@ class GuestController extends Controller
         }
 
         if (Auth::user()->credits < $ticket->buyable_ticket->price) {
-            return redirect()->route('tickets');
+            abort(403);
         }
 
         $expiration = Carbon::now();
@@ -255,7 +262,7 @@ class GuestController extends Controller
     public function statistics()
     {
         if (Gate::allows('admin-action') || Gate::allows('receptionist-action')) {
-            return redirect()->route('index');
+            abort(403);
         }
 
         $gym = Gym::find(session('gym'));
@@ -354,46 +361,5 @@ class GuestController extends Controller
         $user->save();
 
         return redirect()->route('settings')->with('success', 'success');
-    }
-
-    public function sensitive_settings(Request $request)
-    {
-        if (Gate::allows('admin-action')() || Gate::allows('receptionist-action')()) {
-            abort(403);
-        }
-
-        $user = User::all()->where('id', Auth::user()->id)->first();
-        error_log(json_encode($user));
-
-        $validated = $request->validate(
-            [
-                'email' => [
-                    'nullable',
-                    'email',
-                    Rule::unique('users', 'email')->ignore($user->id),
-                ],
-                'password' => [
-                    'nullable',
-                    'min:8',
-                    'max:32',
-                    'confirmed',
-                ],
-                'current_password' => [
-                    'required',
-                    'current_password',
-                ],
-            ]
-        );
-
-        if ($request['email'] != null) {
-            $user->email = $request['email'];
-        }
-        if ($request['password'] != null) {
-            $user->password = Hash::make($request['password']);
-        }
-
-        $user->save();
-
-        return redirect()->route('sensitive-settings')->with('success', 'success');
     }
 }

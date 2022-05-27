@@ -244,7 +244,7 @@ class DatabaseSeeder extends Seeder
                 $random_exit_date = CarbonImmutable::Create($random_enterance_date)->add(rand(1, 4), 'hour')->add(rand(11, 55), 'minute');
 
                 $unused_lockers = Locker::all()->where('gym_id', $random_ticket->gym->id)->filter(function ($locker) {
-                    return $locker->get_user() == null;
+                    return !$locker->is_used();
                 })->values();
 
                 $enterance = Enterance::factory()->create([

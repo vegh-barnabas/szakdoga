@@ -183,9 +183,16 @@ class BuyableTicketController extends Controller
             abort(403);
         }
 
+        $status = "";
+        if ($ticket->hidden) {
+            $status = "megjelenítetted";
+        } else {
+            $status = "elrejtetted";
+        }
+
         $ticket->hidden = !$ticket->hidden;
         $ticket->save();
 
-        return redirect()->route('buyable-tickets.index')->with('hide', $ticket->name);
+        return redirect()->route('buyable-tickets.index')->with('hide', ['name' => $ticket->name, 'status' => $status]);
     }
 }

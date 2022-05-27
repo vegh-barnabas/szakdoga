@@ -2,14 +2,7 @@
 @section('title', 'Kreditek feltöltése')
 
 @section('content')
-  @if (Session::has('error'))
-    <p>
-    <div class="alert alert-danger" role="alert">
-      A(z) <strong>{{ Session::get('error.code') }}</strong> kódú jeggyel rendelkező felhasználó
-      (<strong>{{ Session::get('error.user') }}</strong>) már be van lépve!
-    </div>
-    </p>
-  @elseif(Session::has('success'))
+  @if (Session::has('success'))
     <p>
     <div class="alert alert-success" role="alert">
       Sikeresen feltöltöttél <strong>{{ Session::get('success.amount') }}</strong> összeget

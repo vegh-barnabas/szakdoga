@@ -3,10 +3,20 @@
 
 @section('content')
 
+  @if ($errors->any())
+    <div class="alert alert-danger">
+      <ul>
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
+
   <h2 class="mb-3">Szekrény törlése</h2>
   <div class="card">
     <div class="card-header">
-      <h5 class="card-title">{{ $locker->number }} ({{ $locker->id }})</h5>
+      <h5 class="card-title">{{ $locker->number }} számú szekrény ({{ $locker->id }})</h5>
     </div>
     <div class="card-body">
       <div class="card-text">

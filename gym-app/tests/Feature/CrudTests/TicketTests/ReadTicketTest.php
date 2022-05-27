@@ -42,15 +42,26 @@ class ReadTicketTest extends TestCase
             'buyable_ticket_id' => $buyable_ticket->id,
             'type' => $buyable_ticket->type,
         ]);
+        $response = $this->actingAs($admin)->get('tickets/edit-ticket/' . $ticket->id);
+        $response->assertStatus(200);
+
+        $buyable_ticket = BuyableTicket::factory()->create([
+            'gym_id' => $gym->id,
+            'type' => 'monthly',
+        ]);
+        $ticket = Ticket::factory()->create([
+            'user_id' => $guest->id,
+            'gym_id' => $gym->id,
+            'buyable_ticket_id' => $buyable_ticket->id,
+            'type' => $buyable_ticket->type,
+        ]);
 
         $response = $this->actingAs($admin)->get('tickets/edit-monthly/' . $ticket->id);
         $response->assertStatus(200);
 
-        $response = $this->actingAs($admin)->get('tickets/edit-ticket/' . $ticket->id);
-        $response->assertStatus(200);
     }
 
-    public function test_receptionist_can_access_user_routes()
+    public function test_receptionist_cant_access_ticket_routes()
     {
         // Create Admin
         $receptionist = User::factory()->create([
@@ -70,7 +81,7 @@ class ReadTicketTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_guest_can_access_user_routes()
+    public function test_guest_cant_access_ticket_routes()
     {
         // Create Admin
         $guest = User::factory()->create([

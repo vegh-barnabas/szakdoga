@@ -37,14 +37,6 @@ class Locker extends Model
 
     public function get_user()
     {
-        if ($this->enterance == null) {
-            return false;
-        }
-
-        if ($this->enterance->exit != null) {
-            return $this->enterance->user();
-        }
-
-        return null;
+        return $this->enterance->user();
     }
 }

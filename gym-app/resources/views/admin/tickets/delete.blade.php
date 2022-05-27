@@ -2,7 +2,7 @@
 @section('title', 'Jegy törlése')
 
 @section('content')
-  <h2 class="mb-3">Jegy törlése</h2>
+  <h2 class="mb-3">{{ $ticket->isMonthly() ? 'Bérlet' : 'Jegy' }} törlése</h2>
   <div class="card">
     <div class="card-header">
       <h5 class="card-title">{{ $ticket->buyable_ticket->name }} ({{ $ticket->id }}) - {{ $ticket->user->name }}

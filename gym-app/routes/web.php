@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\BuyableTicketController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\GuestController;
@@ -12,11 +14,14 @@ use App\Models\Enterance;
 use App\Models\Gym;
 use App\Models\Ticket;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\Rule;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +34,12 @@ use Illuminate\Support\Facades\Session;
 |
  */
 
-Auth::routes();
+/* The used auth routes */
+Route::get('login', [LoginController::class, 'showLoginForm']);
+Route::post('login', [LoginController::class, 'login']);
+Route::post('logout', [LoginController::class, 'logout']);
+Route::get('register', [RegisterController::class, 'showRegistrationForm']);
+Route::post('register', [RegisterController::class, 'register']);
 
 /* Admin routes */
 Route::get('/categories/{id}/delete', [CategoryController::class, 'delete'])->name('categories.delete')->middleware('auth');
@@ -37,7 +47,7 @@ Route::resource('categories', CategoryController::class)->middleware('auth');
 
 Route::get('/buyable-tickets/{id}/hide', [BuyableTicketController::class, 'hide_form'])->name('buyable-tickets.hide.index')->middleware('auth');
 Route::patch('/buyable-tickets/{id}/hide', [BuyableTicketController::class, 'hide'])->name('buyable-tickets.hide')->middleware('auth');
-Route::resource('buyable-tickets', BuyableTicketController::class)->middleware('auth');
+Route::resource('buyable-tickets', BuyableTicketController::class, ['only' => ['index', 'create', 'store', 'edit', 'update']])->middleware('auth');
 
 Route::get('/gyms/{id}/delete', [GymController::class, 'delete'])->name('gyms.delete')->middleware('auth');
 Route::resource('gyms', GymController::class)->middleware('auth');
@@ -48,9 +58,9 @@ Route::get('/tickets/edit-ticket/{id}', [TicketController::class, 'edit_ticket']
 Route::patch('/tickets/edit-ticket/{id}', [TicketController::class, 'update_ticket'])->name('ticket.edit')->middleware('auth');
 Route::get('/tickets/edit-monthly/{id}', [TicketController::class, 'edit_monthly'])->name('monthly-ticket.edit.index')->middleware('auth');
 Route::patch('/tickets/edit-monthly/{id}', [TicketController::class, 'update_monthly'])->name('monthly-ticket.edit')->middleware('auth');
-Route::resource('tickets', TicketController::class)->middleware('auth');
+Route::resource('tickets', TicketController::class, ['only' => ['destroy']])->middleware('auth');
 
-Route::resource('users', UserController::class)->middleware('auth');
+Route::resource('users', UserController::class, ['only' => ['index', 'edit', 'update']])->middleware('auth');
 
 Route::get('/lockers/{id}/delete', [LockerController::class, 'delete'])->name('lockers.delete')->middleware('auth');
 Route::resource('lockers', LockerController::class)->middleware('auth');
@@ -70,7 +80,6 @@ Route::patch('/extend-ticket/{id}', [GuestController::class, 'extend_ticket'])->
 Route::get('/statistics', [GuestController::class, 'statistics'])->name('guest.statistics')->middleware('auth');
 
 Route::patch('/settings', [GuestController::class, 'settings'])->name('guest.settings')->middleware('auth');
-Route::patch('/settings/sensitive', [GuestController::class, 'sensitive_settings'])->name('guest.sensitive-settings')->middleware('auth');
 
 /* Receptionist routes */
 Route::get('/entered-users', [ReceptionistController::class, 'entered_users'])->name('receptionist.entered-users')->middleware('auth');
@@ -88,8 +97,6 @@ Route::post('/let-out/{id}', [ReceptionistController::class, 'let_out'])->name('
 Route::get('/add-credits', [ReceptionistController::class, 'add_credits_index'])->name('receptionist.add-credits.index')->middleware('auth');
 Route::post('/add-credits', [ReceptionistController::class, 'add_credits'])->name('receptionist.add-credits')->middleware('auth');
 
-Route::patch('/settings/sensitive', [ReceptionistController::class, 'sensitive_settings'])->name('receptionist.sensitive-settings')->middleware('auth');
-
 /* Mutual Routes */
 // Home - User & Receptionist
 Route::get('/home', function () {
@@ -102,7 +109,7 @@ Route::get('/home', function () {
         }
 
         $gym = Gym::find(session('gym'));
-        $enterances = Enterance::all()->where('gym_id', $gym->id)->where('exit', null);
+        $enterances = Enterance::all()->where('gym_id', $gym->id)->where('exit', null)->sortByDesc('enter')->take(5);
 
         $tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
             return !$ticket->isMonthly();
@@ -124,7 +131,7 @@ Route::get('/home', function () {
 
         $active_enterances = Enterance::all()->filter(function ($enterance) {
             return !$enterance->exited();
-        });
+        })->sortByDesc('enter')->take(5);
 
         return view('admin.index', ['gym_name' => $gym_name, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'active_enterances' => $active_enterances]);
     } else {
@@ -183,17 +190,6 @@ Route::get('/settings', function () {
 
 })->name('settings')->middleware('auth');
 
-Route::get('/settings/sensitive', function () {
-    if (Gate::allows('receptionist-action')) {
-        return view('receptionist.settings_sensitive');
-    } else if (Gate::allows('admin-action')) {
-        abort(403);
-    } else {
-        return view('user.settings_sensitive');
-    }
-
-})->name('sensitive-settings')->middleware('auth');
-
 // Purchased monthly tickets - Receptionist & Admin
 Route::get('/purchased-monthly', function () {
     if (Gate::allows('receptionist-action')) {
@@ -212,7 +208,7 @@ Route::get('/purchased-monthly', function () {
         $gym_name = Gym::all()->pluck('name')->implode(', ');
 
         $purchased_tickets = Ticket::where('type', 'monthly')
-            ->orderBy('bought', 'desc')
+            ->orderBy('expiration', 'desc')
             ->simplePaginate(8);
 
         return view('admin.tickets.index-monthly', ['tickets' => $purchased_tickets, 'gym_name' => $gym_name]);
@@ -226,7 +222,8 @@ Route::get('/purchased-tickets', function () {
     if (Gate::allows('receptionist-action')) {
         $gym = Gym::find(session('gym'));
 
-        $purchased_tickets = Ticket::where('type', 'monthly')
+        $purchased_tickets = Ticket::where('gym_id', $gym->id)
+            ->where('type', 'one-time')
             ->orderBy('bought', 'desc')
             ->simplePaginate(8);
 
@@ -243,3 +240,55 @@ Route::get('/purchased-tickets', function () {
         abort(403);
     }
 })->name('purchased-tickets')->middleware('auth');
+
+// Sensitive settings - Receptionist & User
+Route::get('/settings/sensitive', function () {
+    if (Gate::allows('receptionist-action')) {
+        return view('receptionist.settings_sensitive');
+    } else if (Gate::allows('admin-action')) {
+        abort(403);
+    } else {
+        return view('user.settings_sensitive');
+    }
+
+})->name('sensitive-settings')->middleware('auth');
+
+Route::patch('/settings/sensitive', function (Request $request) {
+    if (Gate::allows('admin-action')) {
+        abort(403);
+    } else {
+        $user = User::all()->where('id', Auth::user()->id)->first();
+
+        $request->validate(
+            [
+                'email' => [
+                    'nullable',
+                    'email',
+                    Rule::unique('users', 'email')->ignore($user->id),
+                ],
+                'password' => [
+                    'nullable',
+                    'min:8',
+                    'max:32',
+                    'confirmed',
+                ],
+                'current_password' => [
+                    'required',
+                    'current_password',
+                ],
+            ]
+        );
+
+        if ($request['email'] != null) {
+            $user->email = $request['email'];
+        }
+        if ($request['password'] != null) {
+            $user->password = Hash::make($request['password']);
+        }
+
+        $user->save();
+
+        return redirect()->route('sensitive-settings')->with('success', 'success');
+    }
+
+})->name('sensitive-settings')->middleware('auth');
