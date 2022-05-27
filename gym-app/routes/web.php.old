@@ -381,12 +381,12 @@ Route::post('/let-in', function (Request $request) {
     $ticket = Ticket::all()->where('code', $code)->first();
 
     if ($ticket == null) {
-        return Redirect::back()->with('doesnt_exist', ['code' => $code]);
+        return redirect()->back()->with('doesnt_exist', ['code' => $code]);
     }
 
     $user = $ticket->user;
     if ($user->enterances->where('exit', null)->count() > 0) {
-        return Redirect::back()->with('error', ['code' => $code, 'user' => $user->name]);
+        return redirect()->back()->with('error', ['code' => $code, 'user' => $user->name]);
     }
 
     return redirect()->route('let-in-2', $code);
@@ -442,7 +442,7 @@ Route::post('/let-in/{code}', function (Request $request, $code) {
         'exit' => null,
     ]);
 
-    return Redirect::to('let-in')->with('success', $user->name);
+    return redirect()->to('let-in')->with('success', $user->name);
 })->name('let-in-2')->middleware('auth');
 
 // Let-out index page
@@ -473,10 +473,10 @@ Route::post('/let-out', function (Request $request) {
     $user = User::all()->where('exit_code', $exit_code)->first();
 
     if ($user == null) {
-        return Redirect::back()->with('error-not-found', $exit_code);
+        return redirect()->back()->with('error-not-found', $exit_code);
     }
     if ($user->enterances->where('exit', null)->count() == 0) {
-        return Redirect::back()->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
+        return redirect()->back()->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
     } // TODO: rename this exit code
 
     return redirect()->route('let-out-2', $user->exit_code);
@@ -490,12 +490,12 @@ Route::get('/let-out/{code}', function ($code) {
 
     $user = User::all()->where('exit_code', $code)->first(); // TODO: is $code safe to use?
     if ($user == null) {
-        return Redirect::to('let-out')->with('error-not-found', $code);
+        return redirect()->to('let-out')->with('error-not-found', $code);
     }
 
     $enterance = $user->enterances->where('exit', null)->first();
     if ($enterance == null) {
-        return Redirect::to('let-out')->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
+        return redirect()->to('let-out')->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
     } // TODO: rename this exit code from 'error'
 
     return view('receptionist.let-out-2', ['user' => $user, 'enterance' => $enterance]);
@@ -529,7 +529,7 @@ Route::post('/let-out/{code}', function (Request $request, $code) {
     $enterance->exit = $date_now;
     $enterance->save();
 
-    return Redirect::to('let-out')->with('success', $user->name);
+    return redirect()->to('let-out')->with('success', $user->name);
 })->name('let-out-2')->middleware('auth');
 
 // Let-out index page
@@ -639,7 +639,7 @@ Route::get('/users/edit/{id}', function ($id) {
     }
 
     if (Gym::all()->count() == 0) {
-        return Redirect::to('users')->with('no-gym-error', 0);
+        return redirect()->to('users')->with('no-gym-error', 0);
     }
 
     $user = User::all()->where('id', $id)->first();
@@ -659,7 +659,7 @@ Route::post('/users/edit/{id}', function ($id, Request $request) {
     }
 
     if (Gym::all()->count() == 0) {
-        return Redirect::to('users')->with('no-gym-error');
+        return redirect()->to('users')->with('no-gym-error');
     }
 
     $user = User::all()->where('id', $id)->first();
@@ -690,7 +690,7 @@ Route::post('/users/edit/{id}', function ($id, Request $request) {
 
     $user->update($validated);
 
-    return Redirect::back()->with('success', $user->name);
+    return redirect()->back()->with('success', $user->name);
     // return view('admin.edit-user', ['user' => $user]);
 })->name('edit-user')->middleware('auth');
 
@@ -706,7 +706,7 @@ Route::get('/ticket/edit/{id}', function ($id) {
     }
 
     if ($ticket->isMonthly()) {
-        return Redirect::back();
+        return redirect()->back();
     }
 
     return view('admin.edit-purchased-ticket', ['ticket' => $ticket]);
@@ -732,7 +732,7 @@ Route::patch('/ticket/edit/{id}', function (Request $request, $id) {
 
     $ticket->update($validated);
 
-    return Redirect::back()->with('success', $ticket->name);
+    return redirect()->back()->with('success', $ticket->name);
 })->name('edit-purchased-ticket')->middleware('auth');
 
 Route::get('/monthly-ticket/edit/{id}', function ($id) {
@@ -747,7 +747,7 @@ Route::get('/monthly-ticket/edit/{id}', function ($id) {
     }
 
     if (!$ticket->isMonthly()) {
-        return Redirect::back();
+        return redirect()->back();
     }
 
     return view('admin.edit-purchased-ticket', ['ticket' => $ticket]);
@@ -774,7 +774,7 @@ Route::patch('/monthly-ticket/edit/{id}', function (Request $request, $id) {
 
     $ticket->update($validated);
 
-    return Redirect::back()->with('success', $ticket->name);
+    return redirect()->back()->with('success', $ticket->name);
 })->name('edit-purchased-monthly-ticket')->middleware('auth');
 
 Route::get('/ticket/delete/{id}', function ($id) {
@@ -805,7 +805,7 @@ Route::delete('/ticket/delete/{id}', function ($id) {
         return abort(500);
     }
 
-    return Redirect::to('purchased-tickets')->with('deleted', $ticket_name);
+    return redirect()->to('purchased-tickets')->with('deleted', $ticket_name);
 })->name('delete-purchased-ticket')->middleware('auth');
 
 Route::get('/buyable/add', function () {
@@ -838,7 +838,7 @@ Route::post('/buyable/add', function (Request $request) {
 
     BuyableTicket::create($validated);
 
-    return Redirect::back()->with('success', $validated['name']);
+    return redirect()->back()->with('success', $validated['name']);
 })->name('add-buyable-ticket')->middleware('auth'); // TODO: rename this
 
 Route::get('/buyable/edit/{id}', function ($id) {
@@ -882,7 +882,7 @@ Route::patch('/buyable/edit/{id}', function ($id, Request $request) {
 
     $ticket->update($validated);
 
-    return Redirect::back()->with('success', $ticket->name);
+    return redirect()->back()->with('success', $ticket->name);
 })->name('edit-buyable')->middleware('auth');
 
 // Categories
@@ -952,7 +952,7 @@ Route::post('/gym/add', function (Request $request) {
         $category->gyms()->attach($gym->id);
     }
 
-    return Redirect::back()->with('success', $validated['name']);
+    return redirect()->back()->with('success', $validated['name']);
 })->name('add-gym')->middleware('auth');
 
 Route::get('/buyable/hide/{id}', function ($id) {
@@ -985,7 +985,7 @@ Route::patch('/buyable/hide/{id}', function ($id) {
     $ticket->hidden = !$ticket->hidden;
     $ticket->save();
 
-    return Redirect::back()->with('hidden', $ticket->name);
+    return redirect()->back()->with('hidden', $ticket->name);
 })->name('hide-buyable')->middleware('auth');
 
 Route::get('/category/edit/{id}', function ($id) {
@@ -1025,7 +1025,7 @@ Route::patch('/category/edit/{id}', function ($id, Request $request) {
 
     $category->update($validated);
 
-    return Redirect::back()->with('success', $category->name);
+    return redirect()->back()->with('success', $category->name);
 })->name('edit-category')->middleware('auth');
 
 Route::post('/category/add', function (Request $request) {
@@ -1042,7 +1042,7 @@ Route::post('/category/add', function (Request $request) {
 
     $category = Category::create($validated);
 
-    return Redirect::back()->with('success', $category->name);
+    return redirect()->back()->with('success', $category->name);
 })->name('add-category')->middleware('auth');
 
 Route::get('/category/delete/{id}', function ($id) {
@@ -1079,7 +1079,7 @@ Route::delete('/category/delete/{id}', function ($id) {
         return abort(500);
     }
 
-    return Redirect::to('categories')->with('deleted', $category_name);
+    return redirect()->to('categories')->with('deleted', $category_name);
 })->name('delete-category')->middleware('auth');
 
 Route::get('/gym/edit/{id}', function ($id) {
@@ -1125,7 +1125,7 @@ Route::patch('/gym/edit/{id}', function ($id, Request $request) {
     $gym->categories()->detach();
     $gym->categories()->attach($request->categories);
 
-    return Redirect::back()->with('success', $gym->name);
+    return redirect()->back()->with('success', $gym->name);
 })->name('edit-gym')->middleware('auth');
 
 Route::get('/gym/delete/{id}', function ($id) {
@@ -1160,5 +1160,5 @@ Route::delete('/gym/delete/{id}', function ($id) {
         return abort(500);
     }
 
-    return Redirect::to('gyms')->with('deleted', $gym_name);
+    return redirect()->to('gyms')->with('deleted', $gym_name);
 })->name('delete-gym')->middleware('auth');

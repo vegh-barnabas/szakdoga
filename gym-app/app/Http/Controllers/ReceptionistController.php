@@ -176,7 +176,7 @@ class ReceptionistController extends Controller
         $enterance->locker_id = $locker->id;
         $enterance->save();
 
-        return Redirect::to('let-in')->with('success', $user->name);
+        return redirect()->to('let-in')->with('success', $user->name);
     }
 
     public function let_out_index_page()
@@ -208,16 +208,16 @@ class ReceptionistController extends Controller
         $user = User::all()->where('exit_code', $exit_code)->first();
 
         if ($user == null) {
-            return Redirect::back()->with('not-found', $exit_code);
+            return redirect()->to('receptionist.let-out.index')->with('not-found', $exit_code);
         }
         if ($user->enterances->where('exit', null)->count() == 0) {
-            return Redirect::back()->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
+            return redirect()->to('receptionist.let-out.index')->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
         }
 
         $enterance = Enterance::all()->where('user_id', $user->id)->where('exit', null)->first();
 
         if ($enterance->gym_id != Gym::find(session('gym'))->id) {
-            return Redirect::back()->with('not-this-gym', ['code' => $exit_code]);
+            return redirect()->to('receptionist.let-out.index')->with('not-this-gym', ['code' => $exit_code]);
         }
 
         return redirect()->route('receptionist.let-out.page', $user->exit_code);
@@ -231,12 +231,12 @@ class ReceptionistController extends Controller
 
         $user = User::all()->where('exit_code', $code)->first();
         if ($user == null) {
-            return Redirect::to('let-out')->with('error-not-found', $code);
+            return redirect()->to('let-out')->with('error-not-found', $code);
         }
 
         $enterance = $user->enterances->where('exit', null)->first();
         if ($enterance == null) {
-            return Redirect::to('let-out')->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
+            return redirect()->to('let-out')->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
         }
 
         $gym = Gym::all()->where('id', $enterance->gym_id)->first();
@@ -276,7 +276,7 @@ class ReceptionistController extends Controller
         $enterance->locker_id = null;
         $enterance->save();
 
-        return Redirect::to('let-out')->with('success', $user->name);
+        return redirect()->to('let-out')->with('success', $user->name);
     }
 
     public function entered_users()
@@ -332,6 +332,6 @@ class ReceptionistController extends Controller
         $user->credits += $request['amount'];
         $user->save();
 
-        return Redirect::to('add-credits')->with('success', ['name' => $user->name, 'amount' => $request['amount']]);
+        return redirect()->to('add-credits')->with('success', ['name' => $user->name, 'amount' => $request['amount']]);
     }
 }

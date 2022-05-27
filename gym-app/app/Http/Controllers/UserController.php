@@ -66,7 +66,7 @@ class UserController extends Controller
         }
 
         if (Gym::all()->count() == 0) {
-            return Redirect::to('users')->with('no-gym-error', 0);
+            return redirect()->to('users')->with('no-gym-error', 0);
         }
 
         $user = User::all()->where('id', $id)->first();
@@ -94,7 +94,7 @@ class UserController extends Controller
         }
 
         if (Gym::all()->count() == 0) {
-            return Redirect::to('users')->with('no-gym-error');
+            return redirect()->to('users')->with('no-gym-error');
         }
 
         $user = User::all()->where('id', $id)->first();

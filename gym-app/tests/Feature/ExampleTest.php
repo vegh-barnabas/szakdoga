@@ -7,6 +7,13 @@ use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
+    public function test_the_application_returns_the_register_screen()
+    {
+        $response = $this->get('/register');
+
+        $response->assertStatus(200);
+    }
+
     public function test_the_application_returns_the_login_screen()
     {
         $response = $this->get('/login');

@@ -35,22 +35,22 @@ use Illuminate\Validation\Rule;
  */
 
 /* The used auth routes */
-Route::get('login', [LoginController::class, 'showLoginForm']);
-Route::post('login', [LoginController::class, 'login']);
-Route::post('logout', [LoginController::class, 'logout']);
-Route::get('register', [RegisterController::class, 'showRegistrationForm']);
-Route::post('register', [RegisterController::class, 'register']);
+Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('login', [LoginController::class, 'login'])->name('login');
+Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('register', [RegisterController::class, 'register'])->name('register');
 
 /* Admin routes */
 Route::get('/categories/{id}/delete', [CategoryController::class, 'delete'])->name('categories.delete')->middleware('auth');
-Route::resource('categories', CategoryController::class)->middleware('auth');
+Route::resource('categories', CategoryController::class, ['only' => ['index', 'create', 'store', 'edit', 'update', 'destroy']])->middleware('auth');
 
 Route::get('/buyable-tickets/{id}/hide', [BuyableTicketController::class, 'hide_form'])->name('buyable-tickets.hide.index')->middleware('auth');
 Route::patch('/buyable-tickets/{id}/hide', [BuyableTicketController::class, 'hide'])->name('buyable-tickets.hide')->middleware('auth');
 Route::resource('buyable-tickets', BuyableTicketController::class, ['only' => ['index', 'create', 'store', 'edit', 'update']])->middleware('auth');
 
 Route::get('/gyms/{id}/delete', [GymController::class, 'delete'])->name('gyms.delete')->middleware('auth');
-Route::resource('gyms', GymController::class)->middleware('auth');
+Route::resource('gyms', GymController::class, ['only' => ['index', 'create', 'store', 'edit', 'update', 'destroy']])->middleware('auth');
 
 Route::get('/tickets/{id}/delete', [TicketController::class, 'delete'])->name('ticket.delete')->middleware('auth');
 // Route::delete('/tickets/{id}/delete', [TicketController::class, 'destroy'])->name('ticket.destroy')->middleware('auth');
@@ -63,7 +63,7 @@ Route::resource('tickets', TicketController::class, ['only' => ['destroy']])->mi
 Route::resource('users', UserController::class, ['only' => ['index', 'edit', 'update']])->middleware('auth');
 
 Route::get('/lockers/{id}/delete', [LockerController::class, 'delete'])->name('lockers.delete')->middleware('auth');
-Route::resource('lockers', LockerController::class)->middleware('auth');
+Route::resource('lockers', LockerController::class, ['only' => ['index', 'create', 'store', 'edit', 'update', 'destroy']])->middleware('auth');
 
 /* Guest routes */
 Route::get('/', [GuestController::class, 'choose_gym_page'])->name('guest.gyms.list')->middleware('auth');
@@ -79,6 +79,7 @@ Route::patch('/extend-ticket/{id}', [GuestController::class, 'extend_ticket'])->
 
 Route::get('/statistics', [GuestController::class, 'statistics'])->name('guest.statistics')->middleware('auth');
 
+Route::get('/settings', [GuestController::class, 'settings_page'])->name('guest.settings')->middleware('auth');
 Route::patch('/settings', [GuestController::class, 'settings'])->name('guest.settings')->middleware('auth');
 
 /* Receptionist routes */
@@ -105,7 +106,7 @@ Route::get('/home', function () {
     }
     if (Gate::allows('receptionist-action')) {
         if (session('gym') == null) {
-            session(['gym' => Auth::user()->prefered_gym]);
+            // session(['gym' => Auth::user()->prefered_gym]);
         }
 
         $gym = Gym::find(session('gym'));
@@ -173,22 +174,6 @@ Route::get('/home', function () {
         return view('user.index', ['gym' => $gym, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'last_enterance_data' => $last_enterance_data]);
     }
 })->name('index')->middleware('auth');
-
-// Settings - User & Receptionist
-Route::get('/settings', function () {
-    if (Gate::allows('receptionist-action')) {
-        abort(403);
-    } else if (Gate::allows('admin-action')) {
-        abort(403);
-    } else {
-        $gyms = Gym::all();
-        $selected_gym_id = Gym::find(session('gym'))->id;
-        $current_gym = session('gym');
-
-        return view('user.settings', ['gyms' => $gyms, 'selected_gym_id' => $selected_gym_id, 'current_gym' => $current_gym]);
-    }
-
-})->name('settings')->middleware('auth');
 
 // Purchased monthly tickets - Receptionist & Admin
 Route::get('/purchased-monthly', function () {

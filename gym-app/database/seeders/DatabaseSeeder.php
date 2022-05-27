@@ -256,5 +256,61 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+        /* Generate some usable tickets */
+        for ($i = 0; $i < rand(0, 15); $i++) {
+            $random_buyable_ticket = BuyableTicket::all()->random();
+            $random_guest = User::all()->where('permission', 'user')->random();
+
+            $rand_bought = CarbonImmutable::now()
+                ->sub(rand(0, 15), 'days');
+
+            $expiration = $rand_bought->add('30', 'days');
+
+            Ticket::factory()->create([
+                'user_id' => $random_guest->id,
+                'gym_id' => $random_buyable_ticket->gym_id,
+                'buyable_ticket_id' => $random_buyable_ticket->id,
+                'type' => $random_buyable_ticket->type,
+                'bought' => $rand_bought->format('Y-m-d'),
+                'expiration' => $expiration->format('Y-m-d'),
+            ]);
+        }
+
+        /* Random still in enterances */
+        $ticket_count = Ticket::all()
+            ->filter(function ($ticket) {
+                return $ticket->useable();
+            })
+            ->count();
+
+        $tickets = Ticket::all()
+            ->filter(function ($ticket) {
+                return $ticket->useable();
+            })
+            ->random(rand(0, $ticket_count));
+
+        foreach ($tickets as $ticket) {
+            $random_locker = Locker::all()
+                ->where('gym_id', $ticket->gym->id)
+                ->where('gender', $ticket->user->gender)
+                ->random();
+
+            $random_enterance = CarbonImmutable::Now()
+                ->subtract(rand(0, 3), 'hours')
+                ->subtract(rand(0, 59), 'minutes');
+
+            $enterance = Enterance::factory()->create([
+                'gym_id' => $ticket->gym->id,
+                'user_id' => $ticket->user->id,
+                'ticket_id' => $ticket->id,
+                'locker_id' => $random_locker->id,
+                'enter' => $random_enterance,
+                'exit' => null,
+            ]);
+
+            $random_locker->enterance_id = $enterance->id;
+            $random_locker->save();
+        }
     }
 }

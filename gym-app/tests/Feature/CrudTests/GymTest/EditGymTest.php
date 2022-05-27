@@ -142,4 +142,49 @@ class EditGymTest extends TestCase
         $this->assertEquals($gym->address, $edited_gym->address);
         $this->assertEquals($gym->description, $edited_gym->description);
     }
+
+    public function test_receptionist_cant_edit_gym()
+    {
+        // Pick some categories and get the IDs from it
+        $categories = Category::factory(5)->create();
+        $category_ids = $categories->pluck('id');
+
+        // Get the first and last category ID
+        $category_id = Arr::first($category_ids);
+
+        // Create Gym
+        $gym = Gym::factory()->create(
+            [
+                'name' => 'Test Gym',
+                'address' => 'Test street 5.',
+                'description' => 'Test description for the gym',
+            ]
+        );
+
+        $gym->categories()->attach($categories);
+
+        // Create User
+        $receptionist = User::factory()->create([
+            'permission' => 'receptionist',
+            'prefered_gym' => $gym->id,
+        ]);
+
+        // Send request
+        $response = $this->actingAs($receptionist)->patch('/gyms/' . $gym->id, [
+            'name' => 'Valid Gym',
+            'address' => 'Valid street 5.',
+            'description' => 'Totally valid description for the gym',
+            'categories' => [$category_id],
+        ]);
+
+        // Check if response gives back redirect so the response is successful
+        $response->assertStatus(403);
+
+        // Check edited gym data is modified
+        $edited_gym = Gym::all()->first();
+
+        $this->assertEquals($gym->name, $edited_gym->name);
+        $this->assertEquals($gym->address, $edited_gym->address);
+        $this->assertEquals($gym->description, $edited_gym->description);
+    }
 }

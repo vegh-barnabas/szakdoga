@@ -24,17 +24,17 @@ class GuestController extends Controller
         }
 
         if (Gate::allows('receptionist-action')) {
-            session(['gym' => Auth::user()->prefered_gym]);
+            return redirect()->route('index');
         }
 
         if (session('gym') != null) {
             return redirect()->route('index');
         }
 
-        if (Auth::user()->prefered_gym != null) {
-            session(['gym' => Auth::user()->prefered_gym]);
-            return redirect()->route('index');
-        }
+        // if (Auth::user()->prefered_gym != null) {
+        //     session(['gym' => Auth::user()->prefered_gym]);
+        //     return redirect()->route('index');
+        // }
 
         return view('gyms.index', ['gyms' => Gym::all()]);
     }
@@ -332,6 +332,21 @@ class GuestController extends Controller
             ['gym' => $gym, 'hour_avg' => $hours, 'min_avg' => $minutes, 'enterance_count' => $enterance_count]);
     }
 
+    public function settings_page()
+    {
+        if (Gate::allows('receptionist-action')) {
+            abort(403);
+        } else if (Gate::allows('admin-action')) {
+            abort(403);
+        }
+
+        $gyms = Gym::all();
+        $selected_gym_id = Gym::find(session('gym'))->id;
+        $current_gym = session('gym');
+
+        return view('user.settings', ['gyms' => $gyms, 'selected_gym_id' => $selected_gym_id, 'current_gym' => $current_gym]);
+    }
+
     public function settings(Request $request)
     {
         $user = User::all()->where('id', Auth::user()->id)->first();
@@ -360,6 +375,6 @@ class GuestController extends Controller
 
         $user->save();
 
-        return redirect()->route('settings')->with('success', 'success');
+        return redirect()->route('guest.settings')->with('success', 'success');
     }
 }

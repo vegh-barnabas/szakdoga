@@ -68,7 +68,7 @@
                     <b>{{ Auth::user()->credits }}</b></a>
                 </li>
                 <li>
-                  <a class="dropdown-item" href="{{ route('settings') }}">Beállítások</a>
+                  <a class="dropdown-item" href="{{ route('guest.settings') }}">Beállítások</a>
                 </li>
                 <li>
                   <a class="dropdown-item" href="{{ route('sensitive-settings') }}">Szenzitív beállítások</a>

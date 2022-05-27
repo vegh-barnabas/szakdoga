@@ -14,14 +14,14 @@ class GuestTest extends TestCase
 
     public function test_guest_can_access_their_routes()
     {
+        // Create gym for session
+        $gym = Gym::factory()->create();
+
         // Create Guest
         $guest = User::factory()->create([
             'permission' => 'user',
             'credits' => 99999,
         ]);
-
-        // Create gym for session
-        $gym = Gym::factory()->create();
 
         $response = $this->actingAs($guest)->withSession(['gym' => $gym->id])->get('statistics/');
         $response->assertStatus(200);
@@ -48,13 +48,14 @@ class GuestTest extends TestCase
 
     public function test_receptionist_cant_access_guest_routes()
     {
+        // Create gym for session
+        $gym = Gym::factory()->create();
+
         // Create Guest
         $receptionist = User::factory()->create([
             'permission' => 'receptionist',
+            'prefered_gym' => $gym->id,
         ]);
-
-        // Create gym for session
-        $gym = Gym::factory()->create();
 
         $response = $this->actingAs($receptionist)->withSession(['gym' => $gym->id])->get('statistics/');
         $response->assertStatus(403);
@@ -80,13 +81,13 @@ class GuestTest extends TestCase
 
     public function test_admin_cant_access_guest_routes()
     {
+        // Create gym for session
+        $gym = Gym::factory()->create();
+
         // Create Guest
         $admin = User::factory()->create([
             'permission' => 'admin',
         ]);
-
-        // Create gym for session
-        $gym = Gym::factory()->create();
 
         $response = $this->actingAs($admin)->get('statistics/');
         $response->assertStatus(403);

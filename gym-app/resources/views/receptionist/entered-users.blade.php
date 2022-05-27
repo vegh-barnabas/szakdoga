@@ -17,6 +17,7 @@
                 <th>Felhasznált jegy/bérlet típusa</th>
                 <th>Felhasznált jegy/bérlet neve</th>
                 <th>Felhasznált jegy/bérlet kódja</th>
+                <th>Öltözőszekrény száma</th>
                 <th>Belépés időpontja</th>
               </tr>
             </thead>
@@ -29,6 +30,10 @@
                   </td>
                   <td>{{ $enterance->ticket->buyable_ticket->name }}</td>
                   <td>{{ $enterance->ticket->code }}</td>
+                  <td>
+                    {{ $enterance->locker->number }}
+                    ({{ $enterance->locker->gender == 'male' ? 'férfi' : 'női' }} öltöző)
+                  </td>
                   <td>{{ $enterance->enter() }}</td>
                 </tr>
               @endforeach

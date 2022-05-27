@@ -22,7 +22,7 @@ class TicketController extends Controller
         }
 
         if ($ticket->isMonthly()) {
-            return Redirect::back();
+            return redirect()->back();
         }
 
         return view('admin.tickets.edit-ticket', ['ticket' => $ticket]);
@@ -42,7 +42,7 @@ class TicketController extends Controller
         }
 
         if (!$ticket->isMonthly()) {
-            return Redirect::back();
+            return redirect()->back();
         }
 
         return view('admin.tickets.edit-monthly-ticket', ['ticket' => $ticket]);

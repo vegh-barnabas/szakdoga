@@ -115,6 +115,7 @@
                 <tr>
                   <th scope="col">Vendég neve</th>
                   <th scope="col">Felhasznált bérlet/jegy</th>
+                  <th scope="col">Öltözőszekrény száma</th>
                   <th scope="col">Belépés időpontja</th>
                 </tr>
               </thead>
@@ -123,6 +124,10 @@
                   <tr>
                     <td><b>{{ $enterance->user->name }}</b></td>
                     <td>{{ $enterance->ticket->buyable_ticket->name }}</td>
+                    <td>
+                      {{ $enterance->locker->number }}
+                      ({{ $enterance->locker->gender == 'male' ? 'férfi' : 'női' }} öltöző)
+                    </td>
                     <td>{{ $enterance->enter() }}</td>
                   </tr>
                 @endforeach
