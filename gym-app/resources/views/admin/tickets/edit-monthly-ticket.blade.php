@@ -29,7 +29,7 @@
                 <label for="bought" class="col-form-label">Érvényesség kezdete</label>
               </div>
               <div class="col-auto">
-                <input type="date" id="bought" name="bought" value="{{ $ticket->bought }}">
+                <input type="date" id="bought" name="bought" value="{{ old('bought') ?? $ticket->bought }}">
               </div>
             </div>
           </div>
@@ -39,7 +39,8 @@
                 <label for="expiration" class="col-form-label">Érvényesség vége</label>
               </div>
               <div class="col-auto">
-                <input type="date" id="expiration" name="expiration" value="{{ $ticket->expiration }}">
+                <input type="date" id="expiration" name="expiration"
+                  value="{{ old('expiration') ?? $ticket->expiration }}">
               </div>
             </div>
           </div>

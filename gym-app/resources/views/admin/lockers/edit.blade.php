@@ -40,8 +40,12 @@
               </div>
               <div class="col-auto">
                 <select id="gender" name="gender" class="form-select">
-                  <option value="male">férfi</option>
-                  <option value="female">nő</option>
+                  <option value="male"
+                    {{ (old('gender') == 'male' ? 'checked' : $locker->gender == 'male' && !old('gender')) ? 'selected' : '' }}>
+                    férfi</option>
+                  <option value="female"
+                    {{ (old('gender') == 'female' ? 'checked' : $locker->gender == 'female' && !old('gender')) ? 'selected' : '' }}>
+                    nő</option>
                 </select>
               </div>
             </div>

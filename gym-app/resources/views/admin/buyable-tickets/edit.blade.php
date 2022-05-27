@@ -30,7 +30,9 @@
               <div class="col-auto">
                 <select id="gym_id" name="gym_id" class="form-select">
                   @foreach ($gyms as $gym)
-                    <option value="{{ $gym->id }}">{{ $gym->name }}</option>
+                    <option value="{{ $gym->id }}"
+                      {{ (old('gym_id') == $gym->id ? 'selected' : $gym->id == $ticket->gym->id && !old('gym_id')) ? 'selected' : '' }}>
+                      {{ $gym->name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -55,11 +57,11 @@
               <div class="col-auto">
                 <select id="type" name="type" class="form-select">
                   <option value="one-time"
-                    {{ (old('type') == 'one-time' ? 'selected' : !$ticket->isMonthly()) ? 'selected' : '' }}>
+                    {{ (old('type') == 'one-time' ? 'selected' : !$ticket->isMonthly() && !old('type')) ? 'selected' : '' }}>
                     jegy
                   </option>
                   <option value="monthly"
-                    {{ (old('type') == 'monthly' ? 'selected' : $ticket->isMonthly()) ? 'selected' : '' }}>
+                    {{ (old('type') == 'monthly' ? 'selected' : $ticket->isMonthly() && !old('type')) ? 'selected' : '' }}>
                     bérlet
                   </option>
                 </select>

@@ -64,9 +64,12 @@
                 <label for="categories" class="col-form-label">Kategóriák</label>
               </div>
               <div class="col-auto">
+                @php
+                  $checked_categories = old('categories', $gym->categories->pluck('id')->toArray());
+                @endphp
                 @foreach ($categories as $category)
                   <input type="checkbox" id="{{ $category->name }}" name="categories[]" value="{{ $category->id }}"
-                    @if (is_array(old('categories')) && in_array($category->id, old('categories'))) checked @endif>
+                    @if (is_array($checked_categories) && in_array($category->id, $checked_categories)) checked @endif>
 
                   <label for="{{ $category->name }}">
                     <span class="badge rounded-pill bg-{{ $category->style }}">{{ $category->name }}</span>

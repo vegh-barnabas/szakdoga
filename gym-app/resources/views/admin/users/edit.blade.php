@@ -28,7 +28,8 @@
                 <label for="name" class="col-form-label">Név</label>
               </div>
               <div class="col-auto">
-                <input type="text" id="name" name="name" class="form-control" value="{{ $user->name }}" />
+                <input type="text" id="name" name="name" class="form-control"
+                  value="{{ old('name') ?? $user->name }}" />
               </div>
             </div>
           </div>
@@ -38,7 +39,8 @@
                 <label for="email" class="col-form-label">E-mail cím</label>
               </div>
               <div class="col-auto">
-                <input type="text" id="email" name="email" class="form-control" value="{{ $user->email }}" />
+                <input type="text" id="email" name="email" class="form-control"
+                  value="{{ old('email') ?? $user->email }}" />
               </div>
             </div>
           </div>
@@ -49,8 +51,14 @@
               </div>
               <div class="col-auto">
                 <select id="gender" name="gender" class="form-select">
-                  <option value="male" {{ $user->gender == 'male' ? 'selected' : '' }}>férfi</option>
-                  <option value="female" {{ $user->gender == 'female' ? 'selected' : '' }}>nő</option>
+                  <option value="male"
+                    {{ (old('gender') == 'male' ? 'checked' : $user->gender == 'male' && !old('gender')) ? 'selected' : '' }}>
+                    férfi
+                  </option>
+                  <option value="female"
+                    {{ (old('gender') == 'female' ? 'checked' : $user->gender == 'female' && !old('gender')) ? 'selected' : '' }}>
+                    nő
+                  </option>
                 </select>
               </div>
             </div>
@@ -62,8 +70,13 @@
               </div>
               <div class="col-auto">
                 <select id="permission" name="permission" class="form-select">
-                  <option value="user" {{ !$user->is_receptionist() ? 'selected' : '' }}>vendég</option>
-                  <option value="receptionist" {{ $user->is_receptionist() ? 'selected' : '' }}>recepciós</option>
+                  <option value="user"
+                    {{ (old('permission') == 'user' ? 'selected' : !$user->is_receptionist() && !old('permission')) ? 'selected' : '' }}>
+                    vendég</option>
+                  <option value="receptionist"
+                    {{ (old('permission') == 'receptionist' ? 'selected' : $user->is_receptionist() && !old('permission')) ? 'selected' : '' }}>
+                    recepciós
+                  </option>
                 </select>
               </div>
             </div>
@@ -77,7 +90,8 @@
                 <div class="col-auto">
                   <select id="prefered_gym" name="prefered_gym" class="form-select">
                     @foreach ($gyms as $gym)
-                      <option value="{{ $gym->id }}" {{ $user->prefered_gym == $gym->id ? 'selected' : '' }}>
+                      <option value="{{ $gym->id }}"
+                        {{ old('prefered_gym') ?? $user->prefered_gym == $gym->id && !old('prefered-gym') ? 'selected' : '' }}>
                         {{ $gym->name }}
                       </option>
                     @endforeach
@@ -93,7 +107,8 @@
                   <label for="credits" class="col-form-label">Kreditek</label>
                 </div>
                 <div class="col-auto">
-                  <input type="text" id="credits" name="credits" class="form-control" value="{{ $user->credits }}" />
+                  <input type="text" id="credits" name="credits" class="form-control"
+                    value="{{ old('credits') ?? $user->credits }}" />
                 </div>
               </div>
             </div>
@@ -104,7 +119,7 @@
                 </div>
                 <div class="col-auto">
                   <input type="text" id="exit_code" name="exit_code" class="form-control"
-                    value="{{ $user->exit_code }}" />
+                    value="{{ old('exit_code') ?? $user->exit_code }}" />
                 </div>
               </div>
             </div>

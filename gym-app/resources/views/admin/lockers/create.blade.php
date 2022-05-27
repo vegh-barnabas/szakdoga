@@ -40,7 +40,7 @@
                 <label for="number" class="col-form-label">Szám</label>
               </div>
               <div class="col-auto">
-                <input type="number" id="number" name="number" class="form-control" />
+                <input type="number" id="number" name="number" class="form-control" value="{{ old('number') }}" />
               </div>
             </div>
           </div>
@@ -52,8 +52,8 @@
               </div>
               <div class="col-auto">
                 <select id="gender" name="gender" class="form-select">
-                  <option value="male">férfi</option>
-                  <option value="female">nő</option>
+                  <option value="male" {{ old('gender') == 'male' ? 'checked' : '' }}>férfi</option>
+                  <option value="female" {{ old('gender') == 'female' ? 'checked' : '' }}>nő</option>
                 </select>
               </div>
             </div>

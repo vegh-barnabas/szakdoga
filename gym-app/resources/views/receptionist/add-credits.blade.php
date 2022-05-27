@@ -36,7 +36,7 @@
                 <label for="name" class="col-form-label">Vendég neve</label>
               </div>
               <div class="col-auto">
-                <input type="text" id="name" name="name" class="form-control" />
+                <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" />
               </div>
             </div>
           </div>
@@ -46,7 +46,8 @@
                 <label for="amount" class="col-form-label">Feltöltendő kredit</label>
               </div>
               <div class="col-auto">
-                <input type="text" id="amount" name="amount" class="form-control" />
+                <input type="text" min="1" id="amount" name="amount" class="form-control"
+                  value="{{ old('amount') }}" />
               </div>
             </div>
           </div>

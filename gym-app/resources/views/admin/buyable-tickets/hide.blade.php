@@ -20,7 +20,8 @@
               <div class="col-auto">
                 <select id="gym_id" name="gym_id" class="form-select" disabled>
                   @foreach ($gyms as $gym)
-                    <option value="{{ $gym->id }}">{{ $gym->name }}</option>
+                    <option value="{{ $gym->id }}" {{ $ticket->gym_id == $gym->id ? 'selected' : '' }}>
+                      {{ $gym->name }}</option>
                   @endforeach
                 </select>
               </div>

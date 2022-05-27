@@ -28,7 +28,8 @@
                 <label for="name" class="col-form-label">Név</label>
               </div>
               <div class="col-auto">
-                <input type="text" id="name" name="name" class="form-control" value="{{ $category->name }}" />
+                <input type="text" id="name" name="name" class="form-control"
+                  value="{{ old('name') ?? $category->name }}" />
               </div>
             </div>
           </div>
@@ -41,7 +42,8 @@
               <div class="col-auto">
                 <select id="style" name="style" class="form-select">
                   @foreach ($styles as $style)
-                    <option value="{{ $style }}" {{ $category->style == $style ? 'selected' : '' }}>
+                    <option value="{{ $style }}"
+                      {{ (old('style') == $style ? 'selected' : $category->style == $style && !old('style')) ? 'selected' : '' }}>
                       {{ $style }}
                     </option>
                   @endforeach

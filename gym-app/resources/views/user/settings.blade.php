@@ -35,7 +35,8 @@
             <label for="current" class="form-label">Kiválasztott edzőterem</label>
             <select class="form-select" id="current" name="current">
               @foreach ($gyms as $gym)
-                <option value={{ $gym->id }} {{ $current_gym == $gym->id ? 'selected' : '' }}>
+                <option value={{ $gym->id }}
+                  {{ (old('current') == $gym->id ? 'selected' : $current_gym == $gym->id && !old('current')) ? 'selected' : '' }}>
                   {{ $gym->name }}
                 </option>
               @endforeach
@@ -46,7 +47,8 @@
             <select class="form-select" id="prefered" name="prefered">
               <option value="none" {{ Auth::user()->prefered_gym == null ? 'selected' : '' }}>Nincs</option>
               @foreach ($gyms as $gym)
-                <option value={{ $gym->id }} {{ $gym->id == Auth::user()->prefered_gym ? 'selected' : '' }}>
+                <option value={{ $gym->id }}
+                  {{ (old('prefered') == $gym->id ? 'selected' : $gym->id == Auth::user()->prefered_gym && !old('current')) ? 'selected' : '' }}>
                   {{ $gym->name }}
                 </option>
               @endforeach

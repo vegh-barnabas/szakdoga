@@ -26,7 +26,8 @@
               <div class="col-auto">
                 <select id="gym_id" name="gym_id" class="form-select">
                   @foreach ($gyms as $gym)
-                    <option value="{{ $gym->id }}">{{ $gym->name }}</option>
+                    <option value="{{ $gym->id }}" {{ old('gym_id') == $gym->id ? 'selected' : '' }}>
+                      {{ $gym->name }}</option>
                   @endforeach
                 </select>
               </div>
@@ -49,8 +50,8 @@
               </div>
               <div class="col-auto">
                 <select id="type" name="type" class="form-select">
-                  <option value="one-time">jegy</option>
-                  <option value="monthly">bérlet</option>
+                  <option value="one-time" {{ old('type') == 'one-time' ? 'selected' : '' }}>jegy</option>
+                  <option value="monthly" {{ old('type') == 'one-time' ? 'selected' : '' }}>bérlet</option>
                 </select>
               </div>
             </div>

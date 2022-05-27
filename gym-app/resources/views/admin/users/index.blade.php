@@ -40,10 +40,9 @@
               @foreach ($all_users as $user)
                 <tr>
                   @if (!$user->is_admin() && $gym_count > 0)
-                    <form>
-                      <td><a href="{{ route('users.edit', $user->id) }}" class="link-primary">{{ $user->name }}</a>
-                      </td>
-                    </form>
+                    <td>
+                      <a href="{{ route('users.edit', $user->id) }}" class="link-primary">{{ $user->name }}</a>
+                    </td>
                   @else
                     <td>{{ $user->name }}</td>
                   @endif

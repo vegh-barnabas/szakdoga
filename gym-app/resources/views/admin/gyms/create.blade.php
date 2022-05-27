@@ -55,8 +55,12 @@
                 <label for="categories" class="col-form-label">Kategóriák</label>
               </div>
               <div class="col-auto">
+                @php
+                  $checked_categories = old('categories', $post->categories->pluck('id')->toArray());
+                @endphp
                 @foreach ($categories as $category)
-                  <input type="checkbox" id="{{ $category->id }}" name="categories[]" value="{{ $category->id }}">
+                  <input type="checkbox" id="{{ $category->id }}" name="categories[]" value="{{ $category->id }}"
+                    @if (is_array($checked_categories) && in_array($category->id, $checked_categories)) checked @endif>
 
                   <label for="{{ $category->id }}">
                     <span class="badge rounded-pill bg-{{ $category->style }}">{{ $category->name }}</span>
