@@ -54,7 +54,7 @@
             </li>
             <li class="nav-item">
               <a class="nav-link {{ Route::is('buyable-tickets.index') ? 'active' : '' }}"
-                href="{{ route('buyable-tickets.index') }}">Vásárolható
+                href="{{ route('buyable-tickets.index') }}">Megvásárolható
                 jegyek/bérletek</a>
             </li>
             <li class="nav-item">

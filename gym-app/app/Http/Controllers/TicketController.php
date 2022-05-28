@@ -21,7 +21,7 @@ class TicketController extends Controller
             abort(403);
         }
 
-        if ($ticket->isMonthly()) {
+        if ($ticket->is_monthly()) {
             return redirect()->back();
         }
 
@@ -41,7 +41,7 @@ class TicketController extends Controller
             abort(403);
         }
 
-        if (!$ticket->isMonthly()) {
+        if (!$ticket->is_monthly()) {
             return redirect()->back();
         }
 
@@ -69,13 +69,13 @@ class TicketController extends Controller
 
         $ticket = Ticket::all()->where('id', $id)->first();
 
-        if ($ticket->isMonthly()) {
+        if ($ticket->is_monthly()) {
             return abort(403);
         }
 
         $ticket->update($validated);
 
-        return redirect()->route('purchased-tickets')->with('edit', $ticket->name);
+        return redirect()->route('purchased-tickets')->with('edit', $ticket->buyable_ticket->name);
     }
 
     public function update_monthly(Request $request, $id)
@@ -93,13 +93,13 @@ class TicketController extends Controller
 
         $ticket = Ticket::all()->where('id', $id)->first();
 
-        if (!$ticket->isMonthly()) {
+        if (!$ticket->is_monthly()) {
             return abort(403);
         }
 
         $ticket->update($validated);
 
-        return redirect()->route('purchased-monthly')->with('edit', $ticket->name);
+        return redirect()->route('purchased-monthly')->with('edit', $ticket->buyable_ticket->name);
     }
 
     public function delete($id)
@@ -128,7 +128,7 @@ class TicketController extends Controller
         $ticket = Ticket::all()->where('id', $id)->first();
 
         $ticket_name = $ticket->buyable_ticket->name;
-        $ticket_is_monthly = $ticket->isMonthly();
+        $ticket_is_monthly = $ticket->is_monthly();
 
         if ($ticket == null) {
             abort(403);

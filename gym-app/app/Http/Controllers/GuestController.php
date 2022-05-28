@@ -138,7 +138,7 @@ class GuestController extends Controller
             return redirect()->route('guest.buy-ticket')->with('error', 'error-not-enough-credits');
         }
 
-        $ticket_type = $ticket->isMonthly() ? "Bérlet" : "Jegy";
+        $ticket_type = $ticket->is_monthly() ? "Bérlet" : "Jegy";
 
         $gym = Gym::all()->where('id', $ticket->gym_id)->first();
 
@@ -209,7 +209,7 @@ class GuestController extends Controller
             abort(403);
         }
 
-        if (!$ticket->expired() || !$ticket->isMonthly()) {
+        if (!$ticket->expired() || !$ticket->is_monthly()) {
             return redirect()->route('index');
         }
 

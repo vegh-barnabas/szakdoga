@@ -126,7 +126,7 @@ class DatabaseSeeder extends Seeder
         /* Enterances */
         $tickets = Ticket::all();
         foreach ($tickets as $ticket) {
-            if ($ticket->isMonthly()) {
+            if ($ticket->is_monthly()) {
                 for ($i = 0; $i < rand(0, 20); $i++) {
                     Enterance::factory()->create([
                         'user_id' => $ticket->user_id,

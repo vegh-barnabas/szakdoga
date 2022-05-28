@@ -8,15 +8,13 @@
       Sikeresen létrehoztad a(z) <strong>{{ Session::get('create') }}</strong> megvásárolható jegyet!
     </div>
     </p>
-  @endif
-  @if (Session::has('edit'))
+  @elseif (Session::has('edit'))
     <p>
     <div class="alert alert-success" role="alert">
       Sikeresen szerkesztetted a(z) <strong>{{ Session::get('edit') }}</strong> megvásárolható jegyet!
     </div>
     </p>
-  @endif
-  @if (Session::has('hide'))
+  @elseif (Session::has('hide'))
     <p>
     <div class="alert alert-danger" role="alert">
       Sikeresen {{ Session::get('hide.status') }} a(z) <strong>{{ Session::get('hide.name') }}</strong> megvásárolható
@@ -27,9 +25,6 @@
 
   <h2 class="mb-3">Megvásárolható jegyek/bérletek</h2>
   <div class="card">
-    <div class="card-header">
-      <h5 class="card-title">{{ $gym_name }}</h5>
-    </div>
     <div class="card-body">
       <div class="card-text">
         <div class="table-responsive">
@@ -51,7 +46,7 @@
                 <tr>
                   <td>{{ $ticket->gym->name }}</td>
                   <td>{{ $ticket->name }}</td>
-                  @if ($ticket->isMonthly())
+                  @if ($ticket->is_monthly())
                     <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
                   @else
                     <td class="text-success"><b>{{ $ticket->get_type() }}</b></td>
@@ -80,6 +75,12 @@
         </div>
       </div>
 
-      <a href="{{ route('buyable-tickets.create') }}" class="btn btn-primary">Új jegy</a>
+      @if ($button_show)
+        <a href="{{ route('buyable-tickets.create') }}" class="btn btn-primary">Új jegy/bérlet</a>
+      @else
+        <div class="alert alert-warning" role="alert">
+          Új jegy/bérlet létrehozásához hozz létre edzőtermet!
+        </div>
+      @endif
     </div>
   @endsection

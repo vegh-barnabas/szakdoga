@@ -40,19 +40,19 @@ class Ticket extends Model
         return $this->belongsTo(BuyableTicket::class);
     }
 
-    public function isMonthly()
+    public function is_monthly()
     {
-        return $this->buyable_ticket->isMonthly();
+        return $this->buyable_ticket->is_monthly();
     }
 
     public function get_type()
     {
-        return $this->buyable_ticket->isMonthly() ? 'bérlet' : 'jegy';
+        return $this->buyable_ticket->is_monthly() ? 'bérlet' : 'jegy';
     }
 
     public function used()
     {
-        if (!$this->isMonthly() && $this->enterances->count() > 0) {
+        if (!$this->is_monthly() && $this->enterances->count() > 0) {
             return true;
         }
 
@@ -85,7 +85,7 @@ class Ticket extends Model
 
     public function use_date()
     {
-        if ($this->isMonthly()) {
+        if ($this->is_monthly()) {
             return null;
         }
 

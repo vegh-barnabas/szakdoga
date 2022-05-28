@@ -47,11 +47,11 @@
             </li>
             <li class="nav-item">
               <a class="nav-link {{ Route::is('guest.tickets') ? 'active' : '' }}"
-                href="{{ route('guest.tickets') }}">Jegyeim</a>
+                href="{{ route('guest.tickets') }}">Jegyeim, bérleteim</a>
             </li>
             <li class="nav-item">
               <a class="nav-link {{ Route::is('guest.buy-ticket') ? 'active' : '' }}"
-                href="{{ route('guest.buy-ticket') }}">Jegyvásárlás</a>
+                href="{{ route('guest.buy-ticket') }}">Jegy/bérlet vásárlás</a>
             </li>
             <li class="nav-item">
               <a class="nav-link {{ Route::is('guest.statistics') ? 'active' : '' }}"

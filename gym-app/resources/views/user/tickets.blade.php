@@ -40,7 +40,7 @@
                       @if ($ticket->useable())
                         <tr>
                           <td>{{ $ticket->get_type() }}</td>
-                          @if ($ticket->isMonthly())
+                          @if ($ticket->is_monthly())
                             <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
                           @else
                             <td class="text-success"><b>{{ $ticket->get_type() }}</b></td>
@@ -53,7 +53,7 @@
                             <td class="text-success">Aktív</td>
                             <td>
                               <p>
-                                @if ($ticket->isMonthly())
+                                @if ($ticket->is_monthly())
                                   <button class="btn btn-primary" type="submit" data-bs-toggle="collapse"
                                     data-bs-target="{{ '#' . Str::slug($ticket->buyable_ticket->name . $ticket->id) }}"
                                     aria-expanded="false" aria-controls="{{ $ticket->id }}">
@@ -108,11 +108,11 @@
                   </thead>
                   <tbody>
                     @foreach ($tickets as $ticket)
-                      @if ($ticket->isMonthly() && !$ticket->useable())
+                      @if ($ticket->is_monthly() && !$ticket->useable())
                         <tr>
                           <form action="{{ route('guest.extend-ticket.show', $ticket->id) }}" method="GET">
                             <td>{{ $ticket->buyable_ticket->name }}</td>
-                            @if ($ticket->isMonthly())
+                            @if ($ticket->is_monthly())
                               <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
                             @else
                               <td class="text-success"><b>{{ $ticket->get_type() }}</b></td>

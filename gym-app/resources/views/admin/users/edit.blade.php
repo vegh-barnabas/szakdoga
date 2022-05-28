@@ -12,7 +12,7 @@
     </div>
   @endif
 
-  <h2 class="mb-3">Felhasználó szerkesztése</h2>
+  <h2 class="mb-3">{{ $user->is_receptionist() ? 'Vendég' : 'Recepciós' }} szerkesztése</h2>
   <div class="card">
     <div class="card-header">
       <h5 class="card-title">{{ $user->name }} (ID: {{ $user->id }})</h5>

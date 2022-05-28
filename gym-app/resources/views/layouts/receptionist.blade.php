@@ -61,7 +61,7 @@
                     listája</a></li>
                 <li><a class="dropdown-item" href="{{ route('purchased-tickets') }}">Megvásárolt jegyek
                     listája</a></li>
-                <li><a class="dropdown-item" href="{{ route('buyable-tickets.index') }}">Vásárolható
+                <li><a class="dropdown-item" href="{{ route('buyable-tickets.index') }}">Megvásárolható
                     jegyek/bérletek listája</a></li>
                 <li><a class="dropdown-item" href="{{ route('receptionist.entered-users') }}">Belépett
                     vendégek</a>

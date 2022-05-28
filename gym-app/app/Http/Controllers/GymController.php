@@ -7,6 +7,7 @@ use App\Models\Gym;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 
 class GymController extends Controller
 {
@@ -56,20 +57,41 @@ class GymController extends Controller
 
         $validated = $request->validate(
             [
-                'name' => 'required|min:4|max:32|not_in:' . Gym::all()->pluck('name'),
-                'address' => 'required|min:4|max:128',
-                'description' => 'required|min:6|max:128',
-                'categories' => 'nullable',
-                'categories.*' => 'integer|distinct|exists:categories,id',
-            ],
+                'name' => [
+                    'required',
+                    'min:4',
+                    'max:32',
+                    Rule::unique('gyms', 'name'),
+                ],
+                'address' => [
+                    'required',
+                    'min:4',
+                    'max:128',
+                ],
+                'description' => [
+                    'required',
+                    'min:6',
+                    'max:128',
+                ],
+                'categories' => [
+                    'nullable',
+                ],
+                'categories.*' => [
+                    'integer',
+                    'distinct',
+                    Rule::exists('categories', 'id'),
+                ],
+            ]
         );
 
         $gym = Gym::create($validated);
 
-        foreach ($request->categories as $category_id) {
-            $category = Category::all()->where('id', $category_id)->first();
+        if ($request->categories != null) {
+            foreach ($request->categories as $category_id) {
+                $category = Category::all()->where('id', $category_id)->first();
 
-            $category->gyms()->attach($gym->id);
+                $category->gyms()->attach($gym->id);
+            }
         }
 
         return redirect()->route('gyms.index')->with('create', $gym->name);
@@ -119,12 +141,31 @@ class GymController extends Controller
 
         $validated = $request->validate(
             [
-                'name' => 'min:3|max:120',
-                'address' => 'min:3|max:120',
-                'description' => 'max:220',
-                'categories' => 'nullable',
-                'categories.*' => 'integer|distinct|exists:categories,id',
-            ],
+                'name' => [
+                    'required',
+                    'min:4',
+                    'max:32',
+                    Rule::unique('gyms', 'name')->ignore($gym->id),
+                ],
+                'address' => [
+                    'required',
+                    'min:4',
+                    'max:128',
+                ],
+                'description' => [
+                    'required',
+                    'min:6',
+                    'max:128',
+                ],
+                'categories' => [
+                    'nullable',
+                ],
+                'categories.*' => [
+                    'integer',
+                    'distinct',
+                    Rule::exists('categories', 'id'),
+                ],
+            ]
         );
 
         $gym->update($validated);

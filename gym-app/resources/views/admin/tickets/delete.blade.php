@@ -1,12 +1,14 @@
 @extends('layouts.admin')
-@section('title', 'Jegy törlése')
+@section('title', 'Megvásárolt jegy/bérlet törlése')
 
 @section('content')
-  <h2 class="mb-3">{{ $ticket->isMonthly() ? 'Bérlet' : 'Jegy' }} törlése</h2>
+  <h2 class="mb-3">Megvásárolt {{ $ticket->get_type() }} törlése</h2>
   <div class="card">
     <div class="card-header">
-      <h5 class="card-title">{{ $ticket->buyable_ticket->name }} ({{ $ticket->id }}) - {{ $ticket->user->name }}
-        ({{ $ticket->user->id }})</h5>
+      <h5 class="card-title">{{ $ticket->buyable_ticket->name }} {{ $ticket->get_type() }} (ID {{ $ticket->id }})
+        -
+        {{ $ticket->user->name }} vendég
+        (ID {{ $ticket->user->id }})</h5>
     </div>
     <div class="card-body">
       <div class="card-text">

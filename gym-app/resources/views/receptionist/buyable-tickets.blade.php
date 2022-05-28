@@ -25,7 +25,7 @@
               @foreach ($tickets as $ticket)
                 <tr>
                   <td>{{ $ticket->name }}</td>
-                  @if ($ticket->isMonthly())
+                  @if ($ticket->is_monthly())
                     <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
                   @else
                     <td class="text-success"><b>{{ $ticket->get_type() }}</b></td>

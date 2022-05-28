@@ -22,8 +22,6 @@ class UserController extends Controller
             abort(403);
         }
 
-        $gym_name = Gym::all()->pluck('name')->implode(', ');
-
         $admins = User::all()->filter(function ($user) {
             return $user->is_admin();
         })->sortBy('name');
@@ -39,18 +37,9 @@ class UserController extends Controller
         $all_users = $admins->merge($receptionists);
         $all_users = $all_users->merge($users);
 
-        // $tickets = Ticket::with('type')
-        //     ->where('gym_id', $gym->id)
-        //     ->whereIn('id', Auth::user()->tickets)
-        //     ->orderBy('expiration', 'desc')
-        //     ->orderBy('type')
-        //     ->paginate(2);
-
         $all_users = User::orderBy('permission')->orderBy('name')->simplePaginate(15);
 
-        $gym_count = Gym::all()->count();
-
-        return view('admin.users.index', ['all_users' => $all_users, 'gym_name' => $gym_name, 'gym_count' => $gym_count]);
+        return view('admin.users.index', ['all_users' => $all_users]);
     }
 
     /**
@@ -127,7 +116,7 @@ class UserController extends Controller
                 ],
                 'prefered_gym' => [
                     Rule::requiredIf($user->is_receptionist()),
-                    'in:' . Gym::all()->pluck('id')->implode(','),
+                    Rule::exists('gyms', 'id'),
                 ],
             ],
         );

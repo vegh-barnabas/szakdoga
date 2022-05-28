@@ -25,7 +25,7 @@
               @foreach ($enterances as $enterance)
                 <tr>
                   <td>{{ $enterance->user->name }}</td>
-                  <td class="text-{{ $enterance->ticket->isMonthly() ? 'primary' : 'success' }}">
+                  <td class="text-{{ $enterance->ticket->is_monthly() ? 'primary' : 'success' }}">
                     {{ $enterance->ticket->get_type() }}
                   </td>
                   <td>{{ $enterance->ticket->buyable_ticket->name }}</td>

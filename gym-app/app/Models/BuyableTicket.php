@@ -29,13 +29,13 @@ class BuyableTicket extends Model
         return $this->belongsTo(Gym::class);
     }
 
-    public function isMonthly()
+    public function is_monthly()
     {
         return $this->type == 'monthly';
     }
 
     public function get_type()
     {
-        return $this->isMonthly() ? 'bérlet' : 'jegy';
+        return $this->is_monthly() ? 'bérlet' : 'jegy';
     }
 }

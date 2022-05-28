@@ -21,9 +21,14 @@ class LockerController extends Controller
             abort(403);
         }
 
+        $button_show = true;
+        if (Gym::all()->count() == 0) {
+            $button_show = false;
+        }
+
         $lockers = Locker::simplePaginate(12);
 
-        return view('admin.lockers.index', ['lockers' => $lockers]);
+        return view('admin.lockers.index', ['lockers' => $lockers, 'button_show' => $button_show]);
     }
 
     /**
@@ -38,6 +43,10 @@ class LockerController extends Controller
         }
 
         $gyms = Gym::all();
+
+        if ($gyms->count() == 0) {
+            abort(403);
+        }
 
         return view('admin.lockers.create', ['gyms' => $gyms]);
     }
@@ -56,7 +65,10 @@ class LockerController extends Controller
 
         $validated = $request->validate(
             [
-                'gym_id' => 'required|in:' . Gym::all()->pluck('id')->implode(','),
+                'gym_id' => [
+                    'required',
+                    Rule::exists('gyms', 'id'),
+                ],
                 'number' => [
                     'required',
                     'numeric',
@@ -65,8 +77,11 @@ class LockerController extends Controller
                         return $query->where('gym_id', $request->gym_id);
                     }),
                 ],
-                'gender' => 'required|in:male,female',
-            ],
+                'gender' => [
+                    'required',
+                    Rule::in(['male', 'female']),
+                ],
+            ]
         );
 
         $locker = Locker::create($validated);
@@ -86,14 +101,14 @@ class LockerController extends Controller
             abort(403);
         }
 
-        if (Locker::find($id)->is_used()) {
-            abort(403);
-        }
-
         $locker = Locker::find($id);
 
         if ($locker == null) {
-            return redirect()->route('lockers.index')->with('not-found', $id);
+            abort(403);
+        }
+
+        if ($locker->is_used()) {
+            abort(403);
         }
 
         $gyms = Gym::all();
@@ -127,14 +142,18 @@ class LockerController extends Controller
         $validated = $request->validate(
             [
                 'number' => [
+                    'required',
                     'numeric',
                     'min:1',
-                    Rule::unique('lockers')->where(function ($query) use ($request) {
-                        return $query->where('gym_id', $request->gym_id);
+                    Rule::unique('lockers')->where(function ($query) use ($locker) {
+                        return $query->where('gym_id', $locker->gym_id);
                     })->ignore($locker->id),
                 ],
-                'gender' => 'in:male,female',
-            ],
+                'gender' => [
+                    'required',
+                    Rule::in(['male', 'female']),
+                ],
+            ]
         );
 
         $locker->update($validated);

@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Megvásárolható jegy hozzáadása')
+@section('title', 'Megvásárolható jegy/bérlet létrehozása')
 
 @section('content')
   @if ($errors->any())
@@ -12,7 +12,7 @@
     </div>
   @endif
 
-  <h2 class="mb-3">Megvásárolható jegy hozzáadása</h2>
+  <h2 class="mb-3">Megvásárolható jegy/bérlet létrehozása</h2>
   <div class="card">
     <div class="card-body">
       <div class="card-text">
@@ -51,7 +51,7 @@
               <div class="col-auto">
                 <select id="type" name="type" class="form-select">
                   <option value="one-time" {{ old('type') == 'one-time' ? 'selected' : '' }}>jegy</option>
-                  <option value="monthly" {{ old('type') == 'one-time' ? 'selected' : '' }}>bérlet</option>
+                  <option value="monthly" {{ old('type') == 'monthly' ? 'selected' : '' }}>bérlet</option>
                 </select>
               </div>
             </div>

@@ -11,7 +11,6 @@ use App\Models\Ticket;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -23,16 +22,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Remove previous data
-        DB::table('enterances')->truncate();
-        DB::table('tickets')->truncate();
-        DB::table('buyable_tickets')->truncate();
-        DB::table('category_gym')->truncate();
-        DB::table('lockers')->truncate();
-        DB::table('gyms')->truncate();
-        DB::table('categories')->truncate();
-        DB::table('users')->truncate();
-
         /* Gyms */
         Gym::factory()->create([
             'name' => "Sajt utcai edzőterem",
@@ -192,10 +181,10 @@ class DatabaseSeeder extends Seeder
         /* Tickets */
         $users = User::all()->where('permission', 'user');
         $buyable_tickets = BuyableTicket::all()->filter(function ($ticket) {
-            return !$ticket->isMonthly();
+            return !$ticket->is_monthly();
         });
         $buyable_monthly_tickets = BuyableTicket::all()->filter(function ($ticket) {
-            return $ticket->isMonthly();
+            return $ticket->is_monthly();
         });
         foreach ($users as $user) {
             // one-time tickets
@@ -232,7 +221,7 @@ class DatabaseSeeder extends Seeder
 
         foreach ($random_tickets as $random_ticket) {
             $enterances = 1;
-            if ($random_ticket->isMonthly()) {
+            if ($random_ticket->is_monthly()) {
                 $enterances = rand(0, 15);
             }
 
@@ -291,6 +280,10 @@ class DatabaseSeeder extends Seeder
             ->random(rand(0, $ticket_count));
 
         foreach ($tickets as $ticket) {
+            if (Enterance::where('user_id', $ticket->user->id)->where('exit', null)->count() != 0) {
+                break;
+            }
+
             $random_locker = Locker::all()
                 ->where('gym_id', $ticket->gym->id)
                 ->where('gender', $ticket->user->gender)

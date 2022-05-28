@@ -113,10 +113,10 @@ Route::get('/home', function () {
         $enterances = Enterance::all()->where('gym_id', $gym->id)->where('exit', null)->sortByDesc('enter')->take(5);
 
         $tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
-            return !$ticket->isMonthly();
+            return !$ticket->is_monthly();
         })->sortByDesc('bought')->take(5);
         $monthly_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
-            return $ticket->isMonthly();
+            return $ticket->is_monthly();
         })->sortByDesc('bought')->take(5);
 
         return view('receptionist.index', ['enterances' => $enterances, 'tickets' => $tickets, 'monthly_tickets' => $monthly_tickets, 'gym' => $gym]);
@@ -124,10 +124,10 @@ Route::get('/home', function () {
         $gym_name = Gym::all()->pluck('name')->implode(', ');
 
         $tickets = Ticket::all()->filter(function ($ticket) {
-            return !$ticket->isMonthly();
+            return !$ticket->is_monthly();
         })->sortByDesc('bought')->take(5);
         $monthly_tickets = Ticket::all()->filter(function ($ticket) {
-            return $ticket->isMonthly();
+            return $ticket->is_monthly();
         })->sortByDesc('bought')->take(5);
 
         $active_enterances = Enterance::all()->filter(function ($enterance) {
@@ -141,14 +141,14 @@ Route::get('/home', function () {
         $tickets = Auth::user()->tickets
             ->where('gym_id', $gym->id)
             ->filter(function ($ticket) {
-                return !$ticket->isMonthly() && $ticket->useable();
+                return !$ticket->is_monthly() && $ticket->useable();
             })
             ->sortByDesc('expiration');
 
         $monthly_tickets = Auth::user()->tickets
             ->where('gym_id', $gym->id)
             ->filter(function ($ticket) {
-                return $ticket->isMonthly() && $ticket->useable();
+                return $ticket->is_monthly() && $ticket->useable();
             })
             ->sortByDesc('expiration');
 
@@ -180,7 +180,7 @@ Route::get('/purchased-monthly', function () {
     if (Gate::allows('receptionist-action')) {
         $gym = Gym::find(session('gym'));
         // $purchased_tickets = Ticket::all()->where('gym_id', $gym->id)->filter(function ($ticket) {
-        //     return $ticket->isMonthly();
+        //     return $ticket->is_monthly();
         // })->values()->sortByDesc('expiration');
 
         $purchased_tickets = Ticket::where('gym_id', $gym->id)
@@ -190,13 +190,12 @@ Route::get('/purchased-monthly', function () {
 
         return view('receptionist.purchased-monthly', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
     } else if (Gate::allows('admin-action')) {
-        $gym_name = Gym::all()->pluck('name')->implode(', ');
 
         $purchased_tickets = Ticket::where('type', 'monthly')
             ->orderBy('expiration', 'desc')
             ->simplePaginate(8);
 
-        return view('admin.tickets.index-monthly', ['tickets' => $purchased_tickets, 'gym_name' => $gym_name]);
+        return view('admin.tickets.index-monthly', ['tickets' => $purchased_tickets]);
     } else {
         abort(403);
     }
@@ -214,13 +213,11 @@ Route::get('/purchased-tickets', function () {
 
         return view('receptionist.purchased-tickets', ['tickets' => $purchased_tickets, 'gym_name' => $gym->name]);
     } else if (Gate::allows('admin-action')) {
-        $gym_name = Gym::all()->pluck('name')->implode(', ');
-
         $purchased_tickets = Ticket::where('type', 'one-time')
             ->orderBy('bought', 'desc')
             ->simplePaginate(8);
 
-        return view('admin.tickets.index-ticket', ['tickets' => $purchased_tickets, 'gym_name' => $gym_name]);
+        return view('admin.tickets.index-ticket', ['tickets' => $purchased_tickets]);
     } else {
         abort(403);
     }

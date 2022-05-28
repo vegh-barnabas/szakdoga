@@ -67,8 +67,8 @@
             </div>
           </div>
           <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="keyGiven" name="keyGiven" />
-            <label class="form-check-label" for="keyGiven"><b class="text-danger">A lakatot és a kulcsot
+            <input type="checkbox" class="form-check-input" id="key_given" name="key_given" />
+            <label class="form-check-label" for="key_given"><b class="text-danger">A lakatot és a kulcsot
                 visszakaptam</b></label>
           </div>
 

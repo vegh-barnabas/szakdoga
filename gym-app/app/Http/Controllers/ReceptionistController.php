@@ -50,7 +50,7 @@ class ReceptionistController extends Controller
             return redirect()->route('receptionist.let-in.index-page')->with('not-found', ['code' => $code]);
         }
 
-        if (!$ticket->isMonthly() && !$ticket->enterances->isEmpty()) {
+        if (!$ticket->is_monthly() && !$ticket->enterances->isEmpty()) {
             $enterance_date = CarbonImmutable::create($ticket->enterances->first()->enter);
 
             return redirect()->route('receptionist.let-in.index-page')
@@ -89,7 +89,7 @@ class ReceptionistController extends Controller
             return redirect()->route('receptionist.let-in.index-page');
         }
 
-        if (!$ticket->isMonthly() && !$ticket->enterances->isEmpty()) {
+        if (!$ticket->is_monthly() && !$ticket->enterances->isEmpty()) {
             return redirect()->route('receptionist.let-in.index-page');
         }
 
@@ -124,7 +124,7 @@ class ReceptionistController extends Controller
 
         $ticket = Ticket::all()->where('code', $code)->first();
 
-        if (!$ticket->isMonthly() && !$ticket->enterances->isEmpty()) {
+        if (!$ticket->is_monthly() && !$ticket->enterances->isEmpty()) {
             abort(403);
         }
 
@@ -149,9 +149,9 @@ class ReceptionistController extends Controller
             [
                 'locker' => [
                     'required',
-                    'in:' . $free_lockers,
+                    Rule::in($free_lockers),
                 ],
-                'keyGiven' => [
+                'key_given' => [
                     'required',
                     'accepted',
                 ],
@@ -257,7 +257,7 @@ class ReceptionistController extends Controller
 
         $request->validate(
             [
-                'keyGiven' => [
+                'key_given' => [
                     'required',
                     'accepted',
                 ],
@@ -307,8 +307,6 @@ class ReceptionistController extends Controller
         if (!Gate::allows('receptionist-action')) {
             abort(403);
         }
-
-        // error_log(json_encode(User::where('permission', 'user')->pluck('name')));
 
         $request->validate(
             [

@@ -56,7 +56,7 @@ class User extends Authenticatable
         return $this->hasMany(Enterance::class);
     }
 
-    public function getPreferedGymName()
+    public function get_prefered_gym_name()
     {
         if ($this->prefered_gym == null) {
             return "";
@@ -65,7 +65,7 @@ class User extends Authenticatable
         return Gym::all()->where('id', $this->prefered_gym)->first()->name;
     }
 
-    public function getUserType()
+    public function get_user_type()
     {
         if ($this->permission == 'receptionist') {
             return "Recepciós";

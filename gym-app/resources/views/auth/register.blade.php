@@ -4,6 +4,13 @@
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-md-8">
+        @if (Session::has('error-no-gym'))
+          <p>
+          <div class="alert alert-danger" role="alert">
+            Még nincs létrehozott edzőterem, így nem tudod használni az oldalt!
+          </div>
+          </p>
+        @endif
         <div class="card">
           <div class="card-header">{{ __('Regisztráció') }}</div>
 

@@ -5,23 +5,20 @@
   @if (Session::has('delete'))
     <p>
     <div class="alert alert-danger" role="alert">
-      Sikeresen törölted a(z) <strong>{{ Session::get('delete') }}</strong> jegyet!
+      Sikeresen törölted a(z) <strong>{{ Session::get('delete') }}</strong> megvásárolt jegyet!
     </div>
     </p>
   @endif
   @if (Session::has('edit'))
     <p>
     <div class="alert alert-success" role="alert">
-      Sikeresen szerkesztetted a(z) <strong>{{ Session::get('edit') }}</strong> jegyet!
+      Sikeresen szerkesztetted a(z) <strong>{{ Session::get('edit') }}</strong> megvásárolt jegyet!
     </div>
     </p>
   @endif
 
   <h2 class="mb-3">Megvásárolt jegyek</h2>
   <div class="card">
-    <div class="card-header">
-      <h5 class="card-title">{{ $gym_name }}</h5>
-    </div>
     <div class="card-body">
       <div class="card-text">
         <div class="table-responsive">

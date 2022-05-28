@@ -20,9 +20,6 @@
 
   <h2 class="mb-3">Felhasználók listája</h2>
   <div class="card">
-    <div class="card-header">
-      <h5 class="card-title">{{ $gym_name }}</h5>
-    </div>
     <div class="card-body">
       <div class="card-text">
         <div class="table-responsive">
@@ -39,7 +36,7 @@
             <tbody>
               @foreach ($all_users as $user)
                 <tr>
-                  @if (!$user->is_admin() && $gym_count > 0)
+                  @if (!$user->is_admin())
                     <td>
                       <a href="{{ route('users.edit', $user->id) }}" class="link-primary">{{ $user->name }}</a>
                     </td>
@@ -47,9 +44,9 @@
                     <td>{{ $user->name }}</td>
                   @endif
                   <td>{{ $user->id }}</td>
-                  <td>{{ $user->getUserType() }}</td>
-                  <td>{{ $user->getPreferedGymName() }}</td>
-                  <td>{{ $user->getUserType() == 'Vendég' ? $user->credits : '' }}</td>
+                  <td>{{ $user->get_user_type() }}</td>
+                  <td>{{ $user->get_prefered_gym_name() }}</td>
+                  <td>{{ $user->get_user_type() == 'Vendég' ? $user->credits : '' }}</td>
                 </tr>
               @endforeach
             </tbody>

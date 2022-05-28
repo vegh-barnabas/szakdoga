@@ -5,32 +5,22 @@
   @if (Session::has('create'))
     <p>
     <div class="alert alert-success" role="alert">
-      Sikeresen létrehoztad a(z) <strong>{{ Session::get('create') }}</strong> számú öltözőszekrényt!
+      Sikeresen létrehoztad az öltözőszekrényt! (Szám: <strong>{{ Session::get('create') }}</strong>)
     </div>
     </p>
-  @endif
-  @if (Session::has('edit'))
+  @elseif (Session::has('edit'))
     <p>
     <div class="alert alert-success" role="alert">
-      Sikeresen szerkesztetted a(z) <strong>{{ Session::get('edit') }}</strong> számú öltözőszekrényt!
+      Sikeresen szerkesztetted az öltözőszekrényt! (Szám: <strong>{{ Session::get('edit') }}</strong>)
     </div>
     </p>
-  @endif
-  @if (Session::has('delete'))
+  @elseif (Session::has('delete'))
     <p>
     <div class="alert alert-danger" role="alert">
-      Sikeresen törölted a(z) <strong>{{ Session::get('delete') }}</strong> számú öltözőszekrényt!
+      Sikeresen törölted az öltözőszekrényt! (Szám: <strong>{{ Session::get('delete') }}</strong>)
     </div>
     </p>
   @endif
-  @if (Session::has('not-found'))
-    <p>
-    <div class="alert alert-danger" role="alert">
-      Nem található <strong>{{ Session::get('not-found') }}</strong> ID-jú öltözőszekrény!
-    </div>
-    </p>
-  @endif
-
 
   <h2 class="mb-3">Szekrények listája</h2>
   <div class="card">
@@ -40,8 +30,8 @@
           <table class="table table-hover">
             <thead>
               <tr>
-                <th>Edzőterem</th>
                 <th>ID</th>
+                <th>Edzőterem</th>
                 <th>Szám</th>
                 <th>Nem</th>
                 <th>Hozzátartozó vendég</th>
@@ -51,8 +41,8 @@
             <tbody>
               @foreach ($lockers as $locker)
                 <tr>
-                  <td>{{ $locker->gym->name }}</td>
                   <td>{{ $locker->id }}</td>
+                  <td>{{ $locker->gym->name }}</td>
                   <td>{{ $locker->number }}</td>
                   <td>{{ $locker->gender == 'male' ? 'férfi' : 'nő' }}</td>
                   <td>{{ $locker->is_used() ? $locker->get_user->name : '-' }}</td>
@@ -76,7 +66,13 @@
         </div>
       </div>
 
-      <a href="{{ route('lockers.create') }}" class="btn btn-primary">Új szekrény</a>
+      @if ($button_show)
+        <a href="{{ route('lockers.create') }}" class="btn btn-primary">Új szekrény</a>
+      @else
+        <div class="alert alert-warning" role="alert">
+          Új öltözőszekrény létrehozásához hozz létre edzőtermet!
+        </div>
+      @endif
     </div>
   </div>
 @endsection

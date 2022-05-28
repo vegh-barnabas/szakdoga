@@ -26,11 +26,14 @@ class BuyableTicketController extends Controller
 
             return view('receptionist.buyable-tickets', ['tickets' => $all_tickets, 'gym_name' => $gym->name]);
         } else if (Gate::allows('admin-action')) {
-            $gym_name = Gym::all()->pluck('name')->implode(', ');
-
             $all_tickets = BuyableTicket::orderBy('type')->simplePaginate(8);
 
-            return view('admin.buyable-tickets.index', ['tickets' => $all_tickets, 'gym_name' => $gym_name]);
+            $button_show = true;
+            if (Gym::all()->count() == 0) {
+                $button_show = false;
+            }
+
+            return view('admin.buyable-tickets.index', ['tickets' => $all_tickets, 'button_show' => $button_show]);
         } else {
             abort(403);
         }
@@ -49,6 +52,10 @@ class BuyableTicketController extends Controller
 
         $gyms = Gym::all();
 
+        if ($gyms->count() == 0) {
+            abort(403);
+        }
+
         return view('admin.buyable-tickets.create', ['gyms' => $gyms]);
     }
 
@@ -66,7 +73,10 @@ class BuyableTicketController extends Controller
 
         $validated = $request->validate(
             [
-                'gym_id' => 'required|in:' . Gym::all()->pluck('id')->implode(','),
+                'gym_id' => [
+                    'required',
+                    Rule::exists('gyms', 'id'),
+                ],
                 'name' => [
                     'required',
                     'min:3',
@@ -75,11 +85,26 @@ class BuyableTicketController extends Controller
                         return $query->where('gym_id', $request->gym_id);
                     }),
                 ],
-                'type' => 'required|in:monthly,one-time',
-                'description' => 'min:6|max:128',
-                'quantity' => 'required|integer|min:1',
-                'price' => 'required|integer|min:0',
-            ],
+                'type' => [
+                    'required',
+                    Rule::in(['monthly', 'one-time']),
+                ],
+                'description' => [
+                    'required',
+                    'min:6',
+                    'max:128',
+                ],
+                'quantity' => [
+                    'required',
+                    'numeric',
+                    'min:1',
+                ],
+                'price' => [
+                    'required',
+                    'numeric',
+                    'min:0',
+                ],
+            ]
         );
 
         $validated['hidden'] = 0;
@@ -133,20 +158,42 @@ class BuyableTicketController extends Controller
 
         $validated = $request->validate(
             [
-                'gym_id' => 'in:' . Gym::all()->pluck('id')->implode(','),
+                'gym_id' => [
+                    'required',
+                    Rule::exists('gyms', 'id'),
+                ],
                 'name' => [
+                    'required',
                     'min:3',
                     'max:32',
                     Rule::unique('buyable_tickets')->where(function ($query) use ($request) {
                         return $query->where('gym_id', $request->gym_id);
                     })->ignore($ticket->id),
                 ],
-                'type' => 'in:monthly,one-time',
-                'description' => 'min:6|max:128',
-                'quantity' => 'integer|min:1',
-                'price' => 'integer|min:0',
-                'hidden' => 'boolean',
-            ],
+                'type' => [
+                    'required',
+                    Rule::in(['monthly', 'one-time']),
+                ],
+                'description' => [
+                    'required',
+                    'min:6',
+                    'max:128',
+                ],
+                'quantity' => [
+                    'required',
+                    'numeric',
+                    'min:1',
+                ],
+                'price' => [
+                    'required',
+                    'numeric',
+                    'min:0',
+                ],
+                'hidden' => [
+                    'required',
+                    'boolean',
+                ],
+            ]
         );
 
         $ticket->update($validated);

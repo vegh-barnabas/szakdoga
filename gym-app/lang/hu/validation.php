@@ -151,7 +151,7 @@ return [
         'address' => 'cím',
         'categories' => 'kategóriák',
         'enterance_code' => 'belépési kód',
-        'keyGiven' => 'kulcsot odaadtam',
+        'key_given' => 'kulcsot odaadtam',
         'exit_code' => 'kilépési kód',
         'amount' => 'mennyiség',
         'money_recieved' => 'összeget megkaptam',

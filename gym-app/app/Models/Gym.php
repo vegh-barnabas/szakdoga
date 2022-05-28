@@ -43,20 +43,20 @@ class Gym extends Model
             $gym->buyable_tickets()->delete();
             $gym->tickets()->delete();
 
-            $users = User::all();
+            $users = User::all()->where('prefered_gym', $gym->id);
             foreach ($users as $user) {
-                if ($user->prefered_gym == $gym->id) {
-                    if ($user->is_receptionist()) {
-                        // delete receptionists
-                        $user->delete();
-                    } else {
-                        // detach favourite gym fields from users
-                        $user->prefered_gym = null;
-                    }
+                if ($user->is_receptionist()) {
+                    // delete receptionists
+                    $user->delete();
+                } else {
+                    // detach favourite gym fields from users
+                    $user->prefered_gym = null;
+                    $user->save();
                 }
             }
 
             $gym->categories()->detach();
+            $gym->lockers()->delete();
         });
     }
 }

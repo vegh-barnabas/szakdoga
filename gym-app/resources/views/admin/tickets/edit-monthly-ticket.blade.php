@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title', 'Bérlet szerkesztése')
+@section('title', 'Megvásárolt bérlet szerkesztése')
 
 @section('content')
   @if ($errors->any())
@@ -12,11 +12,13 @@
     </div>
   @endif
 
-  <h2 class="mb-3">Bérlet szerkesztése</h2>
+  <h2 class="mb-3">Megvásárolt bérlet szerkesztése</h2>
   <div class="card">
     <div class="card-header">
-      <h5 class="card-title">{{ $ticket->buyable_ticket->name }} ({{ $ticket->id }}) - {{ $ticket->user->name }}
-        ({{ $ticket->user->id }})</h5>
+      <h5 class="card-title">{{ $ticket->buyable_ticket->name }} {{ $ticket->get_type() }} (ID {{ $ticket->id }})
+        -
+        {{ $ticket->user->name }} vendég
+        (ID {{ $ticket->user->id }})</h5>
     </div>
     <div class="card-body">
       <div class="card-text">

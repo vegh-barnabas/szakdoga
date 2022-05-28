@@ -1,8 +1,8 @@
 @extends('layouts.admin')
-@section('title', 'Megvásárolható jegy elrejtése')
+@section('title', 'Megvásárolható jegy/bérlet elrejtése/megjelenítése')
 
 @section('content')
-  <h2 class="mb-3">Megvásárolható jegy elrejtése</h2>
+  <h2 class="mb-3">Megvásárolható jegy/bérlet {{ $ticket->hidden ? 'megjelenítése' : 'elrejtése' }}</h2>
   <div class="card">
     <div class="card-header">
       <h5 class="card-title">{{ $ticket->name }}</h5>
@@ -44,8 +44,8 @@
               </div>
               <div class="col-auto">
                 <select id="type" name="type" class="form-select" disabled>
-                  <option value="one-time" {{ !$ticket->isMonthly() ? 'selected' : '' }}>jegy</option>
-                  <option value="monthly" {{ $ticket->isMonthly() ? 'selected' : '' }}>bérlet</option>
+                  <option value="one-time" {{ !$ticket->is_monthly() ? 'selected' : '' }}>jegy</option>
+                  <option value="monthly" {{ $ticket->is_monthly() ? 'selected' : '' }}>bérlet</option>
                 </select>
               </div>
             </div>
@@ -98,7 +98,7 @@
           </div>
 
           @if ($ticket->hidden)
-            <button type="submit" class="btn btn-secondary">Láthatóvá tétel</button>
+            <button type="submit" class="btn btn-secondary">Megjelenítés</button>
           @else
             <button type="submit" class="btn btn-secondary">Elrejtés</button>
           @endif

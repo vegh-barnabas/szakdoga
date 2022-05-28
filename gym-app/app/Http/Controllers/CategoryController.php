@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 
 class CategoryController extends Controller
 {
@@ -57,9 +58,17 @@ class CategoryController extends Controller
 
         $validated = $request->validate(
             [
-                'name' => 'required|min:2|max:32',
-                'style' => 'required|in:' . implode(',', Category::styles),
-            ],
+                'name' => [
+                    'required',
+                    'min:2',
+                    'max:32',
+                    Rule::unique('categories', 'name'),
+                ],
+                'style' => [
+                    'required',
+                    Rule::in(Category::styles),
+                ],
+            ]
         );
 
         $category = Category::create($validated);
@@ -111,9 +120,17 @@ class CategoryController extends Controller
 
         $validated = $request->validate(
             [
-                'name' => 'min:2|max:32',
-                'style' => 'in:' . implode(',', Category::styles),
-            ],
+                'name' => [
+                    'required',
+                    'min:2',
+                    'max:32',
+                    Rule::unique('categories', 'name')->ignore($category->id),
+                ],
+                'style' => [
+                    'required',
+                    Rule::in(Category::styles),
+                ],
+            ]
         );
 
         $category->update($validated);
