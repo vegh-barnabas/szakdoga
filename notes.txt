@@ -132,32 +132,26 @@ recepciós tud képet feltölteni userről
 ✅ views/auth kiganézni
 
 Manuális tesztek során kijövő errorok:
-- buy-tickets oldalon a bérlet meghosszabbításkor minden valid de visszadob
-- success üzenet nem jön fel amikor megveszek 1 bérletet/jegyet
-- megvásárolt jegy bérlet szerkesztésekor nincs üzenet hogy sikeres volt
-- kiléptetéskor ugyanazok a hibaüzik mint beléptetéskor
+✅ buy-tickets oldalon a bérlet meghosszabbításkor minden valid de visszadob
+✅ success üzenet nem jön fel amikor megveszek 1 bérletet/jegyet
+✅ megvásárolt jegy bérlet szerkesztésekor nincs üzenet hogy sikeres volt
+✅ kiléptetéskor ugyanazok a hibaüzik mint beléptetéskor
 
-- ha nincs edzőterem recisnél usernél visszadob a főoldalra (szal végülis ha nincs session)
-- Rule:: meg '' egységesítése
-- all()->where -> where
-- unique -> unique:tábla,mező
+❌ ha nincs edzőterem recisnél usernél visszadob a főoldalra (szal végülis ha nincs session)
+✅ Rule:: meg '' egységesítése
+❌ all()->where -> where
+✅ unique -> unique:tábla,mező
+✅ admin vieweken a gym namek átnézése
+✅ titlek mégegyszer
+
 - db-validáció string hosszok ellenőrzése, seedeléskor figyelni rá
-- admin vieweken a gym namek átnézése
-- titlek mégegyszer
 - navbarban aktív a felület ha azon belül csinálunk vmit pl felhasználó törlése
-
 - readme.md
 - prodba átrakni
 
 -- Bővítési ötletek --
 - policyk
 - több ikon
-- statisztikánál órák
-- következetes elnevezések
+- bővebb statisztika
 - keresősáv
-- öltözők
-
--- Dokumentáció --
-- képek kellenek?
-- milyen packagekat használok
-	- blade icons
+- elveszett kulcs rendszer
