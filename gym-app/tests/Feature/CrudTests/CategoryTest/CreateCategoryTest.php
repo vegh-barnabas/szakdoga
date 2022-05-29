@@ -37,7 +37,6 @@ class CreateCategoryTest extends TestCase
 
         // Check if new buyable ticket is created
         $category = Category::all()->first();
-        // error_log(json_encode(Category::all()));
 
         $this->assertNotNull($category);
     }
@@ -62,7 +61,6 @@ class CreateCategoryTest extends TestCase
 
         // Check if new buyable ticket is created
         $category = Category::all()->first();
-        // error_log(json_encode(Category::all()));
 
         $this->assertNull($category);
     }
@@ -89,7 +87,6 @@ class CreateCategoryTest extends TestCase
 
         // Check if new buyable ticket is created
         $category = Category::all()->first();
-        // error_log(json_encode(Category::all()));
 
         $this->assertNull($category);
     }

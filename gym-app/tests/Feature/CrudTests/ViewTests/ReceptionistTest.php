@@ -52,14 +52,6 @@ class ReceptionistTests extends TestCase
         ]);
 
         $ticket->buyable_ticket()->associate($buyable_ticket);
-
-        error_log($ticket->id);
-
-        // $response = $this->actingAs($receptionist)->withSession(['gym' => $gym->id])->get('let-in/' . $ticket->id);
-        // $response->assertStatus(200);
-
-        // $response = $this->actingAs($receptionist)->withSession(['gym' => $gym->id])->get('let-out/' . $guest->id);
-        // $response->assertStatus(200);
     }
 
     public function test_guest_cant_access_receptionist_routes()

@@ -23,6 +23,11 @@ class ReadBuyableTicketTest extends TestCase
         $response->assertStatus(200);
 
         $response = $this->actingAs($admin)->get('/buyable-tickets/create');
+        $response->assertStatus(403); // Should fail because no gyms
+
+        $gym = Gym::factory()->create();
+
+        $response = $this->actingAs($admin)->get('/buyable-tickets/create');
         $response->assertStatus(200);
 
         // Should fail because there is no buyable ticket

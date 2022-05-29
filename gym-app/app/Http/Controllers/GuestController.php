@@ -311,8 +311,6 @@ class GuestController extends Controller
     public function settings(Request $request)
     {
         $user = User::all()->where('id', Auth::user()->id)->first();
-        // error_log(json_encode($user));
-
         $gyms = Gym::all();
 
         $validated = $request->validate(

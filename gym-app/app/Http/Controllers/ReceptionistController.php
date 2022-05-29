@@ -110,9 +110,6 @@ class ReceptionistController extends Controller
 
         $gym = Gym::find($ticket->buyable_ticket->gym_id);
 
-        error_log(json_encode($ticket->buyable_ticket));
-        error_log($gym);
-
         $lockers = Locker::all()->where('gym_id', $gym->id)->where('gender', $ticket->user->gender)->filter(function ($locker) {
             return !$locker->is_used();
         });

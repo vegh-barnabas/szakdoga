@@ -30,7 +30,6 @@ class HideBuyableTicketTest extends TestCase
             ]);
         // Get the ID
         $buyable_ticket_id = BuyableTicket::all()->first()->id;
-        // error_log(json_encode($buyable_ticket_id));
 
         // Send request
         $response = $this->actingAs($admin)->patch('/buyable-tickets/' . $buyable_ticket_id . '/hide');
@@ -61,7 +60,6 @@ class HideBuyableTicketTest extends TestCase
             ]);
         // Get the ID
         $buyable_ticket_id = BuyableTicket::all()->first()->id;
-        // error_log(json_encode($buyable_ticket_id));
 
         // Send request
         $response = $this->actingAs($admin)->patch('/buyable-tickets/' . $buyable_ticket_id . '/hide');
@@ -90,7 +88,6 @@ class HideBuyableTicketTest extends TestCase
             ]);
         // Get the ID
         $buyable_ticket_id = BuyableTicket::all()->first()->id;
-        // error_log(json_encode($buyable_ticket_id));
 
         // Send request
         $response = $this->actingAs($user)->patch('/buyable-tickets/' . $buyable_ticket_id . '/hide');
@@ -119,7 +116,6 @@ class HideBuyableTicketTest extends TestCase
             ]);
         // Get the ID
         $buyable_ticket_id = BuyableTicket::all()->first()->id;
-        // error_log(json_encode($buyable_ticket_id));
 
         // Send request
         $response = $this->actingAs($user)->patch('/buyable-tickets/' . $buyable_ticket_id . '/hide');

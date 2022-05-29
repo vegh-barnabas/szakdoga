@@ -25,61 +25,63 @@
                   {{ $gym->name }}
                 </h6>
                 <p class="card-text">
-                <table class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th scope="col">Név</th>
-                      <th scope="col">Típus</th>
-                      <th scope="col">Lejárat</th>
-                      <th scope="col">Státusz</th>
-                      <th scope="col">Lehetőség</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($tickets as $ticket)
-                      @if ($ticket->useable())
-                        <tr>
-                          <td>{{ $ticket->buyable_ticket->name }}</td>
-                          @if ($ticket->is_monthly())
-                            <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
-                          @else
-                            <td class="text-success"><b>{{ $ticket->get_type() }}</b></td>
-                          @endif
-                          <td>{{ $ticket->expiration() }}</td>
-                          @if ($ticket->expired())
-                            <td class="text-danger">Lejárt</td>
-                            <td><button type="submit" class="btn btn-light">Hosszabbítás</button></td>
-                          @else
-                            <td class="text-success">Aktív</td>
-                            <td>
-                              <p>
-                                @if ($ticket->is_monthly())
-                                  <button class="btn btn-primary" type="submit" data-bs-toggle="collapse"
-                                    data-bs-target="{{ '#' . Str::slug($ticket->buyable_ticket->name . $ticket->id) }}"
-                                    aria-expanded="false" aria-controls="{{ $ticket->id }}">
-                                    Belépési kód
-                                  </button>
-                                @else
-                                  <button class="btn btn-success" type="submit" data-bs-toggle="collapse"
-                                    data-bs-target="{{ '#' . Str::slug($ticket->buyable_ticket->name . $ticket->id) }}"
-                                    aria-expanded="false" aria-controls="{{ $ticket->id }}">
-                                    Belépési kód
-                                  </button>
-                                @endif
-                              </p>
-                              <div class="collapse"
-                                id="{{ Str::slug($ticket->buyable_ticket->name . $ticket->id) }}">
-                                <div class="card card-body">
-                                  {{ $ticket->code }}
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">Név</th>
+                        <th scope="col">Típus</th>
+                        <th scope="col">Lejárat</th>
+                        <th scope="col">Státusz</th>
+                        <th scope="col">Lehetőség</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach ($tickets as $ticket)
+                        @if ($ticket->useable())
+                          <tr>
+                            <td>{{ $ticket->buyable_ticket->name }}</td>
+                            @if ($ticket->is_monthly())
+                              <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
+                            @else
+                              <td class="text-success"><b>{{ $ticket->get_type() }}</b></td>
+                            @endif
+                            <td>{{ $ticket->expiration() }}</td>
+                            @if ($ticket->expired())
+                              <td class="text-danger">Lejárt</td>
+                              <td><button type="submit" class="btn btn-light">Hosszabbítás</button></td>
+                            @else
+                              <td class="text-success">Aktív</td>
+                              <td>
+                                <p>
+                                  @if ($ticket->is_monthly())
+                                    <button class="btn btn-primary" type="submit" data-bs-toggle="collapse"
+                                      data-bs-target="{{ '#' . Str::slug($ticket->buyable_ticket->name . $ticket->id) }}"
+                                      aria-expanded="false" aria-controls="{{ $ticket->id }}">
+                                      Belépési kód
+                                    </button>
+                                  @else
+                                    <button class="btn btn-success" type="submit" data-bs-toggle="collapse"
+                                      data-bs-target="{{ '#' . Str::slug($ticket->buyable_ticket->name . $ticket->id) }}"
+                                      aria-expanded="false" aria-controls="{{ $ticket->id }}">
+                                      Belépési kód
+                                    </button>
+                                  @endif
+                                </p>
+                                <div class="collapse"
+                                  id="{{ Str::slug($ticket->buyable_ticket->name . $ticket->id) }}">
+                                  <div class="card card-body">
+                                    {{ $ticket->code }}
+                                  </div>
                                 </div>
-                              </div>
-                            </td>
-                          @endif
-                        </tr>
-                      @endif
-                    @endforeach
-                  </tbody>
-                </table>
+                              </td>
+                            @endif
+                          </tr>
+                        @endif
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
                 </p>
               </div>
             </div>
@@ -96,55 +98,57 @@
                   {{ $gym->name }}
                 </h6>
                 <p class="card-text">
-                <table class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th scope="col">Név</th>
-                      <th scope="col">Típus</th>
-                      <th scope="col">Lejárat</th>
-                      <th scope="col">Státusz</th>
-                      <th scope="col">Lehetőség</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @foreach ($tickets as $ticket)
-                      @if ($ticket->is_monthly() && !$ticket->useable() && $ticket->buyable_ticket->hidden == 0)
-                        <tr>
-                          <form action="{{ route('guest.extend-ticket.show', $ticket->id) }}" method="GET">
-                            <td>{{ $ticket->buyable_ticket->name }}</td>
-                            @if ($ticket->is_monthly())
-                              <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
-                            @else
-                              <td class="text-success"><b>{{ $ticket->get_type() }}</b></td>
-                            @endif
-                            <td>{{ $ticket->expiration() }}</td>
-                            @if ($ticket->expired())
-                              <td class="text-danger">Lejárt</td>
-                              <td><button type="submit" class="btn btn-light">Hosszabbítás</button></td>
-                            @else
-                              <td class="text-success">Aktív</td>
-                              <td>
-                                <p>
-                                  <button class="btn btn-success" type="submit" data-bs-toggle="collapse"
-                                    data-bs-target="{{ '#' . Str::slug($ticket->buyable_ticket->name . $ticket->id) }}"
-                                    aria-expanded="false" aria-controls="{{ $ticket->id }}">
-                                    Belépési kód
-                                  </button>
-                                </p>
-                                <div class="collapse"
-                                  id="{{ Str::slug($ticket->buyable_ticket->name . $ticket->id) }}">
-                                  <div class="card card-body">
-                                    {{ $ticket->code }}
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th scope="col">Név</th>
+                        <th scope="col">Típus</th>
+                        <th scope="col">Lejárat</th>
+                        <th scope="col">Státusz</th>
+                        <th scope="col">Lehetőség</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      @foreach ($tickets as $ticket)
+                        @if ($ticket->is_monthly() && !$ticket->useable() && $ticket->buyable_ticket->hidden == 0)
+                          <tr>
+                            <form action="{{ route('guest.extend-ticket.show', $ticket->id) }}" method="GET">
+                              <td>{{ $ticket->buyable_ticket->name }}</td>
+                              @if ($ticket->is_monthly())
+                                <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
+                              @else
+                                <td class="text-success"><b>{{ $ticket->get_type() }}</b></td>
+                              @endif
+                              <td>{{ $ticket->expiration() }}</td>
+                              @if ($ticket->expired())
+                                <td class="text-danger">Lejárt</td>
+                                <td><button type="submit" class="btn btn-light">Hosszabbítás</button></td>
+                              @else
+                                <td class="text-success">Aktív</td>
+                                <td>
+                                  <p>
+                                    <button class="btn btn-success" type="submit" data-bs-toggle="collapse"
+                                      data-bs-target="{{ '#' . Str::slug($ticket->buyable_ticket->name . $ticket->id) }}"
+                                      aria-expanded="false" aria-controls="{{ $ticket->id }}">
+                                      Belépési kód
+                                    </button>
+                                  </p>
+                                  <div class="collapse"
+                                    id="{{ Str::slug($ticket->buyable_ticket->name . $ticket->id) }}">
+                                    <div class="card card-body">
+                                      {{ $ticket->code }}
+                                    </div>
                                   </div>
-                                </div>
-                              </td>
-                            @endif
-                          </form>
-                        </tr>
-                      @endif
-                    @endforeach
-                  </tbody>
-                </table>
+                                </td>
+                              @endif
+                            </form>
+                          </tr>
+                        @endif
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
                 </p>
               </div>
             </div>

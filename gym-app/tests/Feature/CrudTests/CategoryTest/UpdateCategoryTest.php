@@ -70,7 +70,6 @@ class EditCategoryTest extends TestCase
 
         // Check if new buyable ticket is created
         $modified_category = Category::all()->first();
-        // error_log(json_encode(Category::all()));
 
         $this->assertEquals($category->style, $modified_category->style);
     }
@@ -100,7 +99,6 @@ class EditCategoryTest extends TestCase
 
         // Check if new buyable ticket is created
         $modified_category = Category::all()->first();
-        // error_log(json_encode(Category::all()));
 
         $this->assertEquals($category->style, $modified_category->style);
         $this->assertEquals($category->name, $modified_category->name);

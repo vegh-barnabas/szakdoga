@@ -108,7 +108,6 @@ class CreateBuyableTicketTest extends TestCase
         // Check if no new buyable ticket is created
         $buyable_tickets = BuyableTicket::all()->first();
 
-        // error_log(json_encode($buyable_tickets));
         $this->assertNull($buyable_tickets);
     }
 }
