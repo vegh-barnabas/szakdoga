@@ -31,11 +31,6 @@ class GuestController extends Controller
             return redirect()->route('index');
         }
 
-        // if (Auth::user()->prefered_gym != null) {
-        //     session(['gym' => Auth::user()->prefered_gym]);
-        //     return redirect()->route('index');
-        // }
-
         return view('gyms.index', ['gyms' => Gym::all()]);
     }
 
@@ -74,25 +69,12 @@ class GuestController extends Controller
 
         $gym = Gym::find(session('gym'));
 
-        // $tickets = Auth::user()->tickets()
-        //     ->join('buyable_tickets', 'buyable_tickets.id', '=', 'tickets.type_id')
-        //     ->orderBy('type_str')
-        //     ->orderBy('tickets.expiration', 'DESC')
-        //     ->paginate(1);
-
         $tickets = Auth::user()->tickets
             ->where('gym_id', $gym->id)
             ->sortByDesc('expiration')
             ->sortBy(function ($ticket) {
                 return $ticket->get_type();
             });
-
-        // $tickets = Ticket::with('type')
-        //     ->where('gym_id', $gym->id)
-        //     ->whereIn('id', Auth::user()->tickets)
-        //     ->orderBy('expiration', 'desc')
-        //     ->orderBy('type')
-        //     ->paginate(2);
 
         return view('user.tickets', ['gym' => $gym, 'tickets' => $tickets, 'showPagination' => is_null(request('all'))]);
     }
@@ -217,6 +199,10 @@ class GuestController extends Controller
             return redirect()->route('guest.tickets')->with('error-not-enough-credits', ['ticket-name' => $ticket->buyable_ticket->name]);
         }
 
+        if ($ticket->buyable_ticket->hidden == 1) {
+            abort(403);
+        }
+
         $gym = Gym::all()->where('id', $ticket->gym->id)->first();
 
         return view('user.extend_ticket', ['ticket' => $ticket, 'gym' => $gym]);
@@ -249,14 +235,14 @@ class GuestController extends Controller
         $expiration = Carbon::now();
         $expiration->add(1, 'month');
 
-        $ticket->expiration = $expiration;
+        $ticket->expiration = $expiration->format('Y-m-d');
         $ticket->save();
 
         $user = User::all()->where('id', Auth::user()->id)->first();
         $user->credits -= $ticket->buyable_ticket->price;
         $user->save();
 
-        return redirect()->route('index');
+        return redirect()->route('index')->with('extend-monthly', $ticket->buyable_ticket->name);
     }
 
     public function statistics()
@@ -267,31 +253,6 @@ class GuestController extends Controller
 
         $gym = Gym::find(session('gym'));
 
-        // $enterances = Enterance::all()->where('gym_id', $gym->id);
-
-        // $enterance_counts = [];
-        // for ($i = 0; $i < 24; $i++) {
-        //     $enterance_counts[$i] = 0;
-        // }
-
-        // for ($i = 0; $i < 24; $i++) {
-        //     $date = Carbon::today()->add($i, 'hour');
-
-        //     foreach ($enterances as $enterance) {
-        //         $enter = Carbon::create($enterance->enter);
-        //         if ($enter->diffInHours($date) == 0) {
-        //             $enterance_counts[$i]++;
-        //         }
-
-        //         $exit = Carbon::create($enterance->exit);
-        //         if ($exit->diffInHours($date) == 0) {
-        //             $enterance_counts[$i]++;
-        //         }
-        //     }
-        // }
-
-        // TODO: make this into a function in model
-        // TODO: dont show table if the user was never in the gym
         // Enterance avg
         $min_sum = 0;
         $count = 0;

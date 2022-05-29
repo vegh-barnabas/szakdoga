@@ -24,8 +24,8 @@
   @elseif (Session::has('not-this-gym'))
     <p>
     <div class="alert alert-danger" role="alert">
-      A vendég által felhasznált <strong>{{ Session::get('not-this-gym.code') }}</strong> kódú jegy nem ehhez az
-      edzőteremhez tartozik!
+      A <strong>{{ Session::get('not-this-gym.code') }}</strong> kilépési kódú vendég által felhasznált jegy nem ehhez
+      az edzőteremhez tartozik!
     </div>
     </p>
   @endif

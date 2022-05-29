@@ -2,6 +2,14 @@
 @section('title', 'Főoldal')
 
 @section('content')
+  @if (Session::has('extend-monthly'))
+    <p>
+    <div class="alert alert-success" role="alert">
+      Sikeresen meghosszabbítottad a(z) <strong>{{ Session::get('extend-monthly') }}</strong> nevű bérleted!
+    </div>
+    </p>
+  @endif
+
   <h2>Üdv újra, <b>{{ Auth::user()->name }}</b>!</h2>
   <div class="row">
     <div class="col p-4">

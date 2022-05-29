@@ -93,4 +93,13 @@ class Ticket extends Model
 
         return $enterance->format('Y. m. d. H:i');
     }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function ($ticket) {
+            $ticket->enterances()->delete();
+        });
+    }
 }

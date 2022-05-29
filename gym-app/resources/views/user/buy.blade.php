@@ -55,7 +55,8 @@
                       @endif
                       <td>
                         @if (Auth::user()->tickets->where('buyable_ticket_id', $ticket->id)->first()->expired())
-                          <button class="btn btn-primary">Hosszabbítás</button>
+                          <a href="{{ route('guest.extend-ticket.show',Auth::user()->tickets->where('buyable_ticket_id', $ticket->id)->first()) }}"
+                            class="btn btn-primary">Hosszabbítás</a>
                         @endif
                       </td>
                     </tr>

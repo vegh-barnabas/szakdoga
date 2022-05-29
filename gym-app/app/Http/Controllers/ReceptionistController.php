@@ -54,7 +54,12 @@ class ReceptionistController extends Controller
             $enterance_date = CarbonImmutable::create($ticket->enterances->first()->enter);
 
             return redirect()->route('receptionist.let-in.index-page')
-                ->with('used-ticket', ['ticket' => $code, 'used' => $enterance_date->format('Y. m. d. H:i')]);
+                ->with('used-ticket', ['code' => $code, 'used' => $enterance_date->format('Y. m. d. H:i')]);
+        }
+
+        if ($ticket->expired()) {
+            return redirect()->route('receptionist.let-in.index-page')
+                ->with('expired-ticket', ['code' => $code, 'date' => $ticket->expiration()]);
         }
 
         $user = $ticket->user;
@@ -141,8 +146,7 @@ class ReceptionistController extends Controller
             ->where('gender', $ticket->user->gender)
             ->filter(function ($locker) {
                 return !$locker->is_used();
-            })
-            ->pluck('id')->implode(',');
+            })->pluck('id');
 
         $request->validate(
             // Validation rules
@@ -208,16 +212,16 @@ class ReceptionistController extends Controller
         $user = User::all()->where('exit_code', $exit_code)->first();
 
         if ($user == null) {
-            return redirect()->to('receptionist.let-out.index')->with('not-found', $exit_code);
+            return redirect()->route('receptionist.let-out.index-page')->with('not-found', $exit_code);
         }
         if ($user->enterances->where('exit', null)->count() == 0) {
-            return redirect()->to('receptionist.let-out.index')->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
+            return redirect()->route('receptionist.let-out.index-page')->with('error', ['code' => $user->exit_code, 'user' => $user->name]);
         }
 
         $enterance = Enterance::all()->where('user_id', $user->id)->where('exit', null)->first();
 
         if ($enterance->gym_id != Gym::find(session('gym'))->id) {
-            return redirect()->to('receptionist.let-out.index')->with('not-this-gym', ['code' => $exit_code]);
+            return redirect()->route('receptionist.let-out.index-page')->with('not-this-gym', ['code' => $exit_code]);
         }
 
         return redirect()->route('receptionist.let-out.page', $user->exit_code);

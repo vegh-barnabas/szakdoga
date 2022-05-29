@@ -39,7 +39,7 @@
                     @foreach ($tickets as $ticket)
                       @if ($ticket->useable())
                         <tr>
-                          <td>{{ $ticket->get_type() }}</td>
+                          <td>{{ $ticket->buyable_ticket->name }}</td>
                           @if ($ticket->is_monthly())
                             <td class="text-primary"><b>{{ $ticket->get_type() }}</b></td>
                           @else
@@ -108,7 +108,7 @@
                   </thead>
                   <tbody>
                     @foreach ($tickets as $ticket)
-                      @if ($ticket->is_monthly() && !$ticket->useable())
+                      @if ($ticket->is_monthly() && !$ticket->useable() && $ticket->buyable_ticket->hidden == 0)
                         <tr>
                           <form action="{{ route('guest.extend-ticket.show', $ticket->id) }}" method="GET">
                             <td>{{ $ticket->buyable_ticket->name }}</td>

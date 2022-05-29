@@ -41,6 +41,13 @@
       <strong>{{ Session::get('used-ticket.used') }}</strong>
     </div>
     </p>
+  @elseif (Session::has('expired-ticket'))
+    <p>
+    <div class="alert alert-warning" role="alert">
+      A(z) <strong>{{ Session::get('expired-ticket.code') }}</strong> kódú jegy lejárt! Lejárat dátuma:
+      <strong>{{ Session::get('expired-ticket.date') }}</strong>
+    </div>
+    </p>
   @endif
 
   @if ($errors->any())
