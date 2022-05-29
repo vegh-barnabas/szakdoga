@@ -9,7 +9,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase as TestingRefreshDatabase;
 use Tests\TestCase;
 
-class ReceptionistTests extends TestCase
+class ShowReceptionistTest extends TestCase
 {
     use TestingRefreshDatabase;
 

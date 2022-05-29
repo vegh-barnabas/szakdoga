@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Tests\TestCase;
 
-class ExampleTest extends TestCase
+class RegisterTest extends TestCase
 {
     public function test_the_application_returns_the_register_screen()
     {

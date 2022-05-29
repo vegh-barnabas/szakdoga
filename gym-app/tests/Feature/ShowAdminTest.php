@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase as TestingRefreshDatabase;
 use Tests\TestCase;
 
-class ViewTests extends TestCase
+class ShowAdminTest extends TestCase
 {
     use TestingRefreshDatabase;
 

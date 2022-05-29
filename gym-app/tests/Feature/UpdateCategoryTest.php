@@ -8,7 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase as TestingRefreshDatabase;
 use Tests\TestCase;
 
-class EditCategoryTest extends TestCase
+class UpdateCategoryTest extends TestCase
 {
     use TestingRefreshDatabase;
     public function test_admin_can_edit_category()
